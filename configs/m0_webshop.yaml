@@ -1,0 +1,15 @@
+# R002 - M0 sanity: no-mem ReAct on WebShop (fixed 100 subset, idx 0..99).
+run_id: R002_webshop_nomem
+milestone: M0
+out_dir: results
+env: webshop
+provider: openai
+model: gpt-4o-mini
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 15
+n_fewshot: 2
+fewshot_file: null                     # TODO: webshop ReAct exemplars jsonl
+memory: none
+seeds: [0, 1, 2]
+max_tasks: 100

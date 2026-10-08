@@ -1,0 +1,119 @@
+{
+  "run_id": "Q_nomem_s3",
+  "config": {
+    "run_id": "Q_nomem_s3",
+    "milestone": "M7",
+    "out_dir": "results",
+    "env": "alfworld",
+    "task_ids": null,
+    "max_tasks": null,
+    "max_steps": 30,
+    "provider": "openai",
+    "model": "qwen3-8b",
+    "temperature": 0.0,
+    "max_completion_tokens": 256,
+    "base_url": "http://localhost:8000/v1",
+    "request_timeout": 120.0,
+    "max_retries": 5,
+    "api_key": "EMPTY",
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "n_fewshot": 2,
+    "system_prompt_key": "default",
+    "prompt_style": "react_alfworld",
+    "inject_admissible": true,
+    "fewshot_file": "configs/alfworld_react_fewshot.json",
+    "memory": "none",
+    "memory_k": 20,
+    "token_budget": null,
+    "demo_pool": null,
+    "retriever": "lexical",
+    "embed_model": "text-embedding-3-small",
+    "curator": "static",
+    "gate_threshold": 0.35,
+    "explore": true,
+    "prior_a": 1.0,
+    "prior_b": 1.0,
+    "credit": "uniform",
+    "cluster_by_type": true,
+    "stream_shuffle_seed": null,
+    "credit_file": null,
+    "credit_gate_cut": 0.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "summary": {
+    "n": 402,
+    "n_ok": 402,
+    "n_error": 0,
+    "success_rate": 0.681592039800995,
+    "reward": {
+      "mean": 0.681592039800995,
+      "std": 0.46585870291421394
+    },
+    "steps": {
+      "mean": 11.062189054726367,
+      "std": 6.155821835605787
+    },
+    "prompt_tokens": {
+      "mean": 80675.94029850746,
+      "std": 67729.85950758228
+    },
+    "completion_tokens": {
+      "mean": 1259.6915422885572,
+      "std": 1187.6184913402296
+    },
+    "memory_tokens": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "total_cost_usd": 0.0,
+    "by_task_type": {
+      "clean": {
+        "n": 93,
+        "success_rate": 0.6559139784946236
+      },
+      "cool": {
+        "n": 63,
+        "success_rate": 0.8571428571428571
+      },
+      "examine": {
+        "n": 54,
+        "success_rate": 0.6111111111111112
+      },
+      "heat": {
+        "n": 69,
+        "success_rate": 0.7391304347826086
+      },
+      "put": {
+        "n": 72,
+        "success_rate": 0.7361111111111112
+      },
+      "puttwo": {
+        "n": 51,
+        "success_rate": 0.43137254901960786
+      }
+    },
+    "by_seed": {
+      "0": 0.746268656716418,
+      "1": 0.6417910447761194,
+      "2": 0.6567164179104478
+    },
+    "memory": {
+      "kind": "none",
+      "n_items": 0,
+      "n_tokens": 0
+    }
+  },
+  "usage": {
+    "calls": 12380,
+    "prompt_tokens": 32431728,
+    "completion_tokens": 506396,
+    "cached_tokens": 0,
+    "cost_usd": 0.0
+  }
+}

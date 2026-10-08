@@ -1,0 +1,105 @@
+{
+  "run_id": "R012_expel_bm25",
+  "config": {
+    "run_id": "R012_expel_bm25",
+    "milestone": "M2",
+    "out_dir": "results",
+    "env": "alfworld",
+    "task_ids": null,
+    "max_tasks": null,
+    "max_steps": 30,
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "temperature": 0.0,
+    "max_completion_tokens": 256,
+    "base_url": null,
+    "request_timeout": 120.0,
+    "max_retries": 5,
+    "n_fewshot": 2,
+    "system_prompt_key": "default",
+    "prompt_style": "react_alfworld",
+    "inject_admissible": true,
+    "fewshot_file": "configs/alfworld_react_fewshot.json",
+    "memory": "expel",
+    "memory_k": 20,
+    "token_budget": 2048,
+    "demo_pool": "results/pools/expel_insights.jsonl",
+    "retriever": "bm25",
+    "embed_model": "text-embedding-3-small",
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "summary": {
+    "n": 402,
+    "n_ok": 402,
+    "n_error": 0,
+    "success_rate": 0.6865671641791045,
+    "reward": {
+      "mean": 0.6865671641791045,
+      "std": 0.46388866471403145
+    },
+    "steps": {
+      "mean": 18.124378109452735,
+      "std": 9.945345806970078
+    },
+    "prompt_tokens": {
+      "mean": 65325.35572139303,
+      "std": 39131.20070814368
+    },
+    "completion_tokens": {
+      "mean": 376.5696517412935,
+      "std": 217.4531032517335
+    },
+    "memory_tokens": {
+      "mean": 645.0,
+      "std": 0.0
+    },
+    "total_cost_usd": 2.3565043500000007,
+    "by_task_type": {
+      "clean": {
+        "n": 93,
+        "success_rate": 0.6666666666666666
+      },
+      "cool": {
+        "n": 63,
+        "success_rate": 0.746031746031746
+      },
+      "examine": {
+        "n": 54,
+        "success_rate": 0.8333333333333334
+      },
+      "heat": {
+        "n": 69,
+        "success_rate": 0.37681159420289856
+      },
+      "put": {
+        "n": 72,
+        "success_rate": 0.9166666666666666
+      },
+      "puttwo": {
+        "n": 51,
+        "success_rate": 0.5882352941176471
+      }
+    },
+    "by_seed": {
+      "0": 0.6865671641791045,
+      "1": 0.6940298507462687,
+      "2": 0.6791044776119403
+    },
+    "memory": {
+      "kind": "expel",
+      "n_items": 33,
+      "n_tokens": 645
+    }
+  },
+  "usage": {
+    "calls": 9115,
+    "prompt_tokens": 26260793,
+    "completion_tokens": 151381,
+    "cached_tokens": 22312576,
+    "cost_usd": 2.3565043500000007
+  }
+}

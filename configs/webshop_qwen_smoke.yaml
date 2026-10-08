@@ -1,0 +1,31 @@
+run_id: PAPERO_WS_Q_nomem_smoke20
+milestone: PaperO_crossenv_gate
+out_dir: results
+env: webshop
+task_ids: null
+max_tasks: 20
+max_steps: 15
+webshop_base_url: http://127.0.0.1:3000
+webshop_n_tasks: 100
+provider: openai
+model: qwen3-8b
+temperature: 0.0
+max_completion_tokens: 256
+base_url: http://127.0.0.1:8000/v1
+request_timeout: 120.0
+max_retries: 5
+api_key: EMPTY
+chat_template_kwargs:
+  enable_thinking: false
+n_fewshot: 2
+system_prompt_key: default
+prompt_style: thought_action
+inject_admissible: true
+fewshot_file: configs/webshop_react_fewshot.jsonl
+save_trajectories: true
+memory: none
+memory_k: 20
+token_budget: null
+demo_pool: null
+retriever: bm25
+seeds: [0]

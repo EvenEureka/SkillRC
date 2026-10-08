@@ -1,0 +1,336 @@
+% =============================================================================
+%  SkillRC  ·  Preprint LaTeX template (MemoHarness preprint style)
+%  Classical academic-journal style (centered title block, narrow abstract,
+%  Times-family typography, numbered author affiliations).
+%  Compile with:  pdflatex -> bibtex -> pdflatex -> pdflatex
+% =============================================================================
+\documentclass[11pt,letterpaper]{article}
+
+% -------------------- Geometry & language ------------------------------------
+\usepackage[letterpaper,left=1.15in,right=1.15in,top=1.05in,bottom=1.05in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% -------------------- Math (must load BEFORE newtxmath) ---------------------
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}
+
+% -------------------- Fonts (Linux Libertine — elegant academic serif) -------
+% Linux Libertine is a refined humanist serif used by many modern journals;
+% it has true small caps, oldstyle figures, and a matched math companion.
+\usepackage[mono=false]{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[scaled=0.95]{inconsolata}
+\usepackage{microtype}
+\linespread{1.08}
+
+% -------------------- Graphics, tables --------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{wrapfig}
+\usepackage{nicefrac}
+\usepackage[table,dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{pifont}
+\usepackage{xspace}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\setlist{leftmargin=1.5em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{authblk}
+\usepackage[explicit]{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{ifthen}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+
+% -------------------- Bibliography (natbib, author-year) ---------------------
+\PassOptionsToPackage{authoryear,round}{natbib}
+\usepackage{natbib}
+
+% -------------------- Hyperref (loaded last) ---------------------------------
+\usepackage[bookmarks=true,bookmarksopen=true,hidelinks]{hyperref}
+
+% =============================================================================
+%  Brand palette (preserved from original so body figures and tables render
+%  with the same colour cues; the cover page itself stays restrained).
+% =============================================================================
+\definecolor{narrared}     {HTML}{7A1022}
+\definecolor{narrareddeep} {HTML}{5B0A18}
+\definecolor{steelblue}    {HTML}{2E86AB}
+\definecolor{mutedpurple}  {HTML}{6B4C9A}
+\definecolor{warmred}      {HTML}{D1495B}
+\definecolor{insightorange}{HTML}{E67E22}
+\definecolor{remarkgray}   {HTML}{7F8C8D}
+\definecolor{tableheadbg}  {HTML}{F4EEEF}
+\definecolor{tablestripebg}{HTML}{FBF8F9}
+\definecolor{tableaccentbg}{HTML}{F9EAEE}
+\definecolor{tableaccentrule}{HTML}{D9B6BC}
+\definecolor{tableline}    {HTML}{DDD4D7}
+\definecolor{liftpositive} {HTML}{2E7D5C}
+\definecolor{liftnegative} {HTML}{B23A48}
+% Figure colours (pipeline + result plots).
+\definecolor{phaseA}       {HTML}{6F9AD3}
+\definecolor{phaseB}       {HTML}{B07A8F}
+\definecolor{gptblue}      {HTML}{5F86C2}
+\definecolor{qwenmint}     {HTML}{4FA58C}
+\definecolor{salmon}       {HTML}{D9735A}
+\definecolor{dimA}         {HTML}{F0A04B}
+\definecolor{dimB}         {HTML}{E2B12F}
+\definecolor{dimC}         {HTML}{4F9BD9}
+\definecolor{dimD}         {HTML}{3C5BA9}
+\definecolor{dimE}         {HTML}{A066C2}
+\definecolor{dimF}         {HTML}{D1495B}
+
+% Hyperlink colours (matched to the original style).
+\hypersetup{
+    colorlinks  = true,
+    citecolor   = steelblue,
+    linkcolor   = mutedpurple,
+    urlcolor    = warmred,
+    pdfborder   = {0 0 0}
+}
+
+% =============================================================================
+%  Section / heading typography — classical journal feel
+% =============================================================================
+\titleformat{\section}
+  {\large\bfseries\scshape\color{narrareddeep}}
+  {\thesection}{0.6em}{#1}[]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{narrareddeep}}
+  {\thesubsection}{0.55em}{\itshape #1}[]
+\titleformat{\subsubsection}
+  {\normalsize\itshape\color{narrareddeep}}
+  {\thesubsubsection}{0.5em}{#1}[]
+\titlespacing*{\section}      {0pt}{2.6ex plus 0.8ex minus 0.4ex}{1.0ex}
+\titlespacing*{\subsection}   {0pt}{2.0ex plus 0.7ex minus 0.3ex}{0.7ex}
+\titlespacing*{\subsubsection}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{0.5ex}
+
+% Caption styling
+\captionsetup{font={small},
+              labelfont={bf},
+              labelsep=period,
+              skip=4pt}
+
+% =============================================================================
+%  Author / affiliation typography (authblk)
+% =============================================================================
+\setcounter{Maxaffil}{0}
+\setlength{\affilsep}{0.3em}
+\renewcommand\Authfont{\normalsize}
+\renewcommand\Affilfont{\small\itshape\color{black!75}}
+\makeatletter
+\renewcommand\AB@affilsepx{,\enspace\protect\Affilfont}
+\makeatother
+\renewcommand\Authands{ \textnormal{and} }
+
+% =============================================================================
+%  Page headers / footers — minimal, journal-like
+% =============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+% Short running-head title used in the page header (edit as needed).
+\newcommand{\runningtitle}{SkillRC}
+\fancyhead[L]{\footnotesize\itshape\color{black!60}\runningtitle}
+\fancyhead[R]{\footnotesize\color{black!60}\textsc{Preprint}}
+\fancyfoot[C]{\footnotesize\color{black!60}\thepage}
+
+\fancypagestyle{firststyle}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\footnotesize\color{black!60}\thepage}%
+}
+
+% =============================================================================
+%  Convenience macros (recreated from the original neurips file)
+% =============================================================================
+\newcommand{\method}{\textsc{SkillRC}\xspace}
+\newcommand{\memoharness}{\textsc{MemoHarness}\xspace}
+\newcommand{\gptm}{\texttt{GPT-4o-mini}\xspace}
+\newcommand{\qwenm}{\texttt{Qwen3-8B}\xspace}
+\newcommand{\ci}[2]{$[#1,\,#2]$}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\cf}{\textit{cf.}\xspace}
+\newcommand{\wrt}{w.r.t.\xspace}
+\newcommand{\narraemph}[1]{\textcolor{narrareddeep}{\textbf{#1}}}
+\newcommand{\methodlabel}[1]{\noindent\textbf{\textcolor{narrareddeep}{#1}}}
+\newcommand{\tablehead}[1]{\textbf{\textcolor{narrareddeep}{#1}}}
+\newcommand{\dimtag}[1]{{\setlength{\fboxsep}{1.6pt}\colorbox{tableheadbg}{\scriptsize\textsf{\textbf{\textcolor{narrareddeep}{#1}}}}}}
+\newcommand{\dimcell}[3]{%
+  \begin{tabular}[c]{@{}c@{\hspace{0.38em}}l@{}}
+    \dimtag{#1} & \textbf{\textcolor{narrareddeep}{#2}}\\[-1pt]
+                 & \textbf{\textcolor{narrareddeep}{#3}}
+  \end{tabular}%
+}
+\newcommand{\dimcellone}[2]{%
+  \begin{tabular}[c]{@{}c@{\hspace{0.38em}}l@{}}
+    \dimtag{#1} & \textbf{\textcolor{narrareddeep}{#2}}
+  \end{tabular}%
+}
+\newcommand{\stagecell}[2]{%
+  \begin{tabular}[c]{@{}c@{}}
+    \textcolor{steelblue}{#1}\\[-1pt]
+    \textcolor{steelblue}{#2}
+  \end{tabular}%
+}
+\newcommand{\stagecellone}[1]{\textcolor{steelblue}{#1}}
+\newcommand{\defop}[2]{\textit{\textcolor{black!82}{#1}}\par\vspace{1pt}{\ttfamily\footnotesize\textcolor{warmred}{#2}}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\raggedright\arraybackslash}m{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+\newcommand{\logo}[1]{\raisebox{-0.20em}{\includegraphics[height=1.05em]{figures/logos/#1.png}}}
+
+% Theorem-like environments
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+
+% Insight callout box (kept from original)
+\newtcolorbox{insightbox}[1][]{%
+  enhanced, breakable,
+  colback=white,
+  colframe=white,
+  borderline west={2.5pt}{0pt}{insightorange},
+  sharp corners, boxrule=0pt,
+  fonttitle=\bfseries\color{insightorange},
+  attach title to upper={.\quad},
+  title={Insight},
+  #1
+}
+
+% Observation callout: used where the harness edit does not improve a stack.
+\newtcolorbox{observationbox}[1][]{%
+  enhanced, breakable,
+  colback=white,
+  colframe=white,
+  borderline west={2.5pt}{0pt}{mutedpurple},
+  sharp corners, boxrule=0pt,
+  fonttitle=\bfseries\color{mutedpurple},
+  attach title to upper={.\quad},
+  title={Observation},
+  #1
+}
+
+% Prompt listing box: verbatim prompt text in the paper's palette.
+\newtcblisting{promptbox}[1]{%
+  enhanced, breakable, listing only,
+  colback=tablestripebg, colframe=tableaccentrule, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=3pt, bottom=3pt,
+  title={\small\bfseries\color{narrareddeep}#1}, coltitle=narrareddeep,
+  colbacktitle=tableheadbg, toptitle=2pt, bottomtitle=2pt,
+  listing options={basicstyle=\ttfamily\scriptsize, breaklines=true,
+    breakatwhitespace=true, columns=fullflexible, keepspaces=true,
+    showstringspaces=false, upquote=true,
+    literate={—}{{---}}1 {–}{{--}}1}
+}
+
+% Case-study card: coloured left rule per task type, title in the paper palette.
+\newtcolorbox{casebox}[2][]{%
+  enhanced, breakable,
+  colback=white, colframe=white,
+  borderline west={2.5pt}{0pt}{#1},
+  sharp corners, boxrule=0pt, left=8pt, right=4pt, top=2pt, bottom=2pt,
+  fonttitle=\bfseries\color{narrareddeep}, coltitle=narrareddeep,
+  colbacktitle=white, title={#2}, toptitle=1pt, bottomtitle=0pt
+}
+
+% Research-question chip (kept from original)
+\newtcbox{\rqtag}[1][]{%
+  on line,
+  colback=tableheadbg,
+  colframe=tableaccentrule,
+  boxrule=0.4pt,
+  arc=2pt,
+  left=2.5pt,right=2.5pt,top=1pt,bottom=1pt,
+  boxsep=0pt,
+  fontupper=\bfseries\footnotesize\color{narrareddeep},
+  #1
+}
+
+% =============================================================================
+%  Title / authors / abstract / classical cover header
+% =============================================================================
+\title{\method: Is It the Skill or the Stack?\\Auditing Experience Memory in Agent Harnesses}
+
+% --- Author block ------------------------------------------------------------
+% Use a symbol for the correspondence footnote so it does not collide with the
+% affiliation marker.
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\author[1]{Yiwen Lu\thanks{Correspondence: \texttt{ylu37@nd.edu}.}}
+\affil[1]{University of Notre Dame}
+
+\newcommand{\equalcontributionnote}{}
+
+% --- Customisable cover-page fields ------------------------------------------
+\newcommand{\paperstatus}{Preprint. Under review.}
+% Repository URL printed on the cover; leave empty until the repository is public.
+\newcommand{\paperurl}{https://eveneureka.github.io/SkillRC/}
+
+% --- Abstract content lives in \theabstract; consumed by \makecoverpage ------
+\newcommand{\theabstract}{%
+Agent harnesses increasingly learn from experience: past executions are distilled into insights, skills, or playbooks that are injected back into the context of a frozen model. Such memories are usually credited by comparing an agent with the memory to one without it. That comparison cannot tell whether the gain carries over to a different executor, or whether it comes from what the memory says rather than from simply adding context. We introduce \method, a reality check (RC) for agent skills. \method treats the memory as a controlled intervention on a fixed agent and asks two questions in turn: does the memory's gain transfer across executors, and does it survive a placebo that keeps the memory's rules, order, and length but scrambles its words? On ALFWorld, a compact skill memory clearly improves \gptm but not \qwenm. The placebo reproduces most of this difference, so the gap reflects how each executor responds to added context more than how it uses the skills. Task-level effects vary widely, larger memories are not better, and the same kind of memory lowers reward on WebShop. Experience-driven harnesses should report cross-executor effects and content controls alongside their headline gains.%
+}
+
+% --- Classical centered title / authors / colored abstract card -------------
+\makeatletter
+\newcommand{\makecoverpage}{%
+  \thispagestyle{firststyle}%
+  \begin{center}
+    {\bfseries\fontsize{18pt}{22pt}\selectfont\color{narrareddeep}\@title\par}
+    \vspace{0.95em}
+    {\@author\par}
+    \vspace{0.55em}
+    {\footnotesize\itshape\color{black!70}\paperstatus\par}
+    \vspace{0.25em}
+    \ifx\paperurl\@empty\else{\small\href{\paperurl}{\paperurl}\par}\fi
+    \ifx\equalcontributionnote\@empty\else
+      \vspace{0.30em}%
+      {\footnotesize\color{black!70}\equalcontributionnote\par}%
+    \fi
+  \end{center}
+
+  \vspace{1.1em}
+
+  % --- Abstract card: pink-cream tint + thick deep-red left bar -------------
+  \begin{tcolorbox}[
+      enhanced, breakable,
+      width=\textwidth,
+      colback=tableheadbg,
+      colframe=tableheadbg,
+      boxrule=0pt,
+      sharp corners,
+      left=14pt, right=14pt, top=10pt, bottom=10pt,
+  ]
+    {\bfseries\color{narrareddeep}\large Abstract}\par
+    \vspace{0.45em}
+    {\small\theabstract\par}
+  \end{tcolorbox}
+
+  \vspace{1.2em}
+}
+\makeatother
+
+% =============================================================================
+%  Document
+% =============================================================================
+\begin{document}
+
+\makecoverpage
+
+% Restore arabic footnote numbering for the body (the cover page used
+% \fnsymbol so the corresponding-author \thanks marker renders as ``*'').
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\setcounter{footnote}{0}
+
+\input{preprint_body}
+
+\end{document}

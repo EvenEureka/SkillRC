@@ -1,0 +1,105 @@
+{
+  "run_id": "R008_nomem_s3",
+  "config": {
+    "run_id": "R008_nomem_s3",
+    "milestone": "M0",
+    "out_dir": "results",
+    "env": "alfworld",
+    "task_ids": null,
+    "max_tasks": null,
+    "max_steps": 30,
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "temperature": 0.0,
+    "max_completion_tokens": 256,
+    "base_url": null,
+    "request_timeout": 120.0,
+    "max_retries": 5,
+    "n_fewshot": 2,
+    "system_prompt_key": "default",
+    "prompt_style": "react_alfworld",
+    "inject_admissible": true,
+    "fewshot_file": "configs/alfworld_react_fewshot.json",
+    "memory": "none",
+    "memory_k": 20,
+    "token_budget": null,
+    "demo_pool": null,
+    "retriever": "lexical",
+    "embed_model": "text-embedding-3-small",
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "summary": {
+    "n": 402,
+    "n_ok": 402,
+    "n_error": 0,
+    "success_rate": 0.5398009950248757,
+    "reward": {
+      "mean": 0.5398009950248757,
+      "std": 0.49841336337926356
+    },
+    "steps": {
+      "mean": 20.308457711442784,
+      "std": 10.374307055176136
+    },
+    "prompt_tokens": {
+      "mean": 56283.44278606965,
+      "std": 31870.22830943454
+    },
+    "completion_tokens": {
+      "mean": 405.53731343283584,
+      "std": 226.0463120134277
+    },
+    "memory_tokens": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "total_cost_usd": 2.1491567999999974,
+    "by_task_type": {
+      "clean": {
+        "n": 93,
+        "success_rate": 0.45161290322580644
+      },
+      "cool": {
+        "n": 63,
+        "success_rate": 0.8571428571428571
+      },
+      "examine": {
+        "n": 54,
+        "success_rate": 0.6481481481481481
+      },
+      "heat": {
+        "n": 69,
+        "success_rate": 0.13043478260869565
+      },
+      "put": {
+        "n": 72,
+        "success_rate": 0.8333333333333334
+      },
+      "puttwo": {
+        "n": 51,
+        "success_rate": 0.3333333333333333
+      }
+    },
+    "by_seed": {
+      "0": 0.5895522388059702,
+      "1": 0.5373134328358209,
+      "2": 0.4925373134328358
+    },
+    "memory": {
+      "kind": "none",
+      "n_items": 0,
+      "n_tokens": 0
+    }
+  },
+  "usage": {
+    "calls": 10059,
+    "prompt_tokens": 22625944,
+    "completion_tokens": 163026,
+    "cached_tokens": 17900672,
+    "cost_usd": 2.1491567999999974
+  }
+}

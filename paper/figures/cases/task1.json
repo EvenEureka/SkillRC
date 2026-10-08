@@ -1,0 +1,388 @@
+{
+ "case": "task1",
+ "trial": "pick_heat_then_place_in_recep-Egg-None-GarbageCan-10/trial_T20190908_113432_673307",
+ "floor_plan": "FloorPlan10",
+ "goal": "heat some egg and put it in garbagecan.",
+ "receptacles": {
+  "Cabinet": 6,
+  "CoffeeMachine": 1,
+  "CounterTop": 3,
+  "Drawer": 3,
+  "Fridge": 1,
+  "GarbageCan": 1,
+  "Microwave": 1,
+  "Shelf": 3,
+  "Sink": 1,
+  "StoveBurner": 4,
+  "Toaster": 1
+ },
+ "walkthrough": [
+  "go to countertop_bar__minus_01_dot_24_bar__plus_00_dot_97_bar__minus_00_dot_64",
+  "take egg_bar__minus_01_dot_36_bar__plus_00_dot_97_bar__minus_00_dot_91 from countertop_bar__minus_01_dot_24_bar__plus_00_dot_97_bar__minus_00_dot_64",
+  "go to microwave_bar__plus_01_dot_04_bar__plus_01_dot_68_bar__minus_01_dot_30",
+  "heat egg_bar__minus_01_dot_36_bar__plus_00_dot_97_bar__minus_00_dot_91 with microwave_bar__plus_01_dot_04_bar__plus_01_dot_68_bar__minus_01_dot_30",
+  "go to garbagecan_bar__minus_00_dot_95_bar__plus_00_dot_00_bar__plus_00_dot_58",
+  "move egg_bar__minus_01_dot_36_bar__plus_00_dot_97_bar__minus_00_dot_91 to garbagecan_bar__minus_00_dot_95_bar__plus_00_dot_00_bar__plus_00_dot_58"
+ ],
+ "roles": {
+  "Egg|-01.36|+00.97|-00.91": "object",
+  "CounterTop|-01.24|+00.97|-00.64": "start",
+  "Microwave|+01.04|+01.68|-01.30": "appliance",
+  "GarbageCan|-00.95|+00.00|+00.58": "dest"
+ },
+ "views": [
+  {
+   "file": "task1_view1.jpg",
+   "size": [
+    1200,
+    900
+   ],
+   "boxes": {
+    "GarbageCan|-00.95|+00.00|+00.58": [
+     433,
+     703,
+     705,
+     900
+    ],
+    "Cabinet|+00.65|+00.48|+00.24": [
+     0,
+     678,
+     69,
+     814
+    ],
+    "CounterTop|-01.24|+00.97|-00.64": [
+     286,
+     319,
+     861,
+     590
+    ],
+    "Drawer|+00.64|+00.27|-00.65": [
+     197,
+     464,
+     283,
+     573
+    ],
+    "Drawer|+00.64|+00.55|-00.65": [
+     173,
+     426,
+     258,
+     510
+    ],
+    "CounterTop|+00.93|+00.95|-00.21": [
+     0,
+     368,
+     234,
+     482
+    ],
+    "Drawer|+00.64|+00.76|-00.65": [
+     148,
+     385,
+     240,
+     467
+    ],
+    "Cabinet|+00.65|+00.48|-01.72": [
+     325,
+     307,
+     398,
+     438
+    ],
+    "Egg|-01.36|+00.97|-00.91": [
+     674,
+     342,
+     689,
+     361
+    ],
+    "StoveBurner|+01.08|+00.92|-01.10": [
+     128,
+     342,
+     178,
+     356
+    ],
+    "StoveBurner|+00.84|+00.92|-01.10": [
+     172,
+     339,
+     249,
+     356
+    ],
+    "StoveBurner|+01.08|+00.92|-01.50": [
+     191,
+     319,
+     256,
+     332
+    ],
+    "StoveBurner|+00.84|+00.92|-01.50": [
+     235,
+     319,
+     297,
+     332
+    ],
+    "CounterTop|+00.93|+00.95|-02.05": [
+     251,
+     298,
+     378,
+     321
+    ],
+    "CoffeeMachine|+01.02|+00.90|-02.18": [
+     240,
+     235,
+     340,
+     311
+    ],
+    "Cabinet|+00.95|+02.16|-02.38": [
+     171,
+     1,
+     298,
+     181
+    ],
+    "Cabinet|+00.95|+02.16|-00.76": [
+     0,
+     143,
+     16,
+     173
+    ],
+    "Microwave|+01.04|+01.68|-01.30": [
+     0,
+     34,
+     209,
+     165
+    ],
+    "Cabinet|+00.95|+02.44|-01.78": [
+     71,
+     1,
+     184,
+     40
+    ]
+   },
+   "map_uv": [
+    382.5,
+    330.0
+   ],
+   "rotation": 180,
+   "horizon": 30
+  }
+ ],
+ "map": {
+  "file": "task1_map.jpg",
+  "size": [
+   808,
+   900
+  ],
+  "px_per_m": 150.0,
+  "objects": [
+   {
+    "objectId": "StoveBurner|+00.84|+00.92|-01.10",
+    "type": "StoveBurner",
+    "uv": [
+     658.8,
+     644.8
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.65|+00.48|+00.24",
+    "type": "Cabinet",
+    "uv": [
+     629.8,
+     443.3
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+01.08|+00.92|-01.50",
+    "type": "StoveBurner",
+    "uv": [
+     694.1,
+     705.6
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+00.84|+00.92|-01.50",
+    "type": "StoveBurner",
+    "uv": [
+     658.8,
+     705.6
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.76|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-02.38",
+    "type": "Cabinet",
+    "uv": [
+     674.9,
+     836.4
+    ]
+   },
+   {
+    "objectId": "CounterTop|-01.24|+00.97|-00.64",
+    "type": "CounterTop",
+    "uv": [
+     346.7,
+     576.5
+    ]
+   },
+   {
+    "objectId": "CounterTop|+00.93|+00.95|-00.21",
+    "type": "CounterTop",
+    "uv": [
+     672.3,
+     511.2
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+01.08|+00.92|-01.10",
+    "type": "StoveBurner",
+    "uv": [
+     694.1,
+     644.8
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.27|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.55|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.65|+00.48|-01.72",
+    "type": "Cabinet",
+    "uv": [
+     629.8,
+     737.2
+    ]
+   },
+   {
+    "objectId": "CounterTop|+00.93|+00.95|-02.05",
+    "type": "CounterTop",
+    "uv": [
+     672.3,
+     787.7
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.44|-01.78",
+    "type": "Cabinet",
+    "uv": [
+     674.8,
+     747.0
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-00.14",
+    "type": "Cabinet",
+    "uv": [
+     674.8,
+     501.0
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-00.76",
+    "type": "Cabinet",
+    "uv": [
+     674.9,
+     593.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.87|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.2,
+     72.1
+    ]
+   },
+   {
+    "objectId": "Toaster|+00.98|+00.90|+00.33",
+    "type": "Toaster",
+    "uv": [
+     680.1,
+     430.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.54|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.1,
+     72.2
+    ]
+   },
+   {
+    "objectId": "CoffeeMachine|+01.02|+00.90|-02.18",
+    "type": "CoffeeMachine",
+    "uv": [
+     685.2,
+     806.6
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.16|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.1,
+     72.2
+    ]
+   },
+   {
+    "objectId": "GarbageCan|-00.95|+00.00|+00.58",
+    "type": "GarbageCan",
+    "uv": [
+     390.5,
+     393.6
+    ]
+   },
+   {
+    "objectId": "Egg|-01.36|+00.97|-00.91",
+    "type": "Egg",
+    "uv": [
+     329.2,
+     615.8
+    ],
+    "box": [
+     323.6,
+     611.4,
+     334.7,
+     620.2
+    ]
+   },
+   {
+    "objectId": "Sink|-00.70|+00.93|-00.65|SinkBasin",
+    "type": "SinkBasin",
+    "uv": [
+     427.8,
+     577.1
+    ]
+   },
+   {
+    "objectId": "Microwave|+01.04|+01.68|-01.30",
+    "type": "Microwave",
+    "uv": [
+     688.9,
+     674.4
+    ]
+   },
+   {
+    "objectId": "Fridge|+00.97|+00.00|+01.25",
+    "type": "Fridge",
+    "uv": [
+     677.4,
+     291.9
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,34 @@
+#!/bin/bash
+#$ -N qwen_mondrian
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+set -uo pipefail
+kinit -R 2>/dev/null || true; aklog || true
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"; mkdir -p logs
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+[ -f "$HOME/.skillrc.env" ] && { set -a; source "$HOME/.skillrc.env"; set +a; }
+VLLM=${VLLM_ENV}
+export HF_HOME=${HF_HOME} HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export CUDA_HOME=$VLLM/lib/python3.11/site-packages/nvidia/cu13
+export PATH=$VLLM/bin:$CUDA_HOME/bin:$PATH
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN VLLM_USE_FLASHINFER_SAMPLER=0
+JOB=${JOB_ID:-$$}; PORT=$((8000 + JOB % 1000)); SRVLOG="logs/vllm_server.$JOB.log"
+echo "host=$(hostname) PORT=$PORT"; nvidia-smi -L 2>/dev/null | head -1
+"$VLLM/bin/vllm" serve Qwen/Qwen3-8B --served-model-name qwen3-8b --port $PORT \
+    --gpu-memory-utilization 0.85 --max-model-len 16384 --enforce-eager > "$SRVLOG" 2>&1 &
+SRV_PID=$!
+for i in $(seq 1 144); do
+  curl -sf http://localhost:$PORT/health >/dev/null 2>&1 && { echo "[serve] READY ~$((i*5))s"; break; }
+  kill -0 $SRV_PID 2>/dev/null || { echo "[serve] died"; tail -30 "$SRVLOG"; exit 1; }
+  sleep 5
+done
+PY=${SKILLRC_PY}
+"$PY" -m skillrc.runner --config configs/qwen_mondrian_s12.yaml --override base_url=http://localhost:$PORT/v1 || echo "mondrian FAILED"
+"$PY" -m skillrc.runner --config configs/qwen_cap5_s12.yaml     --override base_url=http://localhost:$PORT/v1 || echo "cap5 FAILED"
+echo "[serve] shutdown"; kill $SRV_PID 2>/dev/null; sleep 3; kill -9 $SRV_PID 2>/dev/null || true
+echo "[mondrian campaign done]"

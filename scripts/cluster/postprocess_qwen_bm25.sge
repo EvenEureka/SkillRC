@@ -1,0 +1,51 @@
+#!/bin/bash
+#$ -N qwen_bm25_post
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 1
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"
+
+PY=${SKILLRC_PY}
+"$PY" - <<'PY'
+import json
+from pathlib import Path
+
+for run_id in ["Q_skillos_bm25_s3", "Q_expel_bm25_s3"]:
+    summary_path = Path(f"results/{run_id}.summary.json")
+    episodes_path = Path(f"results/{run_id}.episodes.jsonl")
+    if not summary_path.exists() or not episodes_path.exists():
+        raise SystemExit(f"missing completed artifacts for {run_id}")
+    summary = json.loads(summary_path.read_text())["summary"]
+    rows = sum(1 for line in episodes_path.open() if line.strip())
+    if rows != 402 or summary.get("n") != 402 or summary.get("n_error") != 0:
+        raise SystemExit(
+            f"invalid {run_id}: rows={rows} n={summary.get('n')} errors={summary.get('n_error')}"
+        )
+    print(f"validated {run_id}: 402/402, zero errors")
+PY
+
+"$PY" scripts/export_papero_assets.py
+"$PY" scripts/render_papero_figures.py
+"$PY" scripts/decide_qwen_bm25.py \
+  --output ../ARR/PaperO_assets/qwen_bm25_decision.json
+
+"$PY" - <<'PY'
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+figure = Path("../ARR/PaperO_figures/figure4_executor_transfer.svg")
+ET.parse(figure)
+print(f"validated {figure}")
+PY
+
+echo "[qwen bm25 postprocess done]"

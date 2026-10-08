@@ -1,0 +1,76 @@
+#!/bin/bash
+#$ -N po_pl_qwen
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"
+mkdir -p logs
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+
+VLLM=${VLLM_ENV}
+export HF_HOME=${HF_HOME}
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export CUDA_HOME=$VLLM/lib/python3.11/site-packages/nvidia/cu13
+export PATH=$VLLM/bin:$CUDA_HOME/bin:$PATH
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN
+export VLLM_USE_FLASHINFER_SAMPLER=0
+
+for output in results/PAPERO_PLACEBO_QWEN.episodes.jsonl results/PAPERO_PLACEBO_QWEN.summary.json; do
+  if [ -e "$output" ]; then
+    echo "refusing to overwrite existing output: $output"
+    exit 2
+  fi
+done
+
+PYTHONPATH=. ${SKILLRC_PY} scripts/build_order_placebo.py
+
+JOB=${JOB_ID:-$$}
+PORT=$((9000 + JOB % 1000))
+SRVLOG="logs/vllm_placebo.$JOB.log"
+"$VLLM/bin/vllm" serve Qwen/Qwen3-8B \
+  --served-model-name qwen3-8b \
+  --port "$PORT" \
+  --gpu-memory-utilization 0.85 \
+  --max-model-len 16384 \
+  --enforce-eager > "$SRVLOG" 2>&1 &
+SRV_PID=$!
+
+cleanup() {
+  kill "$SRV_PID" 2>/dev/null || true
+  sleep 3
+  kill -9 "$SRV_PID" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+ready=0
+for i in $(seq 1 144); do
+  if curl -sf "http://localhost:$PORT/health" >/dev/null 2>&1; then
+    echo "[serve] READY ~$((i*5))s"
+    ready=1
+    break
+  fi
+  if ! kill -0 "$SRV_PID" 2>/dev/null; then
+    tail -30 "$SRVLOG"
+    exit 1
+  fi
+  sleep 5
+done
+if [ "$ready" -ne 1 ]; then
+  tail -40 "$SRVLOG"
+  exit 1
+fi
+
+PY=${SKILLRC_PY}
+"$PY" -m skillrc.runner \
+  --config configs/papero_placebo_qwen.yaml \
+  --override base_url=http://localhost:$PORT/v1

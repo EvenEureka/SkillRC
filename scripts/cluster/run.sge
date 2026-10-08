@@ -1,0 +1,37 @@
+#!/bin/bash
+# Reusable eval job for tarikan_lab. Parameterize via qsub -v (comma-separated, no spaces):
+#   qsub -v CONFIG=configs/m0_alfworld.yaml,RUN_ID=R001,MAXTASKS=6,SEEDS=0 scripts/run.sge
+#   qsub -v CONFIG=configs/m1_confounds_alfworld.yaml,RUN_ID=R003_random_k,MEMORY=random_k,BUDGET=2048,SEEDS=0,1,2 scripts/run.sge
+#$ -N skillrc_run
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -wd ${SKILLRC_ROOT}
+#$ -o logs/
+#$ -e logs/
+set -uo pipefail
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+aklog >/dev/null 2>&1 && echo "aklog OK"
+[ -f "$HOME/.skillrc.env" ] && { set -a; . "$HOME/.skillrc.env"; set +a; }
+
+: "${CONFIG:?set CONFIG=configs/....yaml}"
+# All key=value overrides MUST go under a SINGLE --override flag: runner's
+# --override is nargs="*", so multiple --override flags would keep only the last.
+KV=()
+[ "${RUN_ID:-}" ]    && KV+=("run_id=$RUN_ID")
+[ "${MEMORY:-}" ]    && KV+=("memory=$MEMORY")
+[ "${BUDGET:-}" ]    && KV+=("token_budget=$BUDGET")
+[ "${MODEL:-}" ]     && KV+=("model=$MODEL")
+[ "${RETRIEVER:-}" ] && KV+=("retriever=$RETRIEVER")
+[ "${POOL:-}" ]      && KV+=("demo_pool=$POOL")
+OVR=()
+[ ${#KV[@]} -gt 0 ] && OVR=(--override "${KV[@]}")
+ARGS=()
+[ "${MAXTASKS:-}" ] && ARGS+=(--max-tasks "$MAXTASKS")
+[ "${SEEDS:-}" ]    && ARGS+=(--seeds ${SEEDS//[-,]/ })   # SEEDS=0-1-2 (dashes; -v forbids commas)
+
+echo "host=$(hostname) CONFIG=$CONFIG RUN_ID=${RUN_ID:-<cfg>} MEMORY=${MEMORY:-<cfg>} SEEDS=${SEEDS:-<cfg>}"
+"$PY" -m skillrc.runner --config "$CONFIG" "${OVR[@]}" "${ARGS[@]}"
+echo "SKILLRC_RUN_DONE"

@@ -1,0 +1,295 @@
+{
+ "case": "task0",
+ "trial": "pick_and_place_simple-Mug-None-Desk-308/trial_T20190908_125200_737896",
+ "floor_plan": "FloorPlan308",
+ "goal": "put a mug in desk.",
+ "receptacles": {
+  "Bed": 1,
+  "Desk": 2,
+  "Drawer": 6,
+  "GarbageCan": 1,
+  "LaundryHamper": 1,
+  "Safe": 1,
+  "Shelf": 6
+ },
+ "walkthrough": [
+  "go to shelf_bar__minus_01_dot_96_bar__plus_01_dot_34_bar__plus_00_dot_41",
+  "take mug_bar__minus_02_dot_05_bar__plus_01_dot_35_bar__plus_00_dot_45 from shelf_bar__minus_01_dot_96_bar__plus_01_dot_34_bar__plus_00_dot_41",
+  "go to desk_bar__minus_00_dot_57_bar__plus_00_dot_00_bar__minus_01_dot_35",
+  "move mug_bar__minus_02_dot_05_bar__plus_01_dot_35_bar__plus_00_dot_45 to desk_bar__minus_00_dot_57_bar__plus_00_dot_00_bar__minus_01_dot_35"
+ ],
+ "roles": {
+  "Mug|-02.05|+01.35|+00.45": "object",
+  "Shelf|-01.96|+01.34|+00.41": "start",
+  "Desk|-00.57|+00.00|-01.35": "dest"
+ },
+ "views": [
+  {
+   "file": "task0_view1.jpg",
+   "size": [
+    1200,
+    900
+   ],
+   "boxes": {
+    "Desk|-01.58|+00.02|+00.67": [
+     617,
+     491,
+     1199,
+     900
+    ],
+    "Drawer|-02.07|+00.21|+00.73": [
+     943,
+     879,
+     1199,
+     900
+    ],
+    "Drawer|-02.07|+00.49|+00.73": [
+     966,
+     816,
+     1199,
+     878
+    ],
+    "Bed|+01.23|+00.00|+01.67": [
+     0,
+     590,
+     197,
+     820
+    ],
+    "Drawer|-02.07|+00.74|+00.73": [
+     1032,
+     765,
+     1199,
+     815
+    ],
+    "GarbageCan|-00.75|+00.00|-00.34": [
+     490,
+     485,
+     590,
+     591
+    ],
+    "Shelf|-01.29|+00.87|+00.41": [
+     636,
+     385,
+     908,
+     580
+    ],
+    "Shelf|-01.96|+00.87|+00.41": [
+     847,
+     385,
+     1199,
+     580
+    ],
+    "Desk|-00.57|+00.00|-01.35": [
+     437,
+     314,
+     597,
+     547
+    ],
+    "Shelf|-01.29|+01.34|+00.41": [
+     648,
+     88,
+     1018,
+     364
+    ],
+    "Shelf|-01.96|+01.34|+00.41": [
+     929,
+     88,
+     1199,
+     364
+    ],
+    "Mug|-02.05|+01.35|+00.45": [
+     1141,
+     277,
+     1199,
+     348
+    ],
+    "Shelf|-01.29|+01.72|+00.41": [
+     905,
+     1,
+     1050,
+     51
+    ],
+    "Shelf|-01.96|+01.72|+00.41": [
+     1121,
+     1,
+     1199,
+     51
+    ]
+   },
+   "map_uv": [
+    286.7,
+    298.5
+   ],
+   "rotation": 180,
+   "horizon": 30
+  }
+ ],
+ "map": {
+  "file": "task0_map.jpg",
+  "size": [
+   851,
+   870
+  ],
+  "px_per_m": 152.54,
+  "objects": [
+   {
+    "objectId": "Drawer|-02.07|+00.74|+00.73",
+    "type": "Drawer",
+    "uv": [
+     122.8,
+     378.2
+    ]
+   },
+   {
+    "objectId": "Desk|-01.58|+00.02|+00.67",
+    "type": "Desk",
+    "uv": [
+     198.1,
+     387.5
+    ]
+   },
+   {
+    "objectId": "Drawer|-00.51|+00.47|-00.85",
+    "type": "Drawer",
+    "uv": [
+     362.2,
+     619.3
+    ]
+   },
+   {
+    "objectId": "Drawer|-02.07|+00.49|+00.73",
+    "type": "Drawer",
+    "uv": [
+     122.8,
+     378.2
+    ]
+   },
+   {
+    "objectId": "Desk|-00.57|+00.00|-01.35",
+    "type": "Desk",
+    "uv": [
+     352.9,
+     694.6
+    ]
+   },
+   {
+    "objectId": "LaundryHamper|+00.16|+00.01|+02.64",
+    "type": "LaundryHamper",
+    "uv": [
+     464.1,
+     87.0
+    ]
+   },
+   {
+    "objectId": "Drawer|-00.51|+00.19|-00.85",
+    "type": "Drawer",
+    "uv": [
+     362.2,
+     619.3
+    ]
+   },
+   {
+    "objectId": "Bed|+01.23|+00.00|+01.67",
+    "type": "Bed",
+    "uv": [
+     626.4,
+     234.4
+    ]
+   },
+   {
+    "objectId": "Drawer|-02.07|+00.21|+00.73",
+    "type": "Drawer",
+    "uv": [
+     122.8,
+     378.2
+    ]
+   },
+   {
+    "objectId": "Drawer|-00.51|+00.72|-00.85",
+    "type": "Drawer",
+    "uv": [
+     362.2,
+     619.3
+    ]
+   },
+   {
+    "objectId": "GarbageCan|-00.75|+00.00|-00.34",
+    "type": "GarbageCan",
+    "uv": [
+     325.2,
+     540.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+01.72|+00.41",
+    "type": "Shelf",
+    "uv": [
+     241.9,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+01.34|+00.41",
+    "type": "Shelf",
+    "uv": [
+     241.9,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.96|+01.72|+00.41",
+    "type": "Shelf",
+    "uv": [
+     141.0,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+00.87|+00.41",
+    "type": "Shelf",
+    "uv": [
+     241.9,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.96|+01.34|+00.41",
+    "type": "Shelf",
+    "uv": [
+     141.0,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.96|+00.87|+00.41",
+    "type": "Shelf",
+    "uv": [
+     141.0,
+     427.0
+    ]
+   },
+   {
+    "objectId": "Safe|-02.18|+00.00|+02.58",
+    "type": "Safe",
+    "uv": [
+     106.1,
+     96.2
+    ]
+   },
+   {
+    "objectId": "Mug|-02.05|+01.35|+00.45",
+    "type": "Mug",
+    "uv": [
+     125.3,
+     420.7
+    ],
+    "box": [
+     114.3,
+     412.0,
+     136.4,
+     429.5
+    ]
+   }
+  ]
+ }
+}

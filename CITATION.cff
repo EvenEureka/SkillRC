@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use SkillRC, please cite it as below."
+title: "SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses"
+type: software
+authors:
+  - family-names: "Lu"
+    given-names: "Yiwen"
+    email: "ylu37@nd.edu"
+    affiliation: "University of Notre Dame"
+license: MIT
+version: 1.0.0
+date-released: 2026-10-08
+repository-code: "https://github.com/EvenEureka/SkillRC"
+url: "https://eveneureka.github.io/SkillRC/"

@@ -1,0 +1,412 @@
+{
+ "case": "task2",
+ "trial": "pick_two_obj_and_place-Pillow-None-Sofa-219/trial_T20190907_163327_486300",
+ "floor_plan": "FloorPlan219",
+ "goal": "put two pillow in sofa.",
+ "receptacles": {
+  "ArmChair": 1,
+  "Cabinet": 4,
+  "Drawer": 5,
+  "Dresser": 1,
+  "GarbageCan": 1,
+  "Safe": 1,
+  "Shelf": 12,
+  "SideTable": 1,
+  "Sofa": 1
+ },
+ "walkthrough": [
+  "go to armchair_bar__minus_01_dot_84_bar__minus_00_dot_01_bar__plus_04_dot_51",
+  "take pillow_bar__minus_01_dot_58_bar__plus_00_dot_67_bar__plus_04_dot_38 from armchair_bar__minus_01_dot_84_bar__minus_00_dot_01_bar__plus_04_dot_51",
+  "go to sofa_bar__minus_00_dot_74_bar__plus_00_dot_00_bar__plus_02_dot_75",
+  "move pillow_bar__minus_01_dot_58_bar__plus_00_dot_67_bar__plus_04_dot_38 to sofa_bar__minus_00_dot_74_bar__plus_00_dot_00_bar__plus_02_dot_75",
+  "go to armchair_bar__minus_01_dot_84_bar__minus_00_dot_01_bar__plus_04_dot_51",
+  "take pillow_bar__minus_02_dot_03_bar__plus_00_dot_67_bar__plus_04_dot_42 from armchair_bar__minus_01_dot_84_bar__minus_00_dot_01_bar__plus_04_dot_51",
+  "go to sofa_bar__minus_00_dot_74_bar__plus_00_dot_00_bar__plus_02_dot_75",
+  "move pillow_bar__minus_02_dot_03_bar__plus_00_dot_67_bar__plus_04_dot_42 to sofa_bar__minus_00_dot_74_bar__plus_00_dot_00_bar__plus_02_dot_75"
+ ],
+ "roles": {
+  "Pillow|-01.58|+00.67|+04.38": "object",
+  "ArmChair|-01.84|-00.01|+04.51": "start",
+  "Sofa|-00.74|+00.00|+02.75": "dest",
+  "Pillow|-02.03|+00.67|+04.42": "object"
+ },
+ "views": [
+  {
+   "file": "task2_view1.jpg",
+   "size": [
+    1200,
+    900
+   ],
+   "boxes": {
+    "Cabinet|-03.85|+00.56|+04.20": [
+     0,
+     758,
+     152,
+     900
+    ],
+    "Dresser|-03.86|00.00|+04.59": [
+     0,
+     581,
+     343,
+     900
+    ],
+    "Cabinet|-02.70|+00.56|+04.20": [
+     158,
+     641,
+     322,
+     900
+    ],
+    "ArmChair|-01.84|-00.01|+04.51": [
+     210,
+     508,
+     485,
+     853
+    ],
+    "Drawer|-03.57|+01.01|+04.30": [
+     0,
+     689,
+     153,
+     830
+    ],
+    "Safe|-02.30|-00.01|+00.27": [
+     1157,
+     673,
+     1199,
+     797
+    ],
+    "Drawer|-02.99|+01.01|+04.30": [
+     158,
+     599,
+     322,
+     726
+    ],
+    "Shelf|-1.219|1.442|0.043": [
+     971,
+     362,
+     1164,
+     720
+    ],
+    "Shelf|-01.29|+00.07|+00.26": [
+     978,
+     655,
+     1080,
+     710
+    ],
+    "Sofa|-00.74|+00.00|+02.75": [
+     480,
+     499,
+     867,
+     685
+    ],
+    "Shelf|-0.043|1.442|1.068": [
+     796,
+     393,
+     912,
+     634
+    ],
+    "Pillow|-02.03|+00.67|+04.42": [
+     340,
+     613,
+     406,
+     632
+    ],
+    "Shelf|-00.26|+00.07|+01.00": [
+     860,
+     614,
+     908,
+     629
+    ],
+    "Shelf|-01.29|+00.58|+00.22": [
+     990,
+     586,
+     1099,
+     624
+    ],
+    "Pillow|-01.58|+00.67|+04.38": [
+     370,
+     587,
+     443,
+     621
+    ],
+    "Shelf|-00.22|+00.58|+01.00": [
+     866,
+     559,
+     899,
+     566
+    ],
+    "Shelf|-01.29|+01.09|+00.23": [
+     992,
+     518,
+     1100,
+     536
+    ],
+    "Shelf|-00.23|+01.09|+01.00": [
+     815,
+     504,
+     900,
+     508
+    ]
+   },
+   "map_uv": [
+    330.1,
+    320.9
+   ],
+   "rotation": 90,
+   "horizon": 0
+  }
+ ],
+ "map": {
+  "file": "task2_map.jpg",
+  "size": [
+   981,
+   853
+  ],
+  "px_per_m": 142.3,
+  "objects": [
+   {
+    "objectId": "Pillow|-02.03|+00.67|+04.42",
+    "type": "Pillow",
+    "uv": [
+     645.9,
+     154.2
+    ],
+    "box": [
+     613.4,
+     130.0,
+     678.4,
+     178.4
+    ]
+   },
+   {
+    "objectId": "Shelf|-00.23|+01.09|+01.00",
+    "type": "Shelf",
+    "uv": [
+     902.3,
+     641.7
+    ]
+   },
+   {
+    "objectId": "Cabinet|-05.02|+00.56|+04.20",
+    "type": "Cabinet",
+    "uv": [
+     220.4,
+     185.2
+    ]
+   },
+   {
+    "objectId": "Drawer|-02.99|+01.01|+04.30",
+    "type": "Drawer",
+    "uv": [
+     509.3,
+     171.1
+    ]
+   },
+   {
+    "objectId": "Sofa|-00.74|+00.00|+02.75",
+    "type": "Sofa",
+    "uv": [
+     829.9,
+     391.6
+    ]
+   },
+   {
+    "objectId": "Shelf|-00.27|+01.58|+00.99",
+    "type": "Shelf",
+    "uv": [
+     896.0,
+     642.1
+    ]
+   },
+   {
+    "objectId": "Drawer|-04.74|+01.01|+04.30",
+    "type": "Drawer",
+    "uv": [
+     260.4,
+     171.1
+    ]
+   },
+   {
+    "objectId": "Dresser|-03.86|00.00|+04.59",
+    "type": "Dresser",
+    "uv": [
+     385.1,
+     130.4
+    ]
+   },
+   {
+    "objectId": "Cabinet|-02.70|+00.56|+04.20",
+    "type": "Cabinet",
+    "uv": [
+     550.6,
+     185.2
+    ]
+   },
+   {
+    "objectId": "Shelf|-00.22|+00.58|+01.00",
+    "type": "Shelf",
+    "uv": [
+     903.3,
+     641.5
+    ]
+   },
+   {
+    "objectId": "Cabinet|-03.85|+00.56|+04.20",
+    "type": "Cabinet",
+    "uv": [
+     387.0,
+     185.2
+    ]
+   },
+   {
+    "objectId": "Drawer|-05.02|+00.88|+00.37",
+    "type": "Drawer",
+    "uv": [
+     219.9,
+     730.6
+    ]
+   },
+   {
+    "objectId": "Cabinet|-03.87|+00.56|+04.20",
+    "type": "Cabinet",
+    "uv": [
+     384.1,
+     185.2
+    ]
+   },
+   {
+    "objectId": "Safe|-02.30|-00.01|+00.27",
+    "type": "Safe",
+    "uv": [
+     607.9,
+     745.1
+    ]
+   },
+   {
+    "objectId": "ArmChair|-01.84|-00.01|+04.51",
+    "type": "ArmChair",
+    "uv": [
+     673.8,
+     142.3
+    ]
+   },
+   {
+    "objectId": "Drawer|-04.16|+01.01|+04.30",
+    "type": "Drawer",
+    "uv": [
+     343.3,
+     171.1
+    ]
+   },
+   {
+    "objectId": "Drawer|-03.57|+01.01|+04.30",
+    "type": "Drawer",
+    "uv": [
+     427.0,
+     171.1
+    ]
+   },
+   {
+    "objectId": "Shelf|-00.26|+00.07|+01.00",
+    "type": "Shelf",
+    "uv": [
+     897.5,
+     641.4
+    ]
+   },
+   {
+    "objectId": "SideTable|-05.02|-00.01|+00.27",
+    "type": "SideTable",
+    "uv": [
+     219.9,
+     745.2
+    ]
+   },
+   {
+    "objectId": "Pillow|-01.58|+00.67|+04.38",
+    "type": "Pillow",
+    "uv": [
+     709.4,
+     159.5
+    ],
+    "box": [
+     676.9,
+     135.3,
+     741.9,
+     183.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+00.58|+00.22",
+    "type": "Shelf",
+    "uv": [
+     751.3,
+     751.8
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+00.07|+00.26",
+    "type": "Shelf",
+    "uv": [
+     751.5,
+     746.0
+    ]
+   },
+   {
+    "objectId": "Shelf|-05.24|+01.78|+00.07",
+    "type": "Shelf",
+    "uv": [
+     189.5,
+     773.4
+    ]
+   },
+   {
+    "objectId": "Shelf|-05.24|+01.97|+00.09",
+    "type": "Shelf",
+    "uv": [
+     189.4,
+     771.3
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+01.09|+00.23",
+    "type": "Shelf",
+    "uv": [
+     751.2,
+     750.8
+    ]
+   },
+   {
+    "objectId": "Shelf|-05.24|+01.39|+00.09",
+    "type": "Shelf",
+    "uv": [
+     189.0,
+     771.1
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.29|+01.58|+00.27",
+    "type": "Shelf",
+    "uv": [
+     750.8,
+     744.5
+    ]
+   },
+   {
+    "objectId": "Shelf|-05.24|+01.58|+00.07",
+    "type": "Shelf",
+    "uv": [
+     189.1,
+     774.0
+    ]
+   },
+   {
+    "objectId": "GarbageCan|-05.80|+00.00|+04.07",
+    "type": "GarbageCan",
+    "uv": [
+     110.3,
+     203.7
+    ]
+   }
+  ]
+ }
+}

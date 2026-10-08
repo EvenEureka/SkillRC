@@ -1,0 +1,12 @@
+# Zero-cost plumbing check: oracle mock policy on the 3-task MockEnv (no API, no GPU).
+run_id: mock_smoke
+milestone: M0
+out_dir: results
+env: mock
+provider: mock
+model: mock
+temperature: 0.0
+max_steps: 8
+n_fewshot: 0
+memory: none
+seeds: [0]

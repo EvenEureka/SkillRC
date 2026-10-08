@@ -1,0 +1,36 @@
+# Pilot config for the cheapest high-value follow-up:
+# equal-footprint sanity check on ALFWorld.
+#
+# Rationale:
+# - Current strongest result (`expel_bm25`) benefits from a much smaller realized
+#   memory footprint (~645 tokens) than raw/skillos (~1800-2000 tokens).
+# - To isolate "compactness + representation" from sheer footprint, run all memory
+#   variants under a much tighter injected-memory cap.
+#
+# Suggested usage:
+#   qsub -v CONFIG=configs/pilot_equal_footprint_alfworld.yaml,MODEL=gpt-4o-mini,EXTRA="--override memory=expel run_id=PILOT_eqfp_expel_bm25 retriever=bm25 --max-tasks 30 --seeds 0" scripts/qsub_eval.sge
+#   qsub -v CONFIG=configs/pilot_equal_footprint_alfworld.yaml,MODEL=gpt-4o-mini,EXTRA="--override memory=raw_traj run_id=PILOT_eqfp_raw_bm25 retriever=bm25 --max-tasks 30 --seeds 0" scripts/qsub_eval.sge
+#   qsub -v CONFIG=configs/pilot_equal_footprint_alfworld.yaml,MODEL=gpt-4o-mini,EXTRA="--override memory=skillos run_id=PILOT_eqfp_skillos_bm25 retriever=bm25 --max-tasks 30 --seeds 0" scripts/qsub_eval.sge
+#
+# Keep this pilot small. We only need enough signal to test whether the current
+# `expel_bm25` advantage survives after shrinking the raw/skillos context.
+run_id: PILOT_equal_footprint
+milestone: PILOT
+out_dir: results
+env: alfworld
+provider: openai
+model: gpt-4o-mini
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true
+fewshot_file: configs/alfworld_react_fewshot.json
+memory: expel
+memory_k: 20
+token_budget: 640
+demo_pool: data/pools/expel_insights.jsonl
+retriever: bm25
+seeds: [0]
+max_tasks: 30

@@ -1,0 +1,12 @@
+# Core harness (mock tests need only these)
+openai>=1.40
+pyyaml>=6.0
+tiktoken>=0.7
+rank-bm25==0.2.2
+numpy>=1.26
+# Environments (install for real runs)
+alfworld==0.4.2          # ALFWorld text environment; then run `alfworld-download`
+requests>=2.31           # WebShop HTTP adapter
+# Analysis, placebo audit, and figures
+matplotlib>=3.8
+transformers>=4.45       # native Qwen3 tokenizer for the dual-tokenizer placebo audit

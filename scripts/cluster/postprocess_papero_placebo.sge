@@ -1,0 +1,27 @@
+#!/bin/bash
+#$ -N po_pl_post
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 2
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+kinit -R 2>/dev/null || true
+aklog || true
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+cd "$ROOT"
+mkdir -p logs
+
+for run_id in PAPERO_PLACEBO_GPT PAPERO_PLACEBO_QWEN PAPERO_PLACEBO_GPT_S2 PAPERO_PLACEBO_QWEN_S2; do
+  test -s "results/$run_id.summary.json"
+done
+
+PYTHONPATH=. "$PY" scripts/audit_lexical_placebo_runtime.py
+PYTHONPATH=. "$PY" scripts/analyze_semantic_placebo.py \
+  > results/placebo/semantic_placebo_analysis.stdout.json
+MPLBACKEND=Agg "$PY" scripts/render_papero_submission_figures.py
+
+echo "[Paper O final placebo postprocessing complete]"

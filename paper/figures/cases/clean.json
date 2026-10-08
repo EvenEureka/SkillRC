@@ -1,0 +1,305 @@
+{
+ "case": "clean",
+ "trial": "pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074106_050405",
+ "floor_plan": "FloorPlan424",
+ "goal": "put a clean soapbar in countertop.",
+ "receptacles": {
+  "Cabinet": 4,
+  "CounterTop": 1,
+  "GarbageCan": 1,
+  "HandTowelHolder": 2,
+  "Sink": 2,
+  "Toilet": 1,
+  "ToiletPaperHanger": 1,
+  "TowelHolder": 1
+ },
+ "walkthrough": [
+  "go to toilet_bar__minus_00_dot_54_bar__plus_00_dot_00_bar__plus_01_dot_49",
+  "take soapbar_bar__minus_00_dot_13_bar__plus_00_dot_95_bar__plus_01_dot_36 from toilet_bar__minus_00_dot_54_bar__plus_00_dot_00_bar__plus_01_dot_49",
+  "go to sink_bar__minus_00_dot_30_bar__plus_00_dot_80_bar__plus_03_dot_26_bar_sinkbasin",
+  "clean soapbar_bar__minus_00_dot_13_bar__plus_00_dot_95_bar__plus_01_dot_36 with sink_bar__minus_00_dot_30_bar__plus_00_dot_80_bar__plus_03_dot_26_bar_sinkbasin",
+  "go to countertop_bar__minus_00_dot_26_bar__plus_00_dot_93_bar__plus_02_dot_84",
+  "move soapbar_bar__minus_00_dot_13_bar__plus_00_dot_95_bar__plus_01_dot_36 to countertop_bar__minus_00_dot_26_bar__plus_00_dot_93_bar__plus_02_dot_84"
+ ],
+ "roles": {
+  "SoapBar|-00.13|+00.95|+01.36": "object",
+  "Toilet|-00.54|+00.00|+01.49": "start",
+  "Sink|-00.30|+00.80|+03.26|SinkBasin": "appliance",
+  "CounterTop|-00.26|+00.93|+02.84": "dest"
+ },
+ "views": [
+  {
+   "file": "clean_view1.jpg",
+   "size": [
+    1200,
+    900
+   ],
+   "boxes": {
+    "Sink|-00.30|+00.80|+03.26|SinkBasin": [
+     0,
+     796,
+     346,
+     900
+    ],
+    "CounterTop|-00.26|+00.93|+02.84": [
+     0,
+     425,
+     520,
+     900
+    ],
+    "Cabinet|-00.49|+00.41|+02.86": [
+     422,
+     779,
+     494,
+     900
+    ],
+    "Cabinet|-00.50|+00.38|+02.84": [
+     454,
+     594,
+     522,
+     900
+    ],
+    "Cabinet|-00.49|+00.41|+02.06": [
+     499,
+     499,
+     537,
+     731
+    ],
+    "SoapBar|-00.20|+00.95|+02.84": [
+     182,
+     645,
+     242,
+     706
+    ],
+    "Sink|-00.30|+00.80|+02.42|SinkBasin": [
+     269,
+     448,
+     498,
+     600
+    ],
+    "Toilet|-00.54|+00.00|+01.49": [
+     391,
+     350,
+     617,
+     568
+    ],
+    "SoapBar|-00.13|+00.95|+01.54": [
+     446,
+     363,
+     453,
+     374
+    ],
+    "SoapBar|-00.13|+00.95|+01.36": [
+     448,
+     349,
+     465,
+     359
+    ],
+    "TowelHolder|-01.08|+01.31|+01.20": [
+     601,
+     258,
+     760,
+     268
+    ],
+    "HandTowelHolder|+00.00|+01.72|+01.89": [
+     284,
+     103,
+     340,
+     196
+    ]
+   },
+   "map_uv": [
+    479.6,
+    181.0
+   ],
+   "rotation": 180,
+   "horizon": 30
+  }
+ ],
+ "map": {
+  "file": "clean_map.jpg",
+  "size": [
+   759,
+   894
+  ],
+  "px_per_m": 215.26,
+  "objects": [
+   {
+    "objectId": "SoapBar|-00.20|+00.95|+02.84",
+    "type": "SoapBar",
+    "uv": [
+     597.4,
+     268.6
+    ],
+    "box": [
+     590.8,
+     257.9,
+     604.0,
+     279.2
+    ]
+   },
+   {
+    "objectId": "SoapBar|-00.13|+00.95|+01.54",
+    "type": "SoapBar",
+    "uv": [
+     612.7,
+     548.1
+    ],
+    "box": [
+     606.2,
+     537.5,
+     619.3,
+     558.8
+    ]
+   },
+   {
+    "objectId": "SoapBar|-00.13|+00.95|+01.36",
+    "type": "SoapBar",
+    "uv": [
+     612.7,
+     588.5
+    ],
+    "box": [
+     606.2,
+     577.9,
+     619.3,
+     599.1
+    ]
+   },
+   {
+    "objectId": "Sink|-00.30|+00.80|+03.26",
+    "type": "Sink",
+    "uv": [
+     576.5,
+     178.1
+    ]
+   },
+   {
+    "objectId": "Cabinet|-00.49|+00.41|+02.86",
+    "type": "Cabinet",
+    "uv": [
+     535.2,
+     264.2
+    ]
+   },
+   {
+    "objectId": "Cabinet|-00.50|+00.38|+02.84",
+    "type": "Cabinet",
+    "uv": [
+     534.3,
+     268.8
+    ]
+   },
+   {
+    "objectId": "CounterTop|-00.26|+00.93|+02.84",
+    "type": "CounterTop",
+    "uv": [
+     584.7,
+     268.6
+    ]
+   },
+   {
+    "objectId": "Cabinet|-00.50|+00.38|+03.65",
+    "type": "Cabinet",
+    "uv": [
+     534.3,
+     94.7
+    ]
+   },
+   {
+    "objectId": "Cabinet|-00.49|+00.41|+02.06",
+    "type": "Cabinet",
+    "uv": [
+     535.2,
+     438.2
+    ]
+   },
+   {
+    "objectId": "Sink|-00.30|+00.80|+02.42",
+    "type": "Sink",
+    "uv": [
+     576.5,
+     359.8
+    ]
+   },
+   {
+    "objectId": "TowelHolder|-01.08|+01.31|+01.20",
+    "type": "TowelHolder",
+    "uv": [
+     408.1,
+     623.2
+    ]
+   },
+   {
+    "objectId": "SoapBar|-00.13|+00.08|+02.29",
+    "type": "SoapBar",
+    "uv": [
+     613.6,
+     387.3
+    ],
+    "box": [
+     607.1,
+     376.6,
+     620.2,
+     397.9
+    ]
+   },
+   {
+    "objectId": "ToiletPaperHanger|-00.27|+00.79|+02.04",
+    "type": "ToiletPaperHanger",
+    "uv": [
+     583.8,
+     440.7
+    ]
+   },
+   {
+    "objectId": "HandTowelHolder|+00.00|+01.72|+01.89",
+    "type": "HandTowelHolder",
+    "uv": [
+     641.1,
+     474.4
+    ]
+   },
+   {
+    "objectId": "HandTowelHolder|+00.00|+01.72|+03.80",
+    "type": "HandTowelHolder",
+    "uv": [
+     641.1,
+     62.8
+    ]
+   },
+   {
+    "objectId": "Toilet|-00.54|+00.00|+01.49",
+    "type": "Toilet",
+    "uv": [
+     524.2,
+     559.0
+    ]
+   },
+   {
+    "objectId": "GarbageCan|-02.23|+00.00|+03.78",
+    "type": "GarbageCan",
+    "uv": [
+     161.7,
+     66.5
+    ]
+   },
+   {
+    "objectId": "Sink|-00.30|+00.80|+02.42|SinkBasin",
+    "type": "SinkBasin",
+    "uv": [
+     575.2,
+     359.1
+    ]
+   },
+   {
+    "objectId": "Sink|-00.30|+00.80|+03.26|SinkBasin",
+    "type": "SinkBasin",
+    "uv": [
+     575.2,
+     177.4
+    ]
+   }
+  ]
+ }
+}

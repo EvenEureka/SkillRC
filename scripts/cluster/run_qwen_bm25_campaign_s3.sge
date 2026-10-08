@@ -1,0 +1,88 @@
+#!/bin/bash
+#$ -N qwen_bm25_s3
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -uo pipefail
+
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"
+mkdir -p logs
+
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+VLLM=${VLLM_ENV}
+export HF_HOME=${HF_HOME}
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export CUDA_HOME=$VLLM/lib/python3.11/site-packages/nvidia/cu13
+export PATH=$VLLM/bin:$CUDA_HOME/bin:$PATH
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN
+export VLLM_USE_FLASHINFER_SAMPLER=0
+
+for run_id in Q_skillos_bm25_s3 Q_expel_bm25_s3; do
+  if [ -e "results/$run_id.episodes.jsonl" ] || [ -e "results/$run_id.summary.json" ]; then
+    echo "refusing to append to existing run: $run_id"
+    exit 2
+  fi
+done
+
+JOB=${JOB_ID:-$$}
+SRVLOG="logs/vllm_server.$JOB.log"
+echo "host=$(hostname)"
+nvidia-smi -L 2>/dev/null | head -1
+
+"$VLLM/bin/vllm" serve Qwen/Qwen3-8B \
+  --served-model-name qwen3-8b \
+  --port 8000 \
+  --gpu-memory-utilization 0.85 \
+  --max-model-len 16384 \
+  --enforce-eager > "$SRVLOG" 2>&1 &
+SRV_PID=$!
+
+cleanup() {
+  kill "$SRV_PID" 2>/dev/null || true
+  sleep 3
+  kill -9 "$SRV_PID" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+ready=0
+for i in $(seq 1 144); do
+  if curl -sf http://localhost:8000/health >/dev/null 2>&1; then
+    echo "[serve] READY ~$((i*5))s"
+    ready=1
+    break
+  fi
+  if ! kill -0 "$SRV_PID" 2>/dev/null; then
+    echo "[serve] died"
+    tail -30 "$SRVLOG"
+    exit 1
+  fi
+  sleep 5
+done
+
+if [ "$ready" -ne 1 ]; then
+  echo "[serve] NOT READY"
+  tail -40 "$SRVLOG"
+  exit 1
+fi
+
+PY=${SKILLRC_PY}
+"$PY" -m skillrc.runner \
+  --config configs/qwen_skillos.yaml \
+  --seeds 0 1 2 \
+  --override run_id=Q_skillos_bm25_s3 retriever=bm25 || exit $?
+
+"$PY" -m skillrc.runner \
+  --config configs/qwen_expel.yaml \
+  --seeds 0 1 2 \
+  --override run_id=Q_expel_bm25_s3 retriever=bm25 || exit $?
+
+echo "[campaign bm25 s3 done]"

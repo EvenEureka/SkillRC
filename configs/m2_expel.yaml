@@ -1,0 +1,21 @@
+# R006 - M2 ExpeL reproduction (NL-insight representation) on 134 unseen.
+# Same retrieval + budget B as raw_traj; only the pool differs (distilled insights).
+run_id: R006_expel
+milestone: M2
+out_dir: results
+env: alfworld
+provider: openai
+model: gpt-4o-mini
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true
+fewshot_file: configs/alfworld_react_fewshot.json
+memory: expel
+memory_k: 20
+token_budget: 2048
+demo_pool: data/pools/expel_insights.jsonl
+seeds: [0]
+max_tasks: null

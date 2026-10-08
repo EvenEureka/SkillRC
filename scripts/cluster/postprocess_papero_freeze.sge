@@ -1,0 +1,26 @@
+#!/bin/bash
+#$ -N papero_freeze
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 1
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"
+export PYTHONPATH="$ROOT"
+PY=${SKILLRC_PY}
+
+"$PY" scripts/analyze_qwen_mechanism_replay.py
+"$PY" scripts/finalize_papero_manuscript.py
+
+if rg -n '\[\[|PENDING' ../ARR/PaperO_manuscript.md; then
+  echo "unresolved manuscript markers"
+  exit 1
+fi
+echo "[Paper O claim freeze complete]"

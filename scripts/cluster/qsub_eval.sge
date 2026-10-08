@@ -1,0 +1,34 @@
+#!/bin/bash
+# UGE/SGE submit script for the ND CRC tarikan_lab GPU nodes (strong CPUs; ALFWorld/
+# WebShop run on the node CPUs, GPU reserved for later Qwen3-8B/vLLM).
+# Submit:  qsub -v CONFIG=configs/m0_alfworld.yaml,MODEL=gpt-4o-mini,EXTRA="--max-tasks 5" scripts/qsub_eval.sge
+#$ -N skillrc_eval
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+mkdir -p logs
+
+# --- AFS token (required before touching /groups from a compute node) ---
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+cd "$ROOT"
+
+# --- secrets: put OPENAI_API_KEY in ~/.skillrc.env (NOT in git) ---
+if [ -f "$HOME/.skillrc.env" ]; then set -a; source "$HOME/.skillrc.env"; set +a; fi
+
+: "${CONFIG:?set CONFIG=configs/....yaml}"
+OVR=()
+[ "${MODEL:-}" ] && OVR+=(--override "model=$MODEL")
+
+echo "host=$(hostname) config=$CONFIG model=${MODEL:-<from config>}"
+nvidia-smi -L 2>/dev/null || true
+
+"$PY" -m skillrc.runner --config "$CONFIG" "${OVR[@]}" ${EXTRA:-}

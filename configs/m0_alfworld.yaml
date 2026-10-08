@@ -1,0 +1,19 @@
+# R001 - M0 sanity: no-mem ReAct on ALFWorld (134 unseen).
+# Frozen executor = OpenAI API model (set `model` after choosing from pricing table).
+# Tip: first smoke it with `--max-tasks 5` before the full 134; `--dry-run` forces mock.
+run_id: R001_alfworld_nomem
+milestone: M0
+out_dir: results
+env: alfworld
+provider: openai
+model: gpt-4o-mini                     # chosen for idea-validation; swap for Qwen3-8B later
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true                             # show exact valid actions each step (grammar-robust)
+fewshot_file: configs/alfworld_react_fewshot.json   # canonical Yao et al. 2-shot per task type
+memory: none
+seeds: [0, 1, 2]
+max_tasks: null                        # null => all 134

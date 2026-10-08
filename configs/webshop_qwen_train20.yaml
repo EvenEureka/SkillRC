@@ -1,0 +1,27 @@
+run_id: PAPERO_WS_Q_train20
+milestone: PaperO_crossenv_train
+out_dir: results
+env: webshop
+task_ids: [500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519]
+max_tasks: null
+max_steps: 15
+webshop_base_url: http://127.0.0.1:3000
+webshop_n_tasks: 6910
+provider: openai
+model: qwen3-8b
+temperature: 0.0
+max_completion_tokens: 256
+base_url: http://127.0.0.1:8000/v1
+request_timeout: 120.0
+max_retries: 5
+api_key: EMPTY
+chat_template_kwargs:
+  enable_thinking: false
+n_fewshot: 2
+system_prompt_key: default
+prompt_style: thought_action
+inject_admissible: true
+fewshot_file: configs/webshop_react_fewshot.jsonl
+save_trajectories: true
+memory: none
+seeds: [0]

@@ -1,0 +1,45 @@
+#!/bin/bash
+#$ -N papero_gpt_s5
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+cd "$ROOT"
+mkdir -p logs
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+
+if [ -f "$HOME/.skillrc.env" ]; then
+  set -a
+  source "$HOME/.skillrc.env"
+  set +a
+fi
+: "${OPENAI_API_KEY:?OPENAI_API_KEY must be configured in ~/.skillrc.env}"
+
+for run_id in R013_nomem_seed5 R013_expel_bm25_seed5; do
+  if [ -e "results/$run_id.episodes.jsonl" ] || [ -e "results/$run_id.summary.json" ]; then
+    echo "refusing to overwrite existing run: $run_id"
+    exit 2
+  fi
+done
+
+"$PY" -m skillrc.runner \
+  --config configs/m0_alfworld.yaml \
+  --seeds 5 \
+  --override run_id=R013_nomem_seed5
+
+"$PY" -m skillrc.runner \
+  --config configs/m2_expel.yaml \
+  --seeds 5 \
+  --override run_id=R013_expel_bm25_seed5 retriever=bm25
+
+echo "[Paper O GPT missing-prompt campaign complete]"

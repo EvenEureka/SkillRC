@@ -1,0 +1,95 @@
+% SkillRC overview figure (TikZ): how the question is decomposed. Included by preprint_body.tex.
+\begin{tikzpicture}[
+  x=1cm, y=1cm,
+  font=\sffamily\scriptsize,
+  col/.style={draw=#1!55, dashed, rounded corners=4pt, fill=#1!4, line width=0.6pt},
+  steptitle/.style={font=\sffamily\bfseries\footnotesize, text=#1},
+  body/.style={align=center, text=black!80, font=\sffamily\scriptsize},
+  note/.style={align=center, text=black!55, font=\sffamily\tiny},
+  card/.style={draw=#1!70, fill=#1!12, rounded corners=2pt, line width=0.5pt, align=center,
+               font=\sffamily\scriptsize, inner sep=2.5pt},
+  flow/.style={-{Latex[length=1.8mm]}, draw=black!55, line width=0.7pt},
+  layer/.style={draw=black!25, fill=white, rounded corners=1.5pt, minimum width=2.6cm,
+                minimum height=0.34cm, font=\sffamily\scriptsize, inner sep=1pt},
+]
+\def\cw{3.66}\def\gap{0.35}
+\pgfmathsetmacro{\step}{\cw+\gap}
+\pgfmathsetmacro{\W}{4*\cw+3*\gap}
+\pgfmathsetmacro{\hc}{\cw/2}
+
+% ============================ Phase A ======================================
+\fill[phaseA, rounded corners=5pt] (0,0) rectangle (\W,-0.62);
+\fill[white] (0.36,-0.31) circle (0.22);
+\node[font=\sffamily\bfseries\small, text=phaseA] at (0.36,-0.31) {A};
+\node[anchor=west, font=\sffamily\bfseries\normalsize, text=white] at (0.72,-0.31)
+  {Phase A: Does the memory's gain transfer across executors?};
+\foreach \i in {0,...,3} { \draw[col=phaseA] (\i*\step,-0.8) rectangle ++(\cw,-3.0); }
+
+% A1 distill experience
+\node[steptitle=phaseA] at (\hc,-1.08) {1. Distill experience};
+\node[body] at (\hc,-1.5) {past successful runs};
+\node[body] at (\hc,-1.83) {$\downarrow$ distill};
+\node[card=phaseA, text width=3.0cm] at (\hc,-2.35) {\textbf{skill memory}\\short rules per task type};
+\node[note, text width=3.3cm] at (\hc,-3.2) {\texttt{[clean]} Always clean the item using\\the designated cleaning area \ldots};
+
+% A2 insert into a fixed agent
+\node[steptitle=phaseA] at (\hc+\step,-1.08) {2. Insert into the agent};
+\node[layer] at (\hc+\step,-1.55) {task instruction};
+\node[layer] at (\hc+\step,-1.95) {demonstrations};
+\node[layer, draw=salmon, fill=salmon!15, font=\sffamily\bfseries\scriptsize] at (\hc+\step,-2.35) {experience memory};
+\node[body] at (\hc+\step,-2.9) {only the memory changes};
+\node[note] at (\hc+\step,-3.25) {the rest of the agent is shared};
+
+% A3 two executors
+\node[steptitle=phaseA] at (\hc+2*\step,-1.08) {3. Run two executors};
+\node[card=gptblue, text width=2.7cm] at (\hc+2*\step,-1.62) {\textbf{Executor A}\\GPT-4o-mini};
+\node[card=qwenmint, text width=2.7cm] at (\hc+2*\step,-2.5) {\textbf{Executor B}\\Qwen3-8B};
+\node[body] at (\hc+2*\step,-3.12) {same tasks, $\pm$ memory};
+
+% A4 compare gains
+\node[steptitle=phaseA] at (\hc+3*\step,-1.08) {4. Compare the gains};
+\node[body] at (\hc+3*\step,-1.6) {gain $=$ success with $-$ without};
+\node[card=salmon, text width=2.9cm] at (\hc+3*\step,-2.3) {\textbf{transport gap}\\gain$_B$ $-$ gain$_A$};
+\node[body] at (\hc+3*\step,-3.12) {$\approx 0$ $\Rightarrow$ the memory transfers};
+
+\foreach \i in {0,...,2} { \draw[flow] (\i*\step+\cw+0.02,-2.3) -- (\i*\step+\cw+\gap-0.02,-2.3); }
+
+% ============================ Phase B ======================================
+\fill[phaseB, rounded corners=5pt] (0,-4.0) rectangle (\W,-4.62);
+\fill[white] (0.36,-4.31) circle (0.22);
+\node[font=\sffamily\bfseries\small, text=phaseB] at (0.36,-4.31) {B};
+\node[anchor=west, font=\sffamily\bfseries\normalsize, text=white] at (0.72,-4.31)
+  {Phase B: Is the gain due to what the memory says?};
+\foreach \i in {0,...,3} { \draw[col=phaseB] (\i*\step,-4.8) rectangle ++(\cw,-3.0); }
+
+% B1 build a placebo
+\node[steptitle=phaseB] at (\hc,-5.08) {1. Build a placebo};
+\node[body] at (\hc,-5.5) {same rules, order, and length;};
+\node[body] at (\hc,-5.8) {words scrambled};
+\node[card=phaseB, text width=3.2cm, align=left, font=\sffamily\tiny] at (\hc,-6.8) {\textbf{true:} Always clean the item using the designated cleaning area \ldots\\[2pt]\textbf{placebo:} item final area it the Always the before designated \ldots};
+
+% B2 run true vs placebo
+\node[steptitle=phaseB] at (\hc+\step,-5.08) {2. Run true vs.\ placebo};
+\node[card=gptblue, text width=2.7cm] at (\hc+\step,-5.6) {\textbf{Executor A}};
+\node[card=qwenmint, text width=2.7cm] at (\hc+\step,-6.15) {\textbf{Executor B}};
+\node[body] at (\hc+\step,-6.85) {same tasks under};
+\node[body] at (\hc+\step,-7.15) {no memory, placebo, true};
+
+% B3 split the gain
+\node[steptitle=phaseB] at (\hc+2*\step,-5.08) {3. Split the gain};
+\node[card=black, text width=1.6cm] (n0) at (\hc+2*\step-0.75,-5.6) {no memory};
+\node[card=phaseB, text width=1.6cm] (n1) at (\hc+2*\step-0.75,-6.4) {placebo};
+\node[card=salmon, text width=1.6cm] (n2) at (\hc+2*\step-0.75,-7.2) {true memory};
+\draw[flow] (n0.south) -- (n1.north);
+\draw[flow] (n1.south) -- (n2.north);
+\node[font=\sffamily\scriptsize, text=black!65, anchor=west] at (\hc+2*\step+0.25,-6.0) {context effect};
+\node[font=\sffamily\scriptsize\bfseries, text=salmon, anchor=west] at (\hc+2*\step+0.25,-6.8) {content effect};
+
+% B4 decide with a fixed rule
+\node[steptitle=phaseB] at (\hc+3*\step,-5.08) {4. Decide by a rule};
+\node[card=salmon, text width=3.3cm] at (\hc+3*\step,-6.0) {content explains the gap\\\textbf{only if} its effect\\differs between executors};
+\node[body] at (\hc+3*\step,-6.95) {otherwise \emph{inconclusive}};
+\node[note] at (\hc+3*\step,-7.3) {rule fixed before any result};
+
+\foreach \i in {0,...,2} { \draw[flow] (\i*\step+\cw+0.02,-6.3) -- (\i*\step+\cw+\gap-0.02,-6.3); }
+\end{tikzpicture}

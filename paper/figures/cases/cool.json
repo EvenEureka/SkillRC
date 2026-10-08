@@ -1,0 +1,362 @@
+{
+ "case": "cool",
+ "trial": "pick_cool_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_121559_082363",
+ "floor_plan": "FloorPlan10",
+ "goal": "put a cool mug in cabinet.",
+ "receptacles": {
+  "Cabinet": 6,
+  "CoffeeMachine": 1,
+  "CounterTop": 3,
+  "Drawer": 3,
+  "Fridge": 1,
+  "GarbageCan": 1,
+  "Microwave": 1,
+  "Shelf": 3,
+  "Sink": 1,
+  "StoveBurner": 4,
+  "Toaster": 1
+ },
+ "walkthrough": [
+  "go to countertop_bar__plus_00_dot_93_bar__plus_00_dot_95_bar__minus_00_dot_21",
+  "take mug_bar__plus_01_dot_20_bar__plus_00_dot_91_bar__plus_00_dot_31 from countertop_bar__plus_00_dot_93_bar__plus_00_dot_95_bar__minus_00_dot_21",
+  "go to fridge_bar__plus_00_dot_97_bar__plus_00_dot_00_bar__plus_01_dot_25",
+  "cool mug_bar__plus_01_dot_20_bar__plus_00_dot_91_bar__plus_00_dot_31 with fridge_bar__plus_00_dot_97_bar__plus_00_dot_00_bar__plus_01_dot_25",
+  "go to cabinet_bar__plus_00_dot_95_bar__plus_02_dot_16_bar__minus_00_dot_14",
+  "move mug_bar__plus_01_dot_20_bar__plus_00_dot_91_bar__plus_00_dot_31 to cabinet_bar__plus_00_dot_95_bar__plus_02_dot_16_bar__minus_00_dot_14"
+ ],
+ "roles": {
+  "Mug|+01.20|+00.91|+00.31": "object",
+  "CounterTop|+00.93|+00.95|-00.21": "start",
+  "Fridge|+00.97|+00.00|+01.25": "appliance",
+  "Cabinet|+00.95|+02.16|-00.14": "dest"
+ },
+ "views": [
+  {
+   "file": "cool_view1.jpg",
+   "size": [
+    1200,
+    900
+   ],
+   "boxes": {
+    "CounterTop|+00.93|+00.95|-00.21": [
+     732,
+     482,
+     1199,
+     900
+    ],
+    "CounterTop|-01.24|+00.97|-00.64": [
+     0,
+     500,
+     331,
+     883
+    ],
+    "Cabinet|+00.65|+00.48|+00.24": [
+     710,
+     522,
+     760,
+     727
+    ],
+    "Fridge|+00.97|+00.00|+01.25": [
+     652,
+     41,
+     737,
+     597
+    ],
+    "Toaster|+00.98|+00.90|+00.33": [
+     838,
+     430,
+     1049,
+     549
+    ],
+    "Mug|+01.20|+00.91|+00.31": [
+     1014,
+     487,
+     1063,
+     541
+    ],
+    "Shelf|-01.69|+00.54|+02.72": [
+     285,
+     391,
+     413,
+     413
+    ],
+    "Shelf|-01.69|+00.87|+02.72": [
+     270,
+     347,
+     400,
+     360
+    ],
+    "Shelf|-01.69|+00.16|+02.72": [
+     257,
+     304,
+     387,
+     311
+    ],
+    "Cabinet|+00.95|+02.16|-00.14": [
+     996,
+     1,
+     1199,
+     158
+    ]
+   },
+   "map_uv": [
+    570.0,
+    555.0
+   ],
+   "rotation": 0,
+   "horizon": 30
+  }
+ ],
+ "map": {
+  "file": "cool_map.jpg",
+  "size": [
+   808,
+   900
+  ],
+  "px_per_m": 150.0,
+  "objects": [
+   {
+    "objectId": "Mug|+01.20|+00.91|+00.31",
+    "type": "Mug",
+    "uv": [
+     714.3,
+     433.0
+    ],
+    "box": [
+     703.5,
+     424.4,
+     725.2,
+     441.6
+    ]
+   },
+   {
+    "objectId": "Mug|+00.90|+00.94|-02.11",
+    "type": "Mug",
+    "uv": [
+     661.5,
+     795.1
+    ],
+    "box": [
+     648.7,
+     781.5,
+     674.2,
+     808.8
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+00.84|+00.92|-01.10",
+    "type": "StoveBurner",
+    "uv": [
+     658.8,
+     644.8
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.65|+00.48|+00.24",
+    "type": "Cabinet",
+    "uv": [
+     629.8,
+     443.3
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+01.08|+00.92|-01.50",
+    "type": "StoveBurner",
+    "uv": [
+     694.1,
+     705.6
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+00.84|+00.92|-01.50",
+    "type": "StoveBurner",
+    "uv": [
+     658.8,
+     705.6
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.76|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-02.38",
+    "type": "Cabinet",
+    "uv": [
+     674.9,
+     836.4
+    ]
+   },
+   {
+    "objectId": "CounterTop|-01.24|+00.97|-00.64",
+    "type": "CounterTop",
+    "uv": [
+     346.7,
+     576.5
+    ]
+   },
+   {
+    "objectId": "CounterTop|+00.93|+00.95|-00.21",
+    "type": "CounterTop",
+    "uv": [
+     672.3,
+     511.2
+    ]
+   },
+   {
+    "objectId": "StoveBurner|+01.08|+00.92|-01.10",
+    "type": "StoveBurner",
+    "uv": [
+     694.1,
+     644.8
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.27|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Drawer|+00.64|+00.55|-00.65",
+    "type": "Drawer",
+    "uv": [
+     628.1,
+     577.5
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.65|+00.48|-01.72",
+    "type": "Cabinet",
+    "uv": [
+     629.8,
+     737.2
+    ]
+   },
+   {
+    "objectId": "CounterTop|+00.93|+00.95|-02.05",
+    "type": "CounterTop",
+    "uv": [
+     672.3,
+     787.7
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.44|-01.78",
+    "type": "Cabinet",
+    "uv": [
+     674.8,
+     747.0
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-00.14",
+    "type": "Cabinet",
+    "uv": [
+     674.8,
+     501.0
+    ]
+   },
+   {
+    "objectId": "Cabinet|+00.95|+02.16|-00.76",
+    "type": "Cabinet",
+    "uv": [
+     674.9,
+     593.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.87|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.2,
+     72.1
+    ]
+   },
+   {
+    "objectId": "Toaster|+00.98|+00.90|+00.33",
+    "type": "Toaster",
+    "uv": [
+     680.1,
+     430.7
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.54|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.1,
+     72.2
+    ]
+   },
+   {
+    "objectId": "CoffeeMachine|+01.02|+00.90|-02.18",
+    "type": "CoffeeMachine",
+    "uv": [
+     685.2,
+     806.6
+    ]
+   },
+   {
+    "objectId": "Shelf|-01.69|+00.16|+02.72",
+    "type": "Shelf",
+    "uv": [
+     279.1,
+     72.2
+    ]
+   },
+   {
+    "objectId": "GarbageCan|-00.95|+00.00|+00.58",
+    "type": "GarbageCan",
+    "uv": [
+     390.5,
+     393.6
+    ]
+   },
+   {
+    "objectId": "Sink|-00.70|+00.93|-00.65|SinkBasin",
+    "type": "SinkBasin",
+    "uv": [
+     427.8,
+     577.1
+    ]
+   },
+   {
+    "objectId": "Microwave|+01.04|+01.68|-01.30",
+    "type": "Microwave",
+    "uv": [
+     688.9,
+     674.4
+    ]
+   },
+   {
+    "objectId": "Fridge|+00.97|+00.00|+01.25",
+    "type": "Fridge",
+    "uv": [
+     677.4,
+     291.9
+    ]
+   },
+   {
+    "objectId": "Mug|+01.10|+01.66|+00.28",
+    "type": "Mug",
+    "uv": [
+     697.8,
+     439.7
+    ],
+    "box": [
+     689.2,
+     428.9,
+     706.4,
+     450.6
+    ]
+   }
+  ]
+ }
+}

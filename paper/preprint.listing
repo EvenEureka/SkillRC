@@ -1,0 +1,8 @@
+You are distilling reusable procedural insights for the WebShop text environment.
+The examples below come only from training sessions disjoint from evaluation.
+Extract 6 to 10 concise general rules that improve product search, attribute checking,
+option selection, and purchase decisions. Do not mention product IDs, session IDs, or
+specific products. Output only bullet lines beginning with '- '.
+
+Training experiences:
+<positive-reward trajectories from train sessions 500-519>

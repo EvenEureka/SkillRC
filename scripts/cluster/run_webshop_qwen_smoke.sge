@@ -1,0 +1,99 @@
+#!/bin/bash
+#$ -N papero_ws20
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}/..
+HARNESS=$ROOT/skilllib_rc
+WEBSHOP=$ROOT/external/WebShop
+RESULTS=$HARNESS/results
+RUN_ID=PAPERO_WS_Q_nomem_smoke20
+cd "$HARNESS"
+mkdir -p logs
+
+if [ -e "$RESULTS/$RUN_ID.episodes.jsonl" ] || [ -e "$RESULTS/$RUN_ID.summary.json" ]; then
+  echo "refusing to overwrite $RUN_ID"
+  exit 2
+fi
+
+JOB=${JOB_ID:-$$}
+VLLM_PORT=$((8000 + JOB % 1000))
+WS_PORT=$((10000 + JOB % 1000))
+WS_LOG="$HARNESS/logs/webshop_server.$JOB.log"
+VLLM_LOG="$HARNESS/logs/vllm_server.$JOB.log"
+
+WS_PY=${WEBSHOP_PY}
+WS_JAVA_HOME=${WEBSHOP_ENV}
+WS_JVM_PATH=$WS_JAVA_HOME/lib/jvm/lib/server/libjvm.so
+env JAVA_HOME="$WS_JAVA_HOME" JVM_PATH="$WS_JVM_PATH" PYTHONPATH="$WEBSHOP" \
+  "$WS_PY" "$HARNESS/scripts/webshop_server.py" \
+  --port "$WS_PORT" --num-products 1000 > "$WS_LOG" 2>&1 &
+WS_PID=$!
+
+VLLM=${VLLM_ENV}
+export HF_HOME=${HF_HOME}
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export CUDA_HOME=$VLLM/lib/python3.11/site-packages/nvidia/cu13
+export PATH=$VLLM/bin:$CUDA_HOME/bin:$PATH
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN
+export VLLM_USE_FLASHINFER_SAMPLER=0
+"$VLLM/bin/vllm" serve Qwen/Qwen3-8B \
+  --served-model-name qwen3-8b \
+  --port "$VLLM_PORT" \
+  --gpu-memory-utilization 0.85 \
+  --max-model-len 16384 \
+  --enforce-eager > "$VLLM_LOG" 2>&1 &
+VLLM_PID=$!
+
+cleanup() {
+  kill "$WS_PID" "$VLLM_PID" 2>/dev/null || true
+  sleep 3
+  kill -9 "$WS_PID" "$VLLM_PID" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+ws_ready=0
+vllm_ready=0
+for i in $(seq 1 144); do
+  if curl -sf "http://127.0.0.1:$WS_PORT/health" >/dev/null 2>&1; then
+    ws_ready=1
+  fi
+  if curl -sf "http://127.0.0.1:$VLLM_PORT/health" >/dev/null 2>&1; then
+    vllm_ready=1
+  fi
+  if [ "$ws_ready" -eq 1 ] && [ "$vllm_ready" -eq 1 ]; then
+    break
+  fi
+  kill -0 "$WS_PID" 2>/dev/null || { tail -40 "$WS_LOG"; exit 1; }
+  kill -0 "$VLLM_PID" 2>/dev/null || { tail -40 "$VLLM_LOG"; exit 1; }
+  sleep 5
+done
+if [ "$ws_ready" -ne 1 ] || [ "$vllm_ready" -ne 1 ]; then
+  tail -40 "$WS_LOG"
+  tail -40 "$VLLM_LOG"
+  exit 1
+fi
+
+PY=${SKILLRC_PY}
+"$PY" -m skillrc.runner \
+  --config configs/webshop_qwen_smoke.yaml \
+  --override run_id="$RUN_ID" \
+    webshop_base_url="http://127.0.0.1:$WS_PORT" \
+    base_url="http://127.0.0.1:$VLLM_PORT/v1"
+
+"$PY" scripts/evaluate_webshop_gate.py \
+  --episodes "$RESULTS/$RUN_ID.episodes.jsonl" \
+  --summary "$RESULTS/$RUN_ID.summary.json" \
+  --output "$ROOT/ARR/PaperO_assets/webshop_feasibility_gate.json"
+
+echo "[Paper O WebShop smoke complete]"

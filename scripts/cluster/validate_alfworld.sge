@@ -1,0 +1,52 @@
+#!/bin/bash
+# STAGE A: raw AlfredTWEnv init+reset diagnostic (print real obs/info structure).
+# STAGE B: R001 no-mem ReAct smoke on 3 ALFWorld tasks with real gpt-4o-mini.
+#$ -N skillrc_alfworld_val
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -wd ${SKILLRC_ROOT}
+#$ -o logs/
+#$ -e logs/
+
+set -uo pipefail
+mkdir -p logs
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+aklog 2>&1 && echo "aklog OK"
+[ -f "$HOME/.skillrc.env" ] && { set -a; . "$HOME/.skillrc.env"; set +a; echo "key loaded"; }
+
+echo "=== STAGE A: raw init + reset diagnostic ==="
+"$PY" - <<'PYEOF'
+import os, yaml, traceback
+from alfworld.agents.environment import get_environment
+def expand(o):
+    if isinstance(o,str): return os.path.expandvars(o)
+    if isinstance(o,dict): return {k:expand(v) for k,v in o.items()}
+    if isinstance(o,list): return [expand(v) for v in o]
+    return o
+try:
+    cfg = expand(yaml.safe_load(open("configs/alfworld_base_config.yaml")))
+    builder = get_environment(cfg["env"]["type"])(cfg, train_eval="eval_out_of_distribution")
+    print("num_games:", builder.num_games)
+    tw = builder.init_env(batch_size=1)
+    obs, info = tw.reset()
+    o0 = obs[0] if isinstance(obs,(list,tuple)) else obs
+    print("OBS0:", str(o0)[:600])
+    print("INFO_KEYS:", list(info.keys()))
+    adm = info.get("admissible_commands")
+    print("ADMISSIBLE[:6]:", (adm[0][:6] if adm else None))
+    print("GAMEFILE:", (info.get("extra.gamefile") or ["?"])[0] if info.get("extra.gamefile") else "n/a")
+    # one dummy step to confirm step signature
+    o,s,d,i2 = tw.step(["look"])
+    print("STEP_OK dones=", d[0], "score=", s[0])
+    print("STAGE_A_OK")
+except Exception:
+    traceback.print_exc(); print("STAGE_A_FAILED")
+PYEOF
+
+echo "=== STAGE B: R001 no-mem smoke (6 tasks, gpt-4o-mini) ==="
+"$PY" -m skillrc.runner --config configs/m0_alfworld.yaml --max-tasks 6 --seeds 0 \
+  --override run_id=R001_smoke6 2>&1 | tail -45
+echo "ALFWORLD_VALIDATE_DONE"

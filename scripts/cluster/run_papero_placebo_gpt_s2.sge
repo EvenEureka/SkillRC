@@ -1,0 +1,22 @@
+#!/bin/bash
+#$ -N po_pl_gs2
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 4
+#$ -cwd
+#$ -o logs/
+#$ -e logs/
+
+set -euo pipefail
+kinit -R 2>/dev/null || true
+aklog || true
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+cd "$ROOT"
+mkdir -p logs
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+if [ -f "$HOME/.skillrc.env" ]; then set -a; source "$HOME/.skillrc.env"; set +a; fi
+: "${OPENAI_API_KEY:?OPENAI_API_KEY must be configured in ~/.skillrc.env}"
+test ! -e results/PAPERO_PLACEBO_GPT_S2.episodes.jsonl
+test ! -e results/PAPERO_PLACEBO_GPT_S2.summary.json
+"$PY" -m skillrc.runner --config configs/papero_placebo_gpt_s2.yaml

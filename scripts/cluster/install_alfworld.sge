@@ -1,0 +1,47 @@
+#!/bin/bash
+# Install ALFWorld into skillrc env, download game data, and VALIDATE by initing a
+# real AlfredTWEnv + reset (prints obs/info structure to finalize the adapter).
+#$ -N skillrc_alfworld_install
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -wd ${SKILLRC_ROOT}
+#$ -o logs/
+#$ -e logs/
+
+set -uo pipefail
+mkdir -p logs data
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+aklog 2>&1 && echo "aklog OK"
+
+echo "=== STAGE 1: pip install alfworld ==="
+"$PY" -m pip install -q alfworld 2>&1 | tail -15
+"$PY" -c "import alfworld; print('alfworld', getattr(alfworld,'__version__','?'))" || { echo "IMPORT FAILED"; exit 1; }
+
+echo "=== STAGE 2: download data to $ALFWORLD_DATA ==="
+mkdir -p "$ALFWORLD_DATA"
+alfworld-download -f 2>&1 | tail -15 || echo "download WARN"
+echo "data tree:"; find "$ALFWORLD_DATA" -maxdepth 2 -type d 2>/dev/null | head -25
+
+echo "=== STAGE 3: fetch base_config.yaml ==="
+curl -sSL https://raw.githubusercontent.com/alfworld/alfworld/master/configs/base_config.yaml \
+  -o configs/alfworld_base_config.yaml && echo "got base_config" || echo "curl FAILED"
+
+echo "=== STAGE 4: init AlfredTWEnv + reset (validate) ==="
+"$PY" - <<'PYEOF'
+import os, yaml
+import alfworld.agents.environment as environment
+cfg = yaml.safe_load(open("configs/alfworld_base_config.yaml"))
+env = environment.AlfredTWEnv(cfg, train_eval="eval_out_of_distribution")
+print("num_games:", env.num_games)
+tw = env.init_env(batch_size=1)
+obs, info = tw.reset()
+o0 = obs[0] if isinstance(obs, (list, tuple)) else obs
+print("OBS0:", str(o0)[:500])
+print("INFO_KEYS:", list(info.keys()))
+adm = info.get("admissible_commands")
+print("ADMISSIBLE[:8]:", (adm[0][:8] if adm else None))
+PYEOF
+echo "ALFWORLD_INSTALL_DONE (exit=$?)"

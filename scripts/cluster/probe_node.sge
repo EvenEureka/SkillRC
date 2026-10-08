@@ -1,0 +1,25 @@
+#!/bin/bash
+# Cheap compute-node probe: validates the tarikan_lab path before the heavy
+# ALFWorld/WebShop install. No API cost. Runs the mock sanity on the node.
+#$ -N skillrc_probe
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 4
+#$ -wd ${SKILLRC_ROOT}
+#$ -o logs/
+#$ -e logs/
+
+set -uo pipefail
+mkdir -p logs
+ROOT=${SKILLRC_ROOT}
+PY=${SKILLRC_PY}
+
+echo "HOST=$(hostname)"
+aklog 2>&1 && echo "aklog OK" || echo "aklog FAILED"
+echo -n "groups_rw: "; touch "$ROOT/logs/.probe_write" 2>/dev/null && echo "OK" || echo "FAIL"
+echo -n "py_imports: "; "$PY" -c "import openai,tiktoken,yaml,numpy; print('OK')" 2>&1
+echo -n "net_pypi: "; timeout 20 "$PY" -c "import urllib.request;print(urllib.request.urlopen('https://pypi.org/simple/',timeout=15).status)" 2>&1 | tail -1
+echo "gpu:"; nvidia-smi -L 2>&1 | head -2
+echo "--- mock sanity on node ---"
+"$PY" -m skillrc.runner --config configs/m0_sanity_mock.yaml 2>&1 | tail -4
+echo "PROBE_DONE"
