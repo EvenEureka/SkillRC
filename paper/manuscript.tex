@@ -1,5 +1,5 @@
 % =============================================================================
-%  SkillRC  ·  Preprint LaTeX template (MemoHarness preprint style)
+%  SkillRC  ·  Manuscript (LaTeX template in the MemoHarness style)
 %  Classical academic-journal style (centered title block, narrow abstract,
 %  Times-family typography, numbered author affiliations).
 %  Compile with:  pdflatex -> bibtex -> pdflatex -> pdflatex
@@ -140,7 +140,7 @@
 % Short running-head title used in the page header (edit as needed).
 \newcommand{\runningtitle}{SkillRC}
 \fancyhead[L]{\footnotesize\itshape\color{black!60}\runningtitle}
-\fancyhead[R]{\footnotesize\color{black!60}\textsc{Preprint}}
+\fancyhead[R]{\footnotesize\color{black!60}\textsc{Manuscript}}
 \fancyfoot[C]{\footnotesize\color{black!60}\thepage}
 
 \fancypagestyle{firststyle}{%
@@ -271,7 +271,7 @@
 \newcommand{\equalcontributionnote}{}
 
 % --- Customisable cover-page fields ------------------------------------------
-\newcommand{\paperstatus}{Preprint. Under review.}
+\newcommand{\paperstatus}{Manuscript, October 2026.}
 % Repository URL printed on the cover; leave empty until the repository is public.
 \newcommand{\paperurl}{https://eveneureka.github.io/SkillRC/}
 
@@ -331,6 +331,6 @@ Agent harnesses increasingly learn from experience: past executions are distille
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \setcounter{footnote}{0}
 
-\input{preprint_body}
+\input{manuscript_body}
 
 \end{document}

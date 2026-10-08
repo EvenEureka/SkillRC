@@ -23,7 +23,7 @@ vs. without-memory comparison cannot answer:
 <p align="center"><img src="paper/figures/fig_overview.png" width="92%" alt="SkillRC protocol overview"></p>
 
 **Project page:** [`docs/index.html`](docs/index.html) (served by GitHub Pages) ·
-**Paper:** [`paper/preprint.pdf`](paper/preprint.pdf) (preprint)
+**Paper:** [`paper/manuscript.pdf`](paper/manuscript.pdf) (manuscript)
 
 ## Key findings (ALFWorld, 134 unseen tasks)
 
@@ -86,7 +86,7 @@ configs/                 run configurations used in the paper
 data/pools/              focal 33-insight pool and its order placebo
 scripts/analysis/        placebo construction + audits, paired/bootstrapped analyses
 scripts/cluster/         SGE job scripts (examples; see the README there)
-paper/                   LaTeX source (preprint), figures, build.sh
+paper/                   LaTeX source of the manuscript, figures, build.sh
 docs/                    project page for GitHub Pages
 tests/                   mock end-to-end smoke test, passport tests
 ```
@@ -112,11 +112,11 @@ prototypes abandoned before any outcome was inspected; they are kept for audit.
 ## Paper and figures
 
 ```bash
-cd paper && ./build.sh                    # -> paper/preprint.pdf
+cd paper && ./build.sh                    # -> paper/manuscript.pdf
 python paper/figures/make_figures.py      # regenerates the five result figures
 ```
 
-The manuscript uses a preprint template built on Linux Libertine and tcolorbox.
+The manuscript uses a LaTeX template built on Linux Libertine and tcolorbox.
 On a TeX Live installation that lacks them, install the packages in user mode:
 `tlmgr --usermode install libertine newtx inconsolata tcolorbox multirow preprint
 lastpage wrapfig units environ trimspaces mweights fontaxes listingsutf8 upquote`.
@@ -131,7 +131,7 @@ Per-episode logs are not part of this release; see [`PROVENANCE.md`](PROVENANCE.
   title  = {SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
   author = {Lu, Yiwen},
   year   = {2026},
-  note   = {Preprint},
+  note   = {Manuscript},
   url    = {https://github.com/EvenEureka/SkillRC}
 }
 ```
