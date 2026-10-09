@@ -9,16 +9,17 @@ component of agent harnesses: the distilled insights, trajectories, or procedure
 that a harness injects into a frozen LLM executor. RC stands for *reality check*.
 SkillRC varies only the executor stack and the memory's content, representation,
 presentation, and footprint, keeps the agent loop, decoding, and action parsing
-identical across configurations, and asks two questions that a with-memory
-vs. without-memory comparison cannot answer:
+identical across configurations, and asks three questions in turn, of which a
+with-memory vs. without-memory comparison answers only the first:
 
-1. **Does the skill transfer across executor stacks?** It estimates the paired memory
-   effect on identical tasks, prompts, and artifacts for each stack, then the
-   *transport gap* between stacks.
-2. **Does the gain come from the skill's content?** It compares the true payload with a
-   payload-matched **order placebo** that keeps the same items, retrieval order, and
-   token footprint but removes every original adjacent word pair. The decision rule is
-   frozen before any outcome is inspected.
+1. **Does the memory improve the system?** It estimates the paired memory effect on
+   identical tasks, prompts, and artifacts for the stack the memory was built with.
+2. **Does the gain transfer across executor stacks?** It repeats the estimate on a
+   second stack and reports the *transport gap* between stacks.
+3. **How much of the gain comes from the skill's content?** It compares the true payload
+   with a payload-matched **order placebo** that keeps the same items, retrieval order,
+   and token footprint but removes every original adjacent word pair. The decision rule
+   is frozen before any outcome is inspected.
 
 <p align="center"><img src="paper/figures/fig_overview.png" width="92%" alt="SkillRC protocol overview"></p>
 
@@ -36,10 +37,13 @@ vs. without-memory comparison cannot answer:
 | Gap in true − placebo increment | +0.017 | [−0.075, +0.108] |
 | WebShop reward change with memory (Qwen3-8B, 100 sessions) | −0.090 | [−0.165, −0.016] |
 
-The placebo reproduces the executor reversal, so the headline skill effect is driven
-substantially by how each stack responds to added context rather than by differential
-use of the procedures. See the paper for task-level transport maps and the
-context-cost audit.
+The memory helps the stack it was built with, on every demonstration pair and with the
+smallest payload tested. The gain does not transfer, and the placebo already separates the
+two stacks by about as much as the true memory does, so on this evidence the executor
+interaction cannot be attributed to differential use of the procedures. The content
+increment is positive for both stacks but its intervals include zero, and a scrambled block
+is not a fully neutral control: the source of the gain is a testable question, not a
+settled one. See the paper for task-level transport maps and the context-cost audit.
 
 ## Install
 

@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SkillRC</title>
-<meta name="description" content="SkillRC: a controlled experience-memory harness that audits whether experience memory in agent harnesses transfers across executors and whether its gain comes from the experience content.">
+<meta name="description" content="SkillRC: a controlled experience-memory harness that asks three questions of an agent skill memory: does it improve the system, does the gain transfer across executor stacks, and how much of it comes from the experience content.">
 <meta property="og:title" content="SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses">
-<meta property="og:description" content="An experience memory improves GPT-4o-mini by +0.127 on ALFWorld but does not transfer to Qwen3-8B, and a payload-matched order placebo reproduces the reversal.">
-<meta property="og:image" content="static/img/fig_overview.png">
+<meta property="og:description" content="A 645-token skill memory raises GPT-4o-mini by 12.7 points on ALFWorld; the gain does not transfer to Qwen3-8B, and a scrambled placebo already separates the two stacks, so the source of the gain becomes a testable question.">
+<meta property="og:image" content="static/img/fig_placebo.png">
 <style>
   :root {
     color-scheme: light;
@@ -73,6 +73,11 @@
   .callout b { color: var(--obs); font-family: var(--sans); }
   .callout.insight { border-left-color: var(--insight); }
   .callout.insight b { color: var(--insight); }
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 18px; }
+  .step { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--accent-2); border-radius: 4px; padding: 12px 14px 10px; font-size: 16px; line-height: 1.5; }
+  .step .n { font-family: var(--sans); font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 4px; }
+  .step b { color: var(--accent); }
+  .step .m { display: block; margin-top: 8px; font-family: var(--sans); font-size: 13.5px; color: var(--text-3); }
   figure { margin: 22px 0 24px; }
   .plate { background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 12px; }
   figure img { display: block; width: 100%; height: auto; }
@@ -89,6 +94,7 @@
   thead tr { background: var(--card); }
   th { color: var(--accent); font-weight: 700; }
   tbody tr:nth-child(odd) { background: color-mix(in srgb, var(--card) 45%, transparent); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .dim { display: inline-block; font-family: var(--sans); font-size: 12px; font-weight: 700; color: #fff; border-radius: 3px; padding: 1px 6px; margin-right: 6px; }
   .edited { color: var(--accent); font-weight: 700; font-family: var(--sans); font-size: 14px; }
   .fixed { color: var(--text-3); font-family: var(--sans); font-size: 14px; }
@@ -107,6 +113,7 @@
   @media (max-width: 720px) {
     body { font-size: 17px; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps { grid-template-columns: minmax(0, 1fr); }
     .row2 { grid-template-columns: minmax(0, 1fr); }
     .plate { padding: 6px; }
     th:nth-child(2), td:nth-child(2) { white-space: nowrap; }
@@ -138,42 +145,101 @@
     <h2>Abstract</h2>
     <p>Agent harnesses increasingly learn from experience: past executions are distilled into insights, skills, or
       playbooks that are injected back into the context of a frozen model. Such memories are usually credited by
-      comparing an agent with the memory to one without it. That comparison cannot tell whether the gain carries over to
-      a different executor, or whether it comes from what the memory says rather than from simply adding context.
-      SkillRC, a reality check (RC) for agent skills, treats the memory as a controlled intervention on a fixed agent
-      and asks two questions in turn: does the memory's gain transfer across executors, and does it survive a placebo
-      that keeps the memory's rules, order, and length but scrambles its words? On ALFWorld, a compact skill memory
-      clearly improves GPT-4o-mini but not Qwen3-8B, and the placebo reproduces most of this difference: the gap reflects
-      how each executor responds to added context more than how it uses the skills.</p>
+      comparing an agent with the memory to one without it. That comparison answers only the first of three questions:
+      whether the system improves, whether the gain carries over to a different executor, and how much of it comes
+      from what the memory says rather than from adding context. SkillRC, a reality check (RC) for agent skills, asks
+      all three of a fixed agent. It treats the memory as a controlled intervention, estimates its gain on two executor
+      stacks, and compares the true memory with a placebo that keeps the memory&rsquo;s rules, order, and length but
+      scrambles its words. On ALFWorld, a compact skill memory clearly improves GPT-4o-mini on every demonstration pair,
+      with the smallest payload we test. The same memory does not help Qwen3-8B, and the placebo already separates the
+      two executors by as much as the true memory does, while coherent content adds a modest increment to both that our
+      intervals cannot distinguish from zero. The gain is therefore real and specific to the executor stack, and its
+      source becomes a question the protocol can test rather than one a with-versus-without comparison can settle.</p>
   </section>
 
+  <h2>The question</h2>
+  <p>Experience-driven agents convert past executions into insights, skills, or playbooks that re-enter the
+    model&rsquo;s context. The evidence that such a memory helps is usually a with-versus-without comparison on one
+    base model. That comparison answers the first of three questions, and the other two decide what the gain means:</p>
+  <div class="steps">
+    <div class="step"><div class="n">QUESTION 1</div><b>Does adding the memory make the system better?</b> The paired
+      gain on identical tasks, prompts, and memory, for the stack the memory was built with.<span class="m">With-versus-without answers this one.</span></div>
+    <div class="step"><div class="n">QUESTION 2</div><b>Does the same gain transfer to another executor stack?</b> The
+      executor is a stack of weights, tokenizer, chat template, runtime, and decoding, and the same memory may help one
+      stack and not another.<span class="m">Measured by the transport gap between stacks.</span></div>
+    <div class="step"><div class="n">QUESTION 3</div><b>How much of the gain comes from what the memory says?</b> Any
+      added block of text can move a model; a placebo with the same rules, order, and length but scrambled words
+      separates content from context.<span class="m">Measured by the content increment, placebo to true memory.</span></div>
+  </div>
+  <p>SkillRC asks all three of one fixed agent. It varies only the executor stack and the memory&rsquo;s content,
+    representation, presentation, and footprint, keeps the agent loop, decoding, and action parsing identical, audits
+    the items, order, and tokens that reach the model, and freezes the placebo and its decision rule before any outcome
+    is inspected. The focal memory is a pool of 33 ExpeL-style insights (645 tokens) distilled from successful ALFWorld
+    runs; the executors are hosted GPT-4o-mini and locally served Qwen3-8B.</p>
+
   <figure>
-    <div class="plate"><a href="static/img/fig_overview.png"><img src="static/img/fig_overview.png" alt="Two-phase SkillRC overview. Phase A: distill experience into a skill memory, insert it into an otherwise unchanged agent, run two executors with and without the memory, and compare their gains (the transport gap). Phase B: build a placebo with the same rules, order and length but scrambled words, run true versus placebo, split the gain into a context effect and a content effect, and decide by a rule fixed in advance."></a></div>
-    <figcaption><b>Overview of SkillRC.</b> Phase A asks whether a memory's gain transfers across executors; Phase B
-      asks whether the gain comes from what the memory says, by splitting it into a context effect (no memory to placebo)
-      and a content effect (placebo to true memory).</figcaption>
+    <div class="plate"><a href="static/img/fig_placebo.png"><img src="static/img/fig_placebo.png" alt="Order-placebo gate on 60 frozen ALFWorld tasks. Left: success under no memory, the scrambled placebo, and the true memory for GPT-4o-mini (0.544, 0.633, 0.681) and Qwen3-8B (0.728, 0.620, 0.683). Right: paired effects with 95% intervals; the grey band is the frozen equivalence region."></a></div>
+    <figcaption><b>No memory &rarr; scrambled memory &rarr; true memory.</b> On 60 frozen tasks, GPT-4o-mini goes from
+      0.544 to 0.633 with the scrambled placebo and to 0.681 with the true memory; Qwen3-8B goes from 0.728 to 0.620 and
+      back to 0.683. The placebo alone opens a gap between the two stacks of &minus;0.197, as large as the true
+      memory&rsquo;s &minus;0.181; coherent content then adds +0.047 and +0.064, with intervals that include zero. The
+      three bars per stack are the three questions in one picture.</figcaption>
   </figure>
 
-  <h2>Key numbers</h2>
-  <p class="muted">ALFWorld, 134 unseen tasks, 33 ExpeL-style insights (645 tokens), BM25 presentation, three
-    demonstration pairs weighted equally; 95% task-bootstrap intervals.</p>
-  <div class="stats">
-    <div class="stat"><div class="v">+0.127</div><div class="l">GPT-4o-mini gain with memory</div><div class="ci">[+0.072, +0.184]</div></div>
-    <div class="stat"><div class="v">−0.021</div><div class="l">Qwen3-8B gain with memory</div><div class="ci">[−0.062, +0.020]</div></div>
-    <div class="stat"><div class="v">−0.148</div><div class="l">Transport gap (Qwen − GPT)</div><div class="ci">[−0.218, −0.080]</div></div>
-    <div class="stat"><div class="v">+0.017</div><div class="l">Gap in content increment (vs. placebo)</div><div class="ci">[−0.075, +0.108]</div></div>
-  </div>
+  <h2>Three findings</h2>
 
-  <h2>Problem</h2>
-  <p>Experience-driven agents convert past executions into insights, skills, or playbooks that re-enter the model's
-    context. The evidence that such a memory helps is usually a with-versus-without comparison on one base model, and
-    the memory is rarely separated from the other changes it brings to the prompt. Three questions stay open:</p>
-  <ul>
-    <li><b>Does the gain transfer?</b> The executor is a stack (weights, tokenizer, template, runtime, decoding).</li>
-    <li><b>Is it the content?</b> When the pool fits in the budget, retrievers change order, not membership, and any
-      added block can move a model.</li>
-    <li><b>Where does it fail?</b> A positive mean can combine rescues with harm.</li>
-  </ul>
+  <h3>1. The memory helps the system it was built with</h3>
+  <p>On the 134 unseen ALFWorld tasks, the 33-insight memory raises GPT-4o-mini success from <b>0.587 to 0.714</b>, a
+    paired gain of +0.127 (95% task-bootstrap interval [+0.072, +0.184]). The gain is present on every demonstration
+    pair (+0.112, +0.097, and +0.172), so it is not produced by one favourable prompt, and it comes from the smallest
+    payload we test: raw trajectories and Markdown procedures realise about three times as many tokens under the same
+    budget and none of them exceeds it. The memory is also cheap for the stack it helps: episodes become shorter (18.1
+    against 20.3 steps), so the 645-token block raises API cost by 9.6%, most of it cached.</p>
+  <figure>
+    <div class="plate row2">
+      <a href="static/img/fig_success.png"><img src="static/img/fig_success.png" alt="ALFWorld success without and with memory: GPT-4o-mini 0.587 to 0.714, Qwen3-8B 0.704 to 0.683."></a>
+      <a href="static/img/fig_pairs.png"><img src="static/img/fig_pairs.png" alt="Paired gain per demonstration pair: GPT positive on all pairs, Qwen near zero or negative; equal-pair mean +0.127 versus −0.021."></a>
+    </div>
+    <figcaption><b>Findings 1 and 2.</b> Success without and with the memory under both stacks, and the paired gain on
+      each demonstration pair with 95% intervals on the mean.</figcaption>
+  </figure>
+
+  <h3>2. The gain is specific to the executor stack</h3>
+  <p>Under Qwen3-8B the same memory, the same scaffold, and the same tasks give &minus;0.021 ([&minus;0.062, +0.020]),
+    with pairwise effects of +0.008, &minus;0.082, and +0.011. The transport gap between the stacks is
+    <b>&minus;0.148 ([&minus;0.218, &minus;0.080])</b>, so the memory&rsquo;s effect is an interaction between memory
+    and executor, not a property of the memory alone. The second stack starts from higher no-memory success (70.4%
+    against 58.7%), which leaves less headroom, and Finding 3 shows that it also responds to the added block differently.
+    The interval identifies moderation by the whole stack; it does not identify which component, weights, tokenizer,
+    template, or runtime, is responsible.</p>
+
+  <h3>3. The scrambled memory already separates the stacks; the content increment is modest and uncertain</h3>
+  <p>The order placebo keeps the memory&rsquo;s task tags, item indices, retrieval order, and 645-token footprint but
+    removes every original adjacent word pair. On the 60-task gate it already moves the stacks apart: <b>+0.089 for
+    GPT-4o-mini and &minus;0.108 for Qwen3-8B</b>. Coherent content then adds +0.047 ([&minus;0.019, +0.117]) and
+    +0.064 ([0.000, +0.128]), and the gap in this increment is +0.017 ([&minus;0.075, +0.108]). Under the rule frozen
+    before any outcome was read, the content mechanism is inconclusive: the executor reversal cannot be attributed to
+    differential use of the experience content, and the content increment, positive for both stacks, cannot be
+    distinguished from zero.</p>
+  <div class="callout"><b>What this does and does not show.</b> The comparison establishes a memory&ndash;executor
+    interaction that a with-versus-without contrast cannot see, and it bounds the content increment. It does not show
+    that the content is irrelevant: a scrambled block is not a fully neutral control, since it may distract differently
+    from coherent text and keeps the memory&rsquo;s vocabulary. The source of the gain is therefore a testable question,
+    not a settled one.</div>
+  <div class="callout insight"><b>The next test.</b> A coherent, equal-length memory that is irrelevant to the task
+    would separate semantic relevance from textual interference; manipulating stack components one at a time would say
+    which part of the stack moderates the gain. Both run inside the same harness, with the same payload audit.</div>
+
+  <h2>Full results</h2>
+  <h3>Key numbers</h3>
+  <p class="muted">ALFWorld, 134 unseen tasks, 33 ExpeL-style insights (645 tokens), BM25 presentation, three
+    demonstration pairs weighted equally; 95% task-bootstrap intervals. Placebo numbers from the 60-task gate.</p>
+  <div class="stats">
+    <div class="stat"><div class="v">+0.127</div><div class="l">GPT-4o-mini gain with memory (0.587 &rarr; 0.714)</div><div class="ci">[+0.072, +0.184]</div></div>
+    <div class="stat"><div class="v">−0.148</div><div class="l">Transport gap (Qwen − GPT)</div><div class="ci">[−0.218, −0.080]</div></div>
+    <div class="stat"><div class="v">+0.089 / −0.108</div><div class="l">Scrambled placebo vs. no memory, GPT / Qwen</div><div class="ci">[+0.025, +0.153] / [−0.164, −0.053]</div></div>
+    <div class="stat"><div class="v">+0.047 / +0.064</div><div class="l">Content increment, true vs. placebo, GPT / Qwen</div><div class="ci">[−0.019, +0.117] / [0.000, +0.128]</div></div>
+  </div>
 
   <h3>Harness factors</h3>
   <p class="muted">Each comparison varies one factor on identical tasks. The agent loop (ReAct, admissible actions,
@@ -189,47 +255,32 @@
       <tr><td><span class="dim" style="background:#bdbdbd">d</span>Demonstration pair</td><td class="fixed">averaged</td><td>pairs 01, 02, 12, weighted equally</td></tr>
     </tbody>
   </table>
-
-  <h2>Results</h2>
-  <p><span class="rq">RQ1</span><b>Does experience memory improve the harness?</b> Yes, for the stack it was built
-    with. GPT-4o-mini rises from 0.587 to 0.714 on every demonstration pair, with the most compact memory.</p>
-  <p><span class="rq">RQ2</span><b>Does the improvement transfer?</b> No. Qwen3-8B moves from 0.704 to 0.683, and the
-    transport gap of −0.148 excludes zero.</p>
   <figure>
-    <div class="plate row2">
-      <a href="static/img/fig_success.png"><img src="static/img/fig_success.png" alt="ALFWorld success without and with memory: GPT-4o-mini 0.587 to 0.714, Qwen3-8B 0.704 to 0.683."></a>
-      <a href="static/img/fig_pairs.png"><img src="static/img/fig_pairs.png" alt="Paired gain per demonstration pair: GPT positive on all pairs, Qwen near zero or negative; equal-pair mean +0.127 versus −0.021."></a>
-    </div>
-    <figcaption><b>RQ1–RQ2.</b> Success without and with the memory, and the paired gain on each demonstration pair
-      with 95% intervals on the mean.</figcaption>
+    <div class="plate"><a href="static/img/fig_overview.png"><img src="static/img/fig_overview.png" alt="Two-phase SkillRC overview. Phase A: distill experience into a skill memory, insert it into an otherwise unchanged agent, run two executors with and without the memory, and compare their gains (the transport gap). Phase B: build a placebo with the same rules, order and length but scrambled words, run true versus placebo, split the gain into a context effect and a content effect, and decide by a rule fixed in advance."></a></div>
+    <figcaption><b>The protocol.</b> Phase A asks whether a memory&rsquo;s gain transfers across executors; Phase B
+      asks whether the gain comes from what the memory says, by splitting it into a context effect (no memory to placebo)
+      and a content effect (placebo to true memory).</figcaption>
   </figure>
-  <div class="callout"><b>Observation.</b> The second stack starts from higher no-memory success (70.4% vs. 58.7%) and
-    responds to the added block differently; the gap identifies stack-level moderation, not which stack component causes it.</div>
 
-  <p><span class="rq">RQ3</span><b>Is the improvement driven by experience content?</b> Only partly. A placebo with the
-    same items, order, and 645 tokens but no original word pair improves GPT by +0.089 and harms Qwen by −0.108.
-    Coherent content adds +0.047 and +0.064, a gap of +0.017 that crosses zero.</p>
-  <figure>
-    <div class="plate"><a href="static/img/fig_placebo.png"><img src="static/img/fig_placebo.png" alt="Order-placebo gate on 60 frozen tasks: success under no memory, placebo, and true memory per stack, and paired effects with intervals."></a></div>
-    <figcaption><b>RQ3.</b> Pre-registered order-placebo gate on 60 frozen tasks. The grey band is the frozen
-      equivalence region [−0.05, +0.05].</figcaption>
-  </figure>
-  <div class="callout"><b>Observation.</b> Under the frozen rule the content mechanism is inconclusive. In point
-    estimates the placebo alone opens a stack gap of −0.197, as large as the true memory's −0.181.</div>
-
-  <p><span class="rq">RQ4</span><b>Where does transfer succeed or fail?</b> Only 9 of 134 tasks improve under both
-    stacks; 45 improve under GPT but not Qwen, and 13 of the 14 GPT-help/Qwen-hurt tasks have a high Qwen baseline.</p>
+  <h3>Where transfer succeeds or fails</h3>
+  <p>Only 9 of the 134 tasks improve under both stacks and 6 decline under both; 45 improve under GPT-4o-mini but are
+    neutral or harmed under Qwen3-8B, and 13 of the 14 tasks that help GPT and hurt Qwen have a Qwen no-memory success of
+    at least two thirds. GPT gains range from +0.255 on <code>puttwo</code> and +0.246 on <code>heat</code> to
+    &minus;0.111 on <code>cool</code>, and the types with the weakest GPT baseline gain the most.</p>
   <figure>
     <div class="plate"><a href="static/img/fig_transport.png"><img src="static/img/fig_transport.png" alt="Task-level transport map by sign of effect under each stack, and GPT gain by task type."></a></div>
-    <figcaption><b>RQ4.</b> Tasks by the sign of their paired effect under each stack, and GPT gain by task type.</figcaption>
+    <figcaption><b>Task-level transfer.</b> Tasks by the sign of their paired effect under each stack, and GPT gain by task type.</figcaption>
   </figure>
 
-  <p><span class="rq">RQ5</span><b>Is more context better, and does it hold elsewhere?</b> No. Trajectory and procedural
-    memories are about three times larger and never beat the compact insights, and in WebShop a ten-rule memory lowers
-    Qwen3-8B reward from 0.194 to 0.105 (8 improvements, 20 declines, 72 ties).</p>
+  <h3>More context is not better, and the pattern holds elsewhere</h3>
+  <p>Trajectory and procedural memories are about three times larger than the compact insights and never beat them;
+    Markdown procedures harm Qwen3-8B under both presentations. Because the 33 insights always fit, BM25 versus dense
+    ranking changes only their order, yet order alone moves the GPT gain from +0.147 to +0.070. In WebShop, a ten-rule
+    memory distilled from six successful sessions lowers Qwen3-8B reward from 0.194 to 0.105 (8 improvements, 20
+    declines, 72 ties); this check uses one executor and no placebo, so it is a bounded negative-transfer replication.</p>
   <figure>
     <div class="plate"><a href="static/img/fig_webshop.png"><img src="static/img/fig_webshop.png" alt="WebShop: reward and exact success without and with memory, and the sign of paired reward change over 100 sessions."></a></div>
-    <figcaption><b>RQ5.</b> Train-disjoint WebShop comparison with local Qwen3-8B.</figcaption>
+    <figcaption><b>WebShop.</b> Train-disjoint comparison with local Qwen3-8B.</figcaption>
   </figure>
 
   <h2>What the tasks look like</h2>

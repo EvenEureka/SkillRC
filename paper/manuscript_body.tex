@@ -56,13 +56,18 @@ Figure~\ref{fig:pipeline} summarizes the protocol.
 
 We evaluate \method on ALFWorld \citep{shridhar2021alfworld} with two executor
 stacks and on WebShop \citep{yao2022webshop}. The experience memory improves the
-harness for \gptm, raising success from $0.587$ to $0.714$, and the most compact
-memory is also the most effective one. The improvement, however, does not transfer
-to \qwenm, and a placebo that keeps the memory's rules, order, and length but
-scrambles its words reproduces the same reversal. We report
-these non-improvements as observations rather than failures: they locate the
-gain in the interaction between added context and executor stack, which is the
-part of an experience-driven harness that current evaluations leave unmeasured.
+harness for \gptm, raising success from $0.587$ to $0.714$ on every demonstration
+pair, and the most compact memory, 33 rules in 645 tokens, is also the most
+effective one. The improvement, however, is specific to the stack: the same memory
+leaves \qwenm unchanged, and a placebo that keeps the memory's rules, order, and
+length but scrambles its words already separates the two stacks by as much as the
+true memory does, while coherent content adds a modest increment to both whose
+intervals include zero. We read these results as a progression rather than as a
+sequence of failures. The first establishes that the memory helps; the second that
+the gain is an interaction between memory and executor stack, which a single-model
+comparison cannot see; and the third that the share of this interaction owed to
+the experience content is the quantity still to be pinned down, which the protocol
+makes testable.
 
 \methodlabel{Contributions.}
 The main contributions of this work are as follows:
@@ -77,9 +82,10 @@ The main contributions of this work are as follows:
   payload-matched order placebo frozen before outcomes
   (\S\ref{sec:transport} and~\S\ref{sec:placebo}).
   \item Empirical evidence that a compact skill memory improves one executor but not
-  another, that a content-free placebo reproduces most of this gap, that transfer
-  varies widely across tasks, and that the same kind of memory can hurt in a second
-  environment (\S\ref{sec:experiments}).
+  another, that a content-free placebo already opens a gap of similar size, so that
+  the executor interaction cannot be attributed to differential use of content on
+  this evidence, that transfer varies widely across tasks, and that the same kind of
+  memory can hurt in a second environment (\S\ref{sec:experiments}).
 \end{itemize}
 
 \section{Method}
@@ -327,12 +333,12 @@ the analysis.
 \section{Experiments}
 \label{sec:experiments}
 
-We organize the evaluation around five research questions. RQ1 asks whether
-experience memory improves the harness. RQ2 examines whether the improvement
-transfers across executor stacks. RQ3 tests whether the improvement is driven by
-the content of the experience. RQ4 asks where transfer succeeds or fails across
-tasks. RQ5 measures whether more experience context buys more utility and whether
-the pattern appears in a second environment.
+We organize the evaluation around five research questions that build on one
+another. RQ1 asks whether experience memory improves the harness. RQ2 examines
+whether the improvement transfers across executor stacks. RQ3 tests how much of the
+stack-specific gain the content of the experience explains. RQ4 asks where transfer
+succeeds or fails across tasks. RQ5 measures whether more experience context buys
+more utility and whether the pattern appears in a second environment.
 
 \subsection{Setup}
 \label{sec:setup}
@@ -396,7 +402,7 @@ point for the questions that follow.
 
 
 
-It does not. Under \qwenm, the same memory moves success from $0.704$ to $0.683$,
+The gain is specific to the stack it was built with. Under \qwenm, the same memory moves success from $0.704$ to $0.683$,
 a change of $-0.021$ (\ci{-0.062}{+0.020}), and the pairwise effects are $+0.008$,
 $-0.082$, and $+0.011$ (Figure~\ref{fig:success}b). The transport gap is
 $\Delta_{E\times M}=-0.148$ (\ci{-0.218}{-0.080}). The focal contrast was
@@ -428,7 +434,8 @@ equivalence region $[-0.05,+0.05]$.}
 \vspace{-8pt}
 \end{figure}
 
-Only partly. On the 60-task gate the true memory reproduces the original
+The placebo already separates the two stacks, and coherent content adds a modest
+increment to both. On the 60-task gate the true memory reproduces the original
 direction: \gptm rises from $0.544$ to $0.681$ ($+0.136$, \ci{+0.075}{+0.200}) and
 \qwenm falls from $0.728$ to $0.683$ ($-0.044$, \ci{-0.100}{+0.006}). The placebo,
 which carries the same items in the same order at the same footprint but no
@@ -441,11 +448,16 @@ $\Delta_{E\times S}=+0.017$ (\ci{-0.075}{+0.108}).
 
 \begin{observationbox}
 Under the frozen rule the content mechanism is \emph{inconclusive}: coherent text
-may add a modest increment for both stacks, but the executor reversal of RQ2
-cannot be attributed to differential use of experience content. In point
-estimates, the placebo alone opens a stack gap of $-0.197$, as large as the true
-memory's $-0.181$ on the same tasks. Most of the transport gap is a difference in
-how the two stacks respond to an added block of task-tagged action vocabulary.
+adds a positive increment for both stacks, but both intervals include zero, and the
+executor reversal of RQ2 cannot be attributed to differential use of experience
+content on this evidence. In point estimates, the placebo alone opens a stack gap
+of $-0.197$, as large as the true memory's $-0.181$ on the same tasks, so the
+interaction between memory and executor is established while the share of the
+gain owed to content is not. A scrambled block is also not a neutral control: it
+may distract differently from coherent text, and it keeps the memory's vocabulary.
+The comparison therefore turns the source of the gain into a testable question
+rather than settling it; the next control is a coherent, equal-length memory that
+is irrelevant to the task.
 \end{observationbox}
 
 \noindent\rqtag{RQ4}\hspace{0.45em}\textbf{Where does transfer succeed or fail across tasks?}\par\nopagebreak
@@ -560,14 +572,22 @@ than an estimate of executor moderation in WebShop.
 We presented \method, a reality check for experience memory in agent harnesses. It
 varies only the executor stack and the memory's content, representation,
 presentation, and footprint, audits what reaches the model, and evaluates the memory
-through paired transport gaps and a pre-registered, payload-matched placebo. On ALFWorld, the memory improves one
-executor stack with the most compact representation, but the improvement does not
-transfer, and a placebo that keeps the items, order, and footprint reproduces the
-reversal. Experience-driven harnesses can therefore report a genuine gain whose
-source is the stack's response to added context rather than the experience
-content. Future work should manipulate stack components one at a time, extend the
-placebo to regimes where retrieval changes membership, and apply the same audit to
-harnesses that learn their memories online.
+through paired transport gaps and a pre-registered, payload-matched placebo. The
+three questions it asks build on one another. On ALFWorld a compact skill memory
+raises \gptm success by 12.7 points, on every demonstration pair and with the
+smallest payload we test, so the memory does improve the system it was built with.
+The same memory does not help \qwenm, so the gain is an interaction between memory
+and executor stack rather than a property of the memory alone. And a placebo that
+keeps the items, order, and footprint already separates the two stacks by as much
+as the true memory does, while coherent content adds a modest increment to both
+whose intervals include zero, so the share of the gain owed to what the memory
+says is the quantity that remains to be measured. A with-versus-without comparison
+answers only the first question; the effect of an experience memory has to be
+understood together with the stack that reads it. Future work should add a
+coherent, equal-length memory that is irrelevant to the task, to separate semantic
+relevance from textual interference, manipulate stack components one at a time,
+extend the placebo to regimes where retrieval changes membership, and apply the
+same audit to harnesses that learn their memories online.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
