@@ -6,8 +6,8 @@
 <title>SkillRC</title>
 <meta name="description" content="SkillRC: a controlled experience-memory harness that asks three questions of an agent skill memory: does it improve the system, does the gain transfer across executor stacks, and how much of it comes from the experience content.">
 <meta property="og:title" content="SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses">
-<meta property="og:description" content="A 645-token skill memory raises GPT-4o-mini by 12.7 points on ALFWorld; the gain does not transfer to Qwen3-8B, and a scrambled placebo already separates the two stacks, so the source of the gain becomes a testable question.">
-<meta property="og:image" content="static/img/fig_placebo.png">
+<meta property="og:description" content="A 645-token skill memory raises GPT-4o-mini by 12.7 points on ALFWorld but not Qwen3-8B; against a scrambled and a coherent irrelevant control, the benefit comes from task-relevant content, and the stacks differ in what an added block costs.">
+<meta property="og:image" content="static/img/fig_rerun.png">
 <style>
   :root {
     color-scheme: light;
@@ -149,12 +149,13 @@
       whether the system improves, whether the gain carries over to a different executor, and how much of it comes
       from what the memory says rather than from adding context. SkillRC, a reality check (RC) for agent skills, asks
       all three of a fixed agent. It treats the memory as a controlled intervention, estimates its gain on two executor
-      stacks, and compares the true memory with a placebo that keeps the memory&rsquo;s rules, order, and length but
-      scrambles its words. On ALFWorld, a compact skill memory clearly improves GPT-4o-mini on every demonstration pair,
-      with the smallest payload we test. The same memory does not help Qwen3-8B, and the placebo already separates the
-      two executors by as much as the true memory does, while coherent content adds a modest increment to both that our
-      intervals cannot distinguish from zero. The gain is therefore real and specific to the executor stack, and its
-      source becomes a question the protocol can test rather than one a with-versus-without comparison can settle.</p>
+      stacks, and compares the true memory with two controls that keep its rules, order, and length: a scrambled placebo
+      and a coherent memory about an unrelated activity. On ALFWorld, a compact skill memory clearly improves GPT-4o-mini
+      on every demonstration pair, with the smallest payload we test, and does not help Qwen3-8B. A pre-registered rerun
+      of every condition in one time window locates the gain in the memory&rsquo;s task-relevant content: the two controls
+      behave alike, and the true memory exceeds the scrambled placebo on both executors. What differs between the
+      executors is the cost of reading an added block, which leaves Qwen3-8B&rsquo;s net gain near zero; an earlier
+      finding that the placebo alone separates the executors did not reproduce on new games.</p>
   </section>
 
   <h2>The question</h2>
@@ -168,8 +169,8 @@
       executor is a stack of weights, tokenizer, chat template, runtime, and decoding, and the same memory may help one
       stack and not another.<span class="m">Measured by the transport gap between stacks.</span></div>
     <div class="step"><div class="n">QUESTION 3</div><b>How much of the gain comes from what the memory says?</b> Any
-      added block of text can move a model; a placebo with the same rules, order, and length but scrambled words
-      separates content from context.<span class="m">Measured by the content increment, placebo to true memory.</span></div>
+      added block of text can move a model; two controls with the same rules, order, and length, one scrambled and one
+      coherent but about an unrelated activity, separate content from context.<span class="m">Measured by the increment of the true memory over each control.</span></div>
   </div>
   <p>SkillRC asks all three of one fixed agent. It varies only the executor stack and the memory&rsquo;s content,
     representation, presentation, and footprint, keeps the agent loop, decoding, and action parsing identical, audits
@@ -178,12 +179,12 @@
     runs; the executors are hosted GPT-4o-mini and locally served Qwen3-8B.</p>
 
   <figure>
-    <div class="plate"><a href="static/img/fig_placebo.png"><img src="static/img/fig_placebo.png" alt="Order-placebo gate on 60 frozen ALFWorld tasks. Left: success under no memory, the scrambled placebo, and the true memory for GPT-4o-mini (0.544, 0.633, 0.681) and Qwen3-8B (0.728, 0.620, 0.683). Right: paired effects with 95% intervals; the grey band is the frozen equivalence region."></a></div>
-    <figcaption><b>No memory &rarr; scrambled memory &rarr; true memory.</b> On 60 frozen tasks, GPT-4o-mini goes from
-      0.544 to 0.633 with the scrambled placebo and to 0.681 with the true memory; Qwen3-8B goes from 0.728 to 0.620 and
-      back to 0.683. The placebo alone opens a gap between the two stacks of &minus;0.197, as large as the true
-      memory&rsquo;s &minus;0.181; coherent content then adds +0.047 and +0.064, with intervals that include zero. The
-      three bars per stack are the three questions in one picture.</figcaption>
+    <div class="plate"><a href="static/img/fig_rerun.png"><img src="static/img/fig_rerun.png" alt="Same-window rerun on 60 ALFWorld games. GPT-4o-mini: no memory 0.589, scrambled placebo 0.561, coherent irrelevant control 0.561, true memory 0.667. Qwen3-8B: 0.706, 0.633, 0.667, 0.717. Paired effects with 95% intervals: true minus scrambled +0.106 (GPT) and +0.083 (Qwen), both excluding zero; irrelevant minus scrambled near zero for both."></a></div>
+    <figcaption><b>No memory &rarr; scrambled &rarr; coherent but irrelevant &rarr; true memory.</b> All four conditions and both
+      executors were rerun in one time window on 60 games, under a pre-registered analysis. The two controls keep the
+      memory&rsquo;s items, tags, order and 645-token footprint and behave alike; the true memory exceeds them, so the
+      benefit comes from what the memory says about the task. Qwen3-8B loses with any added block (0.706 &rarr; 0.633 with
+      the scrambled one), and its content benefit roughly cancels that loss.</figcaption>
   </figure>
 
   <h2>Three findings</h2>
@@ -213,32 +214,34 @@
     The interval identifies moderation by the whole stack; it does not identify which component, weights, tokenizer,
     template, or runtime, is responsible.</p>
 
-  <h3>3. The scrambled memory already separates the stacks; the content increment is modest and uncertain</h3>
-  <p>The order placebo keeps the memory&rsquo;s task tags, item indices, retrieval order, and 645-token footprint but
-    removes every original adjacent word pair. On the 60-task gate it already moves the stacks apart: <b>+0.089 for
-    GPT-4o-mini and &minus;0.108 for Qwen3-8B</b>. Coherent content then adds +0.047 ([&minus;0.019, +0.117]) and
-    +0.064 ([0.000, +0.128]), and the gap in this increment is +0.017 ([&minus;0.075, +0.108]). Under the rule frozen
-    before any outcome was read, the content mechanism is inconclusive: the executor reversal cannot be attributed to
-    differential use of the experience content, and the content increment, positive for both stacks, cannot be
-    distinguished from zero.</p>
-  <div class="callout"><b>What this does and does not show.</b> The comparison establishes a memory&ndash;executor
-    interaction that a with-versus-without contrast cannot see, and it bounds the content increment. It does not show
-    that the content is irrelevant: a scrambled block is not a fully neutral control, since it may distract differently
-    from coherent text and keeps the memory&rsquo;s vocabulary. The source of the gain is therefore a testable question,
-    not a settled one.</div>
-  <div class="callout insight"><b>The next test.</b> A coherent, equal-length memory that is irrelevant to the task
-    would separate semantic relevance from textual interference; manipulating stack components one at a time would say
-    which part of the stack moderates the gain. Both run inside the same harness, with the same payload audit.</div>
+  <h3>3. The benefit comes from task-relevant content; the stacks differ in what an added block costs</h3>
+  <p>A first placebo gate was inconclusive: the scrambled memory alone moved the stacks apart (+0.089 for GPT-4o-mini,
+    &minus;0.108 for Qwen3-8B), and the content increments had intervals that included zero. A scrambled block is not a
+    neutral control, so we added a <b>coherent, equal-length memory about vegetable gardening</b> with the same tags, word
+    counts, order and footprint, and reran every condition for both executors in one window under a pre-registered rule.</p>
+  <p>On the rerun the true memory exceeds the scrambled placebo on <b>both</b> executors (+0.106 for GPT-4o-mini,
+    +0.083 for Qwen3-8B, both intervals above zero) and exceeds the coherent control on GPT-4o-mini (+0.106). The two
+    controls behave alike (differences 0.000 and +0.033), so the frozen rule attributes the content increment to task
+    relevance, not to coherence. What separates the executors is the block itself: Qwen3-8B drops 0.072 with the scrambled
+    payload, so its content benefit leaves a net gain near zero (+0.011), while GPT-4o-mini keeps most of it (+0.078).</p>
+  <div class="callout"><b>What changed, and what did not.</b> The earlier placebo effect on GPT-4o-mini did not reproduce
+    on the rerun (&minus;0.028 instead of +0.089). The rerun uses a different sample of 60 games, because the re-downloaded
+    ALFWorld data map task ids to games in a different order, and hosted generations are not perfectly repeatable, so this
+    is reported as non-reproduction rather than a task-by-task replication test. The memory&rsquo;s gain on GPT-4o-mini and
+    its absence on Qwen3-8B hold on both samples.</div>
+  <div class="callout insight"><b>The next test.</b> Repeating the two-control design on all 134 tasks with repeated hosted
+    runs would put an interval on the stack difference in context cost; manipulating stack components one at a time would
+    say which part of the stack sets that cost.</div>
 
   <h2>Full results</h2>
   <h3>Key numbers</h3>
   <p class="muted">ALFWorld, 134 unseen tasks, 33 ExpeL-style insights (645 tokens), BM25 presentation, three
-    demonstration pairs weighted equally; 95% task-bootstrap intervals. Placebo numbers from the 60-task gate.</p>
+    demonstration pairs weighted equally; 95% task-bootstrap intervals. Control numbers from the 60-game same-window rerun.</p>
   <div class="stats">
     <div class="stat"><div class="v">+0.127</div><div class="l">GPT-4o-mini gain with memory (0.587 &rarr; 0.714)</div><div class="ci">[+0.072, +0.184]</div></div>
     <div class="stat"><div class="v">−0.148</div><div class="l">Transport gap (Qwen − GPT)</div><div class="ci">[−0.218, −0.080]</div></div>
-    <div class="stat"><div class="v">+0.089 / −0.108</div><div class="l">Scrambled placebo vs. no memory, GPT / Qwen</div><div class="ci">[+0.025, +0.153] / [−0.164, −0.053]</div></div>
-    <div class="stat"><div class="v">+0.047 / +0.064</div><div class="l">Content increment, true vs. placebo, GPT / Qwen</div><div class="ci">[−0.019, +0.117] / [0.000, +0.128]</div></div>
+    <div class="stat"><div class="v">+0.106 / +0.083</div><div class="l">True memory vs. scrambled placebo, GPT / Qwen (rerun)</div><div class="ci">[+0.028, +0.183] / [+0.022, +0.144]</div></div>
+    <div class="stat"><div class="v">0.000 / +0.033</div><div class="l">Coherent irrelevant vs. scrambled, GPT / Qwen (rerun)</div><div class="ci">[−0.072, +0.072] / [−0.028, +0.094]</div></div>
   </div>
 
   <h3>Harness factors</h3>
@@ -248,7 +251,7 @@
     <thead><tr><th>Factor</th><th>Role</th><th>Levels in this study</th></tr></thead>
     <tbody>
       <tr><td><span class="dim" style="background:#7a1022">E</span>Executor stack</td><td class="edited">varied</td><td>GPT-4o-mini (hosted API), Qwen3-8B (vLLM, thinking off)</td></tr>
-      <tr><td><span class="dim" style="background:#F0A04B">c</span>Memory content</td><td class="edited">varied</td><td>none, true insights, order placebo</td></tr>
+      <tr><td><span class="dim" style="background:#F0A04B">c</span>Memory content</td><td class="edited">varied</td><td>none, true insights, order placebo, coherent task-irrelevant control</td></tr>
       <tr><td><span class="dim" style="background:#A066C2">r</span>Representation</td><td class="edited">varied</td><td>33 compact insights, raw trajectories, Markdown procedures</td></tr>
       <tr><td><span class="dim" style="background:#E2B12F">p</span>Presentation</td><td class="edited">varied</td><td>BM25, dense, reference-ranked placebo (order, not membership)</td></tr>
       <tr><td><span class="dim" style="background:#4F9BD9">B</span>Footprint</td><td class="fixed">measured, matched</td><td>2,048-token budget; 645 tokens realized by the insights</td></tr>

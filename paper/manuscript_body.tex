@@ -59,15 +59,17 @@ stacks and on WebShop \citep{yao2022webshop}. The experience memory improves the
 harness for \gptm, raising success from $0.587$ to $0.714$ on every demonstration
 pair, and the most compact memory, 33 rules in 645 tokens, is also the most
 effective one. The improvement, however, is specific to the stack: the same memory
-leaves \qwenm unchanged, and a placebo that keeps the memory's rules, order, and
-length but scrambles its words already separates the two stacks by as much as the
-true memory does, while coherent content adds a modest increment to both whose
-intervals include zero. We read these results as a progression rather than as a
-sequence of failures. The first establishes that the memory helps; the second that
-the gain is an interaction between memory and executor stack, which a single-model
-comparison cannot see; and the third that the share of this interaction owed to
-the experience content is the quantity still to be pinned down, which the protocol
-makes testable.
+leaves \qwenm unchanged. A first placebo gate was inconclusive about why, so we
+added a coherent, equal-length memory about an unrelated activity and reran every
+condition in one window. The rerun locates the gain in the memory's task-relevant
+content: the coherent control behaves like the scrambled placebo, and the true
+memory exceeds the placebo on both executors. What differs between the executors is
+the cost of reading an added block, which leaves \qwenm's net gain near zero. We
+read these results as a progression: the first establishes that the memory helps;
+the second that its effect depends on the stack that reads it, which a
+single-model comparison cannot see; and the third, after two controls, that the
+benefit comes from what the memory says while the stack decides how much of it
+survives.
 
 \methodlabel{Contributions.}
 The main contributions of this work are as follows:
@@ -82,10 +84,11 @@ The main contributions of this work are as follows:
   payload-matched order placebo frozen before outcomes
   (\S\ref{sec:transport} and~\S\ref{sec:placebo}).
   \item Empirical evidence that a compact skill memory improves one executor but not
-  another, that a content-free placebo already opens a gap of similar size, so that
-  the executor interaction cannot be attributed to differential use of content on
-  this evidence, that transfer varies widely across tasks, and that the same kind of
-  memory can hurt in a second environment (\S\ref{sec:experiments}).
+  another; that, against two payload-matched controls run in one window, its
+  benefit comes from task-relevant content on both executors while the executors
+  differ in the cost of an added block; that transfer varies widely across tasks;
+  and that the same kind of memory can hurt in a second environment
+  (\S\ref{sec:experiments}).
 \end{itemize}
 
 \section{Method}
@@ -434,8 +437,7 @@ equivalence region $[-0.05,+0.05]$.}
 \vspace{-8pt}
 \end{figure}
 
-The placebo already separates the two stacks, and coherent content adds a modest
-increment to both. On the 60-task gate the true memory reproduces the original
+\methodlabel{The first gate.} On the 60-task gate the true memory reproduces the original
 direction: \gptm rises from $0.544$ to $0.681$ ($+0.136$, \ci{+0.075}{+0.200}) and
 \qwenm falls from $0.728$ to $0.683$ ($-0.044$, \ci{-0.100}{+0.006}). The placebo,
 which carries the same items in the same order at the same footprint but no
@@ -446,18 +448,60 @@ Figure~\ref{fig:placebo}). Coherent content then adds $S_G=+0.047$ for \gptm
 \qwenm (\ci{0.000}{+0.128}; 18/11/31). The gap in this increment is
 $\Delta_{E\times S}=+0.017$ (\ci{-0.075}{+0.108}).
 
+Under the frozen rule this first gate was \emph{inconclusive}: in point estimates the
+placebo alone opened a stack gap of $-0.197$, as large as the true memory's $-0.181$,
+and the content increments for both stacks had intervals that included zero. A
+scrambled block is also not a neutral control: it may distract differently from
+coherent text, and it keeps the memory's vocabulary.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_rerun.pdf}
+\vspace{-14pt}
+\caption{Pre-registered same-window rerun on 60 ALFWorld games (2026-10-10). Left:
+equal-pair success under no memory, the scrambled order placebo, a coherent memory
+about an unrelated activity, and the true memory; all four conditions and both
+executors were run in the same time window. Right: paired effects with 95\%
+stratified task-bootstrap intervals; the grey band is $[-0.05,+0.05]$. Both controls
+keep the true memory's items, task tags, retrieval order, and 645-token footprint.}
+\label{fig:rerun}
+\vspace{-8pt}
+\end{figure}
+
+\methodlabel{A same-window rerun with a second control.} We therefore added a
+coherent, equal-length, task-irrelevant control: 33 well-formed imperative
+sentences about vegetable gardening, each with the same task tag and word count as
+the corresponding insight, no ALFWorld vocabulary, footprint matched to 645 tokens
+under both tokenizers by the placebo's procedure, and injected at the same indices
+(Appendix~\ref{app:rerun}). Because the per-episode logs of the first gate were lost
+and the hosted alias is mutable, we reran all four conditions for both executors in
+one window, under a pre-registered analysis and decision rule; the re-downloaded
+ALFWorld data map the same 60 task ids to a different sample of games, so the rerun
+is a fresh test rather than a repeat of the first gate.
+
+The rerun locates the content increment in task relevance
+(Figure~\ref{fig:rerun}). The true memory exceeds the scrambled placebo on both
+executors ($S_G=+0.106$, $S_Q=+0.083$; both intervals exclude zero) and exceeds the
+coherent control on \gptm ($+0.106$, interval excludes zero), less clearly on \qwenm
+($+0.050$). The two controls behave alike: coherent minus scrambled is $0.000$ for
+\gptm and $+0.033$ for \qwenm, both intervals including zero
+(Table~\ref{tab:rerun} in Appendix~\ref{app:rerun} lists every interval). The frozen rule therefore attributes the content
+increment to task relevance, not to coherence. The memory again helps \gptm
+($+0.078$, \ci{+0.011}{+0.144}) and not \qwenm ($+0.011$, \ci{-0.056}{+0.078}), but
+the placebo effect of the first gate does not reproduce. On the new games the
+scrambled block slightly lowers \gptm success ($-0.028$, \ci{-0.094}{+0.039}), and
+it lowers \qwenm success by $0.072$ (\ci{-0.139}{0.000}).
+
 \begin{observationbox}
-Under the frozen rule the content mechanism is \emph{inconclusive}: coherent text
-adds a positive increment for both stacks, but both intervals include zero, and the
-executor reversal of RQ2 cannot be attributed to differential use of experience
-content on this evidence. In point estimates, the placebo alone opens a stack gap
-of $-0.197$, as large as the true memory's $-0.181$ on the same tasks, so the
-interaction between memory and executor is established while the share of the
-gain owed to content is not. A scrambled block is also not a neutral control: it
-may distract differently from coherent text, and it keeps the memory's vocabulary.
-The comparison therefore turns the source of the gain into a testable question
-rather than settling it; the next control is a coherent, equal-length memory that
-is irrelevant to the task.
+Both executors take a content benefit from the skill memory, and it comes from what
+the memory says about the task rather than from reading any coherent block. What
+differs between them is the cost of the block itself: \qwenm tends to lose with any
+added payload, and its content benefit roughly cancels that loss, which leaves its
+net gain near zero. The executor gap in the memory's effect is smaller on this
+sample ($-0.067$, \ci{-0.161}{+0.022}) than on the 134 tasks, and the first gate's
+placebo effect did not reproduce on new games; the stack interaction is therefore
+better read as a difference in context cost than as a difference in how the
+executors use the skills.
 \end{observationbox}
 
 \noindent\rqtag{RQ4}\hspace{0.45em}\textbf{Where does transfer succeed or fail across tasks?}\par\nopagebreak
@@ -577,17 +621,17 @@ three questions it asks build on one another. On ALFWorld a compact skill memory
 raises \gptm success by 12.7 points, on every demonstration pair and with the
 smallest payload we test, so the memory does improve the system it was built with.
 The same memory does not help \qwenm, so the gain is an interaction between memory
-and executor stack rather than a property of the memory alone. And a placebo that
-keeps the items, order, and footprint already separates the two stacks by as much
-as the true memory does, while coherent content adds a modest increment to both
-whose intervals include zero, so the share of the gain owed to what the memory
-says is the quantity that remains to be measured. A with-versus-without comparison
-answers only the first question; the effect of an experience memory has to be
-understood together with the stack that reads it. Future work should add a
-coherent, equal-length memory that is irrelevant to the task, to separate semantic
-relevance from textual interference, manipulate stack components one at a time,
-extend the placebo to regimes where retrieval changes membership, and apply the
-same audit to harnesses that learn their memories online.
+and executor stack rather than a property of the memory alone. And against a scrambled placebo and a
+coherent, task-irrelevant memory of the same footprint, run in one window, the true
+memory's benefit comes from its task-relevant content on both executors; the
+executors differ in what reading an added block costs them, and an earlier placebo
+effect did not reproduce on new games. A with-versus-without comparison answers
+only the first question; the effect of an experience memory has to be understood
+together with the stack that reads it and against content controls. Future work
+should repeat the two-control design on all 134 tasks and with repeated hosted
+runs, manipulate stack components one at a time to find which one sets the context
+cost, extend the controls to regimes where retrieval changes membership, and apply
+the same audit to harnesses that learn their memories online.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
@@ -649,6 +693,9 @@ same audit to harnesses that learn their memories online.
 \textbf{\textcolor{narrareddeep}{\ref{app:seedaxis}}}
   & \hyperref[app:seedaxis]{Seed-axis audit}
   & \textcolor{remarkgray}{p.~\pageref{app:seedaxis}} \\
+\textbf{\textcolor{narrareddeep}{\ref{app:rerun}}}
+  & \hyperref[app:rerun]{Same-window rerun with a coherent control}
+  & \textcolor{remarkgray}{p.~\pageref{app:rerun}} \\
 \textbf{\textcolor{narrareddeep}{\ref{app:placebo}}}
   & \hyperref[app:placebo]{Order-placebo construction}
   & \textcolor{remarkgray}{p.~\pageref{app:placebo}}
@@ -671,7 +718,10 @@ omit the optimizers and curators of ExpeL and SkillOS. Fourth, the order placebo
 isolates coherent local order imperfectly: shuffled text may distract differently
 from coherent text, and retained words keep bag-of-words cues; the 60-task gate is
 also lower powered than the 134-task focal contrast and targets an equal-task-type
-effect. Fifth, the WebShop check uses one local executor, one train-distilled pool,
+effect. The same-window rerun adds a coherent control but covers 60 games, one run
+per condition and seed, and a different sample of games than the first gate,
+because the re-downloaded ALFWorld data enumerate games in a different order; its
+placebo result therefore does not test the first gate's numbers task by task. Fifth, the WebShop check uses one local executor, one train-distilled pool,
 the small environment, and one execution per condition. Finally, the hosted GPT
 alias is mutable and temperature-zero hosted generations are not perfectly
 deterministic, and the public release contains the harness, configurations, pools,
@@ -1662,6 +1712,99 @@ and a gap of $-0.170$ (\ci{-0.252}{-0.088}). After seed 5 supplied pair 01, the
 complete three-pair estimates are those reported in RQ1 and RQ2. Repeated
 executions of one prompt are averaged within pair and never treated as independent
 seeds.
+
+\section{Same-Window Rerun with a Coherent, Task-Irrelevant Control}
+\label{app:rerun}
+
+\methodlabel{Why and when.} The first placebo gate (\S\ref{sec:results}, RQ3) could
+not separate ``no task content'' from ``incoherent text''. On 2026-10-10 we added a
+coherent control and, because the per-episode logs of the first gate were lost and
+the hosted model alias is mutable, reran all four conditions (no memory, scrambled
+placebo, coherent irrelevant control, true memory) for both executors in one time
+window. The design, estimands, bootstrap and decision rule were written down before
+any new episode ran (released with the code as \texttt{PREREG\_rerun\_2026-10-10.md}).
+The hosted alias resolved to \texttt{gpt-4o-mini-2024-07-18}.
+
+\methodlabel{The control.} Each of the 33 items keeps the insight's task tag and word
+count, and its body is a well-formed imperative sentence about vegetable gardening
+that contains no ALFWorld object, receptacle, appliance, or task verb. The placebo's
+deterministic procedure then replaces body words with the nonce \texttt{x} until the
+payload measures exactly 645 tokens under the \gptm tokenizer and
+645 under the \qwenm tokenizer (30 of 472 body words replaced). It is
+served through the same index-aligned reference ranking as the placebo, so item
+identity, order, and footprint are identical across the three payloads; every
+episode logged a footprint of 645 tokens. Table~\ref{tab:rerun_examples} shows two
+items.
+
+\begin{table}[t]
+\centering
+\caption{Two items of the true memory and the corresponding items of the two controls.}
+\label{tab:rerun_examples}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\arrayrulecolor{tableline}
+\begin{tabular}{@{}L{0.32\textwidth}L{0.30\textwidth}L{0.30\textwidth}@{}}
+\toprule
+\rowcolor{tableheadbg}
+\tablehead{True insight} & \tablehead{Scrambled placebo (body)} & \tablehead{Coherent, irrelevant control (body)} \\
+\midrule
+\texttt{[clean]} Always clean the item using the designated cleaning area before placing it in the final location. & item final area it the Always the before designated clean in x using placing cleaning the & Always pull weeds while they are small so they never set seed across the whole garden. \\
+\texttt{[cool]} Always check the fridge first for items that need to be cooled. & for Always items fridge x check to the be need that first & x off the lower leaves of tomato plants to improve air flow. \\
+\bottomrule
+\end{tabular}
+\arrayrulecolor{black}
+\end{table}
+
+\methodlabel{Tasks.} The rerun uses the 60 task ids of the frozen gate and seeds
+0, 1, and 5 (the three distinct demonstration pairs). The re-downloaded ALFWorld
+data enumerate the unseen games in a different order than the deleted 2026-07 copy,
+so the same ids now point to a different sample of games (11 \texttt{clean}, 9
+\texttt{put}, 10 of each other type). All eight runs share this mapping, which we
+verified on the task text of every episode before the analysis; the bootstrap
+stratifies by the observed types. This deviation was recorded as an addendum to the
+pre-registration before the analysis was run.
+
+\begin{table}[t]
+\centering
+\caption{Same-window rerun on 60 games: equal-pair success (top) and paired
+contrasts with 95\% stratified task-bootstrap intervals (bottom; 20{,}000 draws).}
+\label{tab:rerun}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\arrayrulecolor{tableline}
+\begin{tabular}{@{}lrlrlrl@{}}
+\toprule
+\rowcolor{tableheadbg}
+ & \multicolumn{2}{c}{\tablehead{\texttt{GPT-4o-mini}}} & \multicolumn{2}{c}{\tablehead{\texttt{Qwen3-8B}}} & \multicolumn{2}{c}{\tablehead{Gap (Qwen $-$ GPT)}} \\
+\midrule
+no memory & 0.589 & & 0.706 & & & \\
+scrambled placebo & 0.561 & & 0.633 & & & \\
+coherent irrelevant & 0.561 & & 0.667 & & & \\
+true memory & 0.667 & & 0.717 & & & \\
+\midrule
+true $-$ none & $+0.078$ & \ci{+0.011}{+0.144} & $+0.011$ & \ci{-0.056}{+0.078} & $-0.067$ & \ci{-0.161}{+0.022} \\
+scrambled $-$ none & $-0.028$ & \ci{-0.094}{+0.039} & $-0.072$ & \ci{-0.139}{-0.000} & $-0.044$ & \ci{-0.150}{+0.061} \\
+irrelevant $-$ none & $-0.028$ & \ci{-0.089}{+0.033} & $-0.039$ & \ci{-0.128}{+0.045} & $-0.011$ & \ci{-0.106}{+0.089} \\
+true $-$ scrambled & $+0.106$ & \ci{+0.028}{+0.183} & $+0.083$ & \ci{+0.022}{+0.144} & $-0.022$ & \ci{-0.133}{+0.083} \\
+true $-$ irrelevant & $+0.106$ & \ci{+0.039}{+0.172} & $+0.050$ & \ci{-0.022}{+0.128} & $-0.056$ & \ci{-0.150}{+0.039} \\
+irrelevant $-$ scrambled & $-0.000$ & \ci{-0.072}{+0.072} & $+0.033$ & \ci{-0.028}{+0.094} & $+0.033$ & \ci{-0.061}{+0.133} \\
+\bottomrule
+\end{tabular}
+\arrayrulecolor{black}
+\end{table}
+
+\methodlabel{Decision rule.} The frozen rule had four outcomes: (1) the controls agree
+($|C_E|\le0.05$ for both executors) and the true memory beats the coherent control on
+\gptm, so the content increment is task relevance; (2) the true memory and the
+coherent control agree, so any coherent block suffices; (3) coherence and relevance
+both contribute; (4) inconclusive. The data meet rule (1). Relative to the first
+gate, the true-memory effect on \gptm is smaller ($+0.078$ against $+0.136$) and the
+placebo effect on \gptm changes sign ($-0.028$ against $+0.089$); with different
+games, one run per condition, and hosted generations that are not perfectly
+repeatable, we report this as non-reproduction of the first gate's placebo effect
+rather than as a replication test of its numbers.
 
 \section{Order-Placebo Construction}
 \label{app:placebo}

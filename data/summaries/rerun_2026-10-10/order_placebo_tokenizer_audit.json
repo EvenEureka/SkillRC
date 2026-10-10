@@ -1,0 +1,10 @@
+{
+  "gpt_4o_mini": {
+    "original": 645,
+    "placebo": 645
+  },
+  "qwen3_8b_native": {
+    "original": 645,
+    "placebo": 645
+  }
+}

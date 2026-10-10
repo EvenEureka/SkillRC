@@ -1,6 +1,8 @@
 __pycache__/
 *.pyc
 results/
+data/alfworld/
+logs/
 configs/alfworld_react_fewshot.json
 paper/*.aux
 paper/*.bbl
@@ -8,3 +10,4 @@ paper/*.blg
 paper/*.log
 paper/*.out
 paper/*.listing
+configs/alfworld_base_config.yaml

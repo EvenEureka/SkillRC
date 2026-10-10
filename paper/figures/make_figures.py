@@ -189,6 +189,56 @@ def fig_placebo():
     _save(fig, "fig_placebo")
 
 
+def fig_rerun():
+    """RQ3, same-window rerun (2026-10-10): none / scrambled placebo / coherent irrelevant / true memory on 60 tasks,
+    plus the pre-registered increments. Every number is read from results/placebo/rerun_2026-10-10_results.json
+    (copied to data/summaries/rerun_2026-10-10/)."""
+    import json
+    src = OUT.parents[1] / "data" / "summaries" / "rerun_2026-10-10" / "rerun_2026-10-10_results.json"
+    R = json.loads(src.read_text())
+    m, e = R["means"], R["estimands"]
+    TEAL, TEAL_D = "#E6DDB8", "#A08A3C"   # coherent irrelevant control
+    fig = plt.figure(figsize=(7.2, 2.7))
+    gs = fig.add_gridspec(1, 4, width_ratios=[1.3, 1.3, 0.55, 1.6], wspace=0.3)
+    for k, (name, ex) in enumerate((("GPT-4o-mini", "gpt"), ("Qwen3-8B", "qwen"))):
+        ax = fig.add_subplot(gs[0, k])
+        vals = [m[f"{ex}/{c}"] for c in ("none", "placebo", "irrelevant", "true")]
+        for i, (v, c, cd) in enumerate(zip(vals, [LAV, BLUE, TEAL, SALM], [LAV_D, BLUE_D, TEAL_D, SALM_D])):
+            ax.bar(i, v, 0.66, color=c, zorder=2)
+            _label(ax, i, v, cd)
+        ax.set_xticks(range(4))
+        ax.set_xticklabels(["None", "Scram-\nbled", "Irrel-\nevant", "True"], fontsize=7.2, linespacing=0.95)
+        ax.set_ylim(0.5, 0.77)
+        ax.yaxis.set_major_formatter(mticker.PercentFormatter(1.0, decimals=0))
+        ax.set_title(name, fontsize=9, color=INK, fontweight="bold", pad=4)
+        _style(ax)
+    ax = fig.add_subplot(gs[0, 3])
+    rows = []
+    for ex, c, cd, tag in (("gpt", BLUE, BLUE_D, "GPT"), ("qwen", MINT, MINT_D, "Qwen")):
+        for key, lab in (("T", "true − none"), ("S", "true − scrambled"), ("R", "true − irrelevant"), ("C", "irrelevant − scrambled")):
+            x = e[f"{key}_{ex}"]
+            rows.append((f"{tag}: {lab}", x["mean"], x["ci95"][0], x["ci95"][1], c, cd))
+    ax.axvspan(-0.05, 0.05, color=GREY_BAND, zorder=0, lw=0)
+    for j, (lab, est, lo, hi, c, cd) in enumerate(rows):
+        y = len(rows) - 1 - j
+        ax.barh(y, est, 0.62, color=c, zorder=2)
+        ax.plot([lo, hi], [y, y], color=cd, lw=1.2, zorder=3)
+        ax.text(0.30, y, _r3(est, True), va="center", ha="right", fontsize=7, color=cd)
+    ax.axvline(0, color="#9E9E9E", lw=0.8, zorder=1)
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([r[0] for r in rows][::-1], fontsize=7.3)
+    ax.set_xlim(-0.16, 0.30)
+    ax.set_title("Paired effects (95% CI)", fontsize=9, color=INK, fontweight="bold", pad=4)
+    for s_ in ("top", "right", "left"):
+        ax.spines[s_].set_visible(False)
+    ax.tick_params(length=0)
+    ax.xaxis.grid(True, color=GRID, lw=0.7)
+    ax.set_axisbelow(True)
+    _title(fig, "Rerun, 60 tasks",
+           [("No memory", LAV), ("Scrambled placebo", BLUE), ("Coherent, irrelevant", TEAL), ("True memory", SALM)], y=1.11)
+    _save(fig, "fig_rerun")
+
+
 def fig_transport():
     """RQ4: task-level transport map and GPT gain by task type."""
     fig = plt.figure(figsize=(6.2, 2.45))
@@ -277,6 +327,6 @@ def fig_webshop():
 
 
 if __name__ == "__main__":
-    for f in (fig_success, fig_pairs, fig_placebo, fig_transport, fig_webshop):
+    for f in (fig_success, fig_pairs, fig_placebo, fig_rerun, fig_transport, fig_webshop):
         f()
     print("wrote", sorted(p.name for p in OUT.glob("fig_*.pdf")))

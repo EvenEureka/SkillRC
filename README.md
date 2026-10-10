@@ -17,9 +17,9 @@ with-memory vs. without-memory comparison answers only the first:
 2. **Does the gain transfer across executor stacks?** It repeats the estimate on a
    second stack and reports the *transport gap* between stacks.
 3. **How much of the gain comes from the skill's content?** It compares the true payload
-   with a payload-matched **order placebo** that keeps the same items, retrieval order,
-   and token footprint but removes every original adjacent word pair. The decision rule
-   is frozen before any outcome is inspected.
+   with two payload-matched controls that keep the same items, retrieval order, and token
+   footprint: an **order placebo** that removes every original adjacent word pair, and a
+   **coherent, task-irrelevant memory**. The decision rules are frozen before outcomes are inspected.
 
 <p align="center"><img src="paper/figures/fig_overview.png" width="92%" alt="SkillRC protocol overview"></p>
 
@@ -33,17 +33,21 @@ with-memory vs. without-memory comparison answers only the first:
 | GPT-4o-mini memory gain (33 insights, 645 tokens, BM25) | +0.127 | [+0.072, +0.184] |
 | Qwen3-8B memory gain | −0.021 | [−0.062, +0.020] |
 | Transport gap (Qwen − GPT) | **−0.148** | [−0.218, −0.080] |
-| Order placebo vs. none, GPT / Qwen (60-task gate) | +0.089 / −0.108 | [+0.025, +0.153] / [−0.164, −0.053] |
-| Gap in true − placebo increment | +0.017 | [−0.075, +0.108] |
+| Order placebo vs. none, GPT / Qwen (first 60-task gate, 2026-07) | +0.089 / −0.108 | [+0.025, +0.153] / [−0.164, −0.053] |
+| Same-window rerun (2026-10-10, 60 games): true vs. scrambled placebo, GPT / Qwen | +0.106 / +0.083 | [+0.028, +0.183] / [+0.022, +0.144] |
+| Rerun: true vs. coherent task-irrelevant control, GPT / Qwen | +0.106 / +0.050 | [+0.039, +0.172] / [−0.022, +0.128] |
+| Rerun: coherent irrelevant vs. scrambled, GPT / Qwen | 0.000 / +0.033 | [−0.072, +0.072] / [−0.028, +0.094] |
 | WebShop reward change with memory (Qwen3-8B, 100 sessions) | −0.090 | [−0.165, −0.016] |
 
 The memory helps the stack it was built with, on every demonstration pair and with the
-smallest payload tested. The gain does not transfer, and the placebo already separates the
-two stacks by about as much as the true memory does, so on this evidence the executor
-interaction cannot be attributed to differential use of the procedures. The content
-increment is positive for both stacks but its intervals include zero, and a scrambled block
-is not a fully neutral control: the source of the gain is a testable question, not a
-settled one. See the paper for task-level transport maps and the context-cost audit.
+smallest payload tested, and does not help the second stack. A pre-registered same-window rerun with two
+payload-matched controls (a scrambled placebo and a coherent memory about gardening with the same tags,
+word counts, order and 645-token footprint) locates the benefit in the memory's task-relevant content: the
+two controls behave alike and the true memory exceeds them. The stacks differ in what reading an added
+block costs: Qwen3-8B loses with any added payload, which leaves its net gain near zero. The first gate's
+placebo effect on GPT-4o-mini did not reproduce on the rerun's (different) sample of games. Data,
+pre-registration and per-episode logs of the rerun are in `data/summaries/rerun_2026-10-10/`.
+See the paper for task-level transport maps and the context-cost audit.
 
 ## Install
 

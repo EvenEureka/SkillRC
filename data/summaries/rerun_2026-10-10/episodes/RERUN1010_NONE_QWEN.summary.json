@@ -1,0 +1,186 @@
+{
+  "run_id": "RERUN1010_NONE_QWEN",
+  "config": {
+    "run_id": "RERUN1010_NONE_QWEN",
+    "milestone": "rerun-2026-10-10-irrelevant-control",
+    "out_dir": "results",
+    "env": "alfworld",
+    "task_ids": [
+      2,
+      4,
+      7,
+      10,
+      12,
+      15,
+      20,
+      21,
+      26,
+      27,
+      28,
+      31,
+      32,
+      35,
+      38,
+      40,
+      42,
+      46,
+      48,
+      49,
+      50,
+      51,
+      52,
+      54,
+      55,
+      56,
+      62,
+      63,
+      68,
+      73,
+      74,
+      77,
+      78,
+      83,
+      84,
+      88,
+      90,
+      91,
+      92,
+      93,
+      94,
+      96,
+      98,
+      99,
+      100,
+      104,
+      105,
+      106,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      117,
+      119,
+      123,
+      126,
+      128,
+      131
+    ],
+    "max_tasks": null,
+    "max_steps": 30,
+    "webshop_base_url": "http://127.0.0.1:3000",
+    "webshop_n_tasks": 100,
+    "provider": "openai",
+    "model": "qwen3-8b",
+    "temperature": 0.0,
+    "max_completion_tokens": 256,
+    "base_url": "http://localhost:9681/v1",
+    "request_timeout": 120.0,
+    "max_retries": 5,
+    "api_key": "EMPTY",
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "n_fewshot": 2,
+    "system_prompt_key": "default",
+    "prompt_style": "react_alfworld",
+    "inject_admissible": true,
+    "fewshot_file": "configs/alfworld_react_fewshot.json",
+    "save_trajectories": true,
+    "memory": "none",
+    "memory_k": 20,
+    "token_budget": null,
+    "demo_pool": null,
+    "rank_reference_pool": null,
+    "retriever": "lexical",
+    "embed_model": "text-embedding-3-small",
+    "passport_file": null,
+    "passport_strict_identity": true,
+    "curator": "static",
+    "gate_threshold": 0.35,
+    "explore": true,
+    "prior_a": 1.0,
+    "prior_b": 1.0,
+    "credit": "uniform",
+    "cluster_by_type": true,
+    "stream_shuffle_seed": null,
+    "credit_file": null,
+    "credit_gate_cut": 0.0,
+    "seeds": [
+      0,
+      1,
+      5
+    ]
+  },
+  "summary": {
+    "n": 180,
+    "n_ok": 180,
+    "n_error": 0,
+    "success_rate": 0.7055555555555556,
+    "reward": {
+      "mean": 0.7055555555555556,
+      "std": 0.4557926212437482
+    },
+    "steps": {
+      "mean": 11.644444444444444,
+      "std": 5.916664058424047
+    },
+    "prompt_tokens": {
+      "mean": 75976.04444444444,
+      "std": 64904.54385050764
+    },
+    "completion_tokens": {
+      "mean": 1121.9388888888889,
+      "std": 1037.4860757506788
+    },
+    "memory_tokens": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "total_cost_usd": 0.0,
+    "by_task_type": {
+      "clean": {
+        "n": 33,
+        "success_rate": 0.5454545454545454
+      },
+      "cool": {
+        "n": 30,
+        "success_rate": 0.9666666666666667
+      },
+      "examine": {
+        "n": 30,
+        "success_rate": 0.7
+      },
+      "heat": {
+        "n": 30,
+        "success_rate": 0.7333333333333333
+      },
+      "put": {
+        "n": 27,
+        "success_rate": 0.9259259259259259
+      },
+      "puttwo": {
+        "n": 30,
+        "success_rate": 0.4
+      }
+    },
+    "by_seed": {
+      "0": 0.7,
+      "1": 0.6666666666666666,
+      "5": 0.75
+    },
+    "memory": {
+      "kind": "none",
+      "n_items": 0,
+      "n_tokens": 0
+    }
+  },
+  "usage": {
+    "calls": 5306,
+    "prompt_tokens": 13675688,
+    "completion_tokens": 201949,
+    "cached_tokens": 0,
+    "cost_usd": 0.0
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "estimands": {
+    "T_gpt": {
+      "contrast": "true - none",
+      "mean": 0.0778,
+      "ci95": [
+        0.0111,
+        0.1444
+      ]
+    },
+    "T_qwen": {
+      "contrast": "true - none",
+      "mean": 0.0111,
+      "ci95": [
+        -0.0556,
+        0.0778
+      ]
+    },
+    "Delta_T": {
+      "contrast": "(T_qwen) - (T_gpt)",
+      "mean": -0.0667,
+      "ci95": [
+        -0.1611,
+        0.0222
+      ]
+    },
+    "P_gpt": {
+      "contrast": "placebo - none",
+      "mean": -0.0278,
+      "ci95": [
+        -0.0944,
+        0.0389
+      ]
+    },
+    "P_qwen": {
+      "contrast": "placebo - none",
+      "mean": -0.0722,
+      "ci95": [
+        -0.1389,
+        -0.0
+      ]
+    },
+    "Delta_P": {
+      "contrast": "(P_qwen) - (P_gpt)",
+      "mean": -0.0444,
+      "ci95": [
+        -0.15,
+        0.0611
+      ]
+    },
+    "I_gpt": {
+      "contrast": "irrelevant - none",
+      "mean": -0.0278,
+      "ci95": [
+        -0.0889,
+        0.0333
+      ]
+    },
+    "I_qwen": {
+      "contrast": "irrelevant - none",
+      "mean": -0.0389,
+      "ci95": [
+        -0.1278,
+        0.0446
+      ]
+    },
+    "Delta_I": {
+      "contrast": "(I_qwen) - (I_gpt)",
+      "mean": -0.0111,
+      "ci95": [
+        -0.1056,
+        0.0889
+      ]
+    },
+    "S_gpt": {
+      "contrast": "true - placebo",
+      "mean": 0.1056,
+      "ci95": [
+        0.0278,
+        0.1833
+      ]
+    },
+    "S_qwen": {
+      "contrast": "true - placebo",
+      "mean": 0.0833,
+      "ci95": [
+        0.0222,
+        0.1444
+      ]
+    },
+    "Delta_S": {
+      "contrast": "(S_qwen) - (S_gpt)",
+      "mean": -0.0222,
+      "ci95": [
+        -0.1333,
+        0.0833
+      ]
+    },
+    "R_gpt": {
+      "contrast": "true - irrelevant",
+      "mean": 0.1056,
+      "ci95": [
+        0.0389,
+        0.1722
+      ]
+    },
+    "R_qwen": {
+      "contrast": "true - irrelevant",
+      "mean": 0.05,
+      "ci95": [
+        -0.0222,
+        0.1278
+      ]
+    },
+    "Delta_R": {
+      "contrast": "(R_qwen) - (R_gpt)",
+      "mean": -0.0556,
+      "ci95": [
+        -0.15,
+        0.0389
+      ]
+    },
+    "C_gpt": {
+      "contrast": "irrelevant - placebo",
+      "mean": -0.0,
+      "ci95": [
+        -0.0722,
+        0.0722
+      ]
+    },
+    "C_qwen": {
+      "contrast": "irrelevant - placebo",
+      "mean": 0.0333,
+      "ci95": [
+        -0.0278,
+        0.0944
+      ]
+    },
+    "Delta_C": {
+      "contrast": "(C_qwen) - (C_gpt)",
+      "mean": 0.0333,
+      "ci95": [
+        -0.0611,
+        0.1333
+      ]
+    }
+  },
+  "means": {
+    "gpt/none": 0.5889,
+    "gpt/true": 0.6667,
+    "gpt/placebo": 0.5611,
+    "gpt/irrelevant": 0.5611,
+    "qwen/none": 0.7056,
+    "qwen/true": 0.7167,
+    "qwen/placebo": 0.6333,
+    "qwen/irrelevant": 0.6667
+  },
+  "drift_vs_2026_07": {
+    "gpt/none": 0.0449,
+    "gpt/true": -0.0143,
+    "gpt/placebo": -0.0719,
+    "qwen/none": -0.0224,
+    "qwen/true": 0.0337,
+    "qwen/placebo": 0.0133
+  },
+  "footprint": {
+    "gpt/true": [
+      645
+    ],
+    "gpt/placebo": [
+      645
+    ],
+    "gpt/irrelevant": [
+      645
+    ],
+    "qwen/true": [
+      645
+    ],
+    "qwen/placebo": [
+      645
+    ],
+    "qwen/irrelevant": [
+      645
+    ]
+  },
+  "decision_rule": "1 (content increment = task relevance)"
+}

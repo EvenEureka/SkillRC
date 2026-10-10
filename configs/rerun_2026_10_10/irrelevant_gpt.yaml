@@ -1,0 +1,25 @@
+run_id: RERUN1010_IRRELEVANT_GPT
+milestone: rerun-2026-10-10-irrelevant-control
+out_dir: results
+env: alfworld
+task_ids: [2, 4, 7, 10, 12, 15, 20, 21, 26, 27, 28, 31, 32, 35, 38, 40, 42, 46, 48,
+  49, 50, 51, 52, 54, 55, 56, 62, 63, 68, 73, 74, 77, 78, 83, 84, 88, 90, 91, 92,
+  93, 94, 96, 98, 99, 100, 104, 105, 106, 110, 111, 112, 113, 114, 115, 117, 119,
+  123, 126, 128, 131]
+provider: openai
+model: gpt-4o-mini
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true
+fewshot_file: configs/alfworld_react_fewshot.json
+memory: expel
+retriever: bm25
+memory_k: 20
+token_budget: 645
+demo_pool: data/pools/expel_insights_irrelevant_coherent.jsonl
+rank_reference_pool: data/pools/expel_insights.jsonl
+seeds: [0, 1, 5]
+save_trajectories: true

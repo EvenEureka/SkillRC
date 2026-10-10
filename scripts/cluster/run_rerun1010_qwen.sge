@@ -1,0 +1,66 @@
+#!/bin/bash
+# 2026-10-10 rerun of the placebo gate with the coherent task-irrelevant control, Qwen3-8B executor.
+# One GPU, one vLLM server, the four conditions run one after another (the harness is sequential).
+# usage: qsub -v SKILLRC_ROOT=...,SKILLRC_PY=...,VLLM_ENV=...,HF_HOME=... scripts/cluster/run_rerun1010_qwen.sge
+#$ -N rerun1010_qwen
+#$ -q gpu@@tarikan_lab
+#$ -l gpu_card=1
+#$ -pe smp 8
+#$ -j y
+#$ -cwd
+#$ -o logs/
+
+set -euo pipefail
+kinit -R 2>/dev/null || true
+aklog || true
+
+ROOT=${SKILLRC_ROOT}
+cd "$ROOT"
+mkdir -p logs
+export ALFWORLD_DATA="$ROOT/data/alfworld"
+
+VLLM=${VLLM_ENV}
+export HF_HOME=${HF_HOME}
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export CUDA_HOME=$VLLM/lib/python3.11/site-packages/nvidia/cu13
+export PATH=$VLLM/bin:$CUDA_HOME/bin:$PATH
+export VLLM_ATTENTION_BACKEND=FLASH_ATTN
+export VLLM_USE_FLASHINFER_SAMPLER=0
+
+for cond in none true placebo irrelevant; do
+  for output in results/RERUN1010_${cond^^}_QWEN.episodes.jsonl results/RERUN1010_${cond^^}_QWEN.summary.json; do
+    if [ -e "$output" ]; then echo "refusing to overwrite existing output: $output"; exit 2; fi
+  done
+done
+
+PY=${SKILLRC_PY}
+# the placebo and the control are rebuilt deterministically and audited before any episode runs
+PYTHONPATH=. "$PY" scripts/analysis/build_order_placebo.py
+AUDIT_PY=${AUDIT_PY:-$PY}   # needs transformers for the Qwen tokenizer audit
+HF_HUB_OFFLINE=1 PYTHONPATH=. "$AUDIT_PY" scripts/analysis/build_irrelevant_control.py
+HF_HUB_OFFLINE=1 PYTHONPATH=. "$AUDIT_PY" scripts/analysis/audit_placebo_tokenizers.py
+
+JOB=${JOB_ID:-$$}
+PORT=$((9000 + JOB % 1000))
+SRVLOG="logs/vllm_rerun1010.$JOB.log"
+"$VLLM/bin/vllm" serve Qwen/Qwen3-8B --served-model-name qwen3-8b --port "$PORT" \
+  --gpu-memory-utilization 0.85 --max-model-len 16384 --enforce-eager > "$SRVLOG" 2>&1 &
+SRV_PID=$!
+cleanup() { kill "$SRV_PID" 2>/dev/null || true; sleep 3; kill -9 "$SRV_PID" 2>/dev/null || true; }
+trap cleanup EXIT
+
+ready=0
+for i in $(seq 1 144); do
+  if curl -sf "http://localhost:$PORT/health" >/dev/null 2>&1; then echo "[serve] READY ~$((i*5))s"; ready=1; break; fi
+  if ! kill -0 "$SRV_PID" 2>/dev/null; then tail -30 "$SRVLOG"; exit 1; fi
+  sleep 5
+done
+[ "$ready" -eq 1 ] || { tail -40 "$SRVLOG"; exit 1; }
+
+for cond in none true placebo irrelevant; do
+  echo "=== condition $cond ($(date)) ==="
+  "$PY" -m skillrc.runner --config configs/rerun_2026_10_10/${cond}_qwen.yaml \
+    --override base_url=http://localhost:$PORT/v1
+done
+echo RERUN1010_QWEN_DONE
