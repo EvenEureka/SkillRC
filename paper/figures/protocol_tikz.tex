@@ -1,108 +1,51 @@
-% SkillRC design schematic (TikZ), included by manuscript_body.tex. Plots no data.
+% SkillRC design figure (TikZ), included by manuscript_body.tex. Conceptual only; plots no data.
 \begin{tikzpicture}[
   x=1cm, y=1cm,
-  font=\sffamily\scriptsize,
+  every node/.style={font=\sffamily\fontsize{8}{9.5}\selectfont},
   col/.style={draw=#1!55, dashed, rounded corners=4pt, fill=#1!4, line width=0.6pt},
-  steptitle/.style={font=\sffamily\bfseries\footnotesize, text=#1},
-  body/.style={align=center, text=black!80, font=\sffamily\scriptsize},
-  note/.style={align=center, text=black!60, font=\sffamily\scriptsize},
+  title/.style={font=\sffamily\bfseries\fontsize{9}{11}\selectfont, text=#1},
   card/.style={draw=#1!70, fill=#1!12, rounded corners=2pt, line width=0.5pt, align=center,
-               font=\sffamily\scriptsize, inner sep=2.5pt},
+               inner sep=3pt},
   flow/.style={-{Latex[length=1.8mm]}, draw=black!55, line width=0.7pt},
-  layer/.style={draw=black!25, fill=white, rounded corners=1.5pt, minimum width=2.6cm,
-                minimum height=0.34cm, font=\sffamily\scriptsize, inner sep=1pt},
+  sign/.style={font=\sffamily\bfseries\fontsize{10}{12}\selectfont, text=black!60},
 ]
-\def\cw{3.66}\def\gap{0.35}
-\pgfmathsetmacro{\step}{\cw+\gap}
-\pgfmathsetmacro{\W}{4*\cw+3*\gap}
-\pgfmathsetmacro{\hc}{\cw/2}
+% columns
+\draw[col=phaseA] (0,0) rectangle (7.0,-3.55);
+\draw[col=phaseB] (7.3,0) rectangle (10.9,-3.55);
+\draw[col=phaseC] (11.2,0) rectangle (15.8,-3.55);
 
-% ============================ Band A =======================================
-\fill[phaseA, rounded corners=5pt] (0,0) rectangle (\W,-0.56);
-\fill[white] (0.34,-0.28) circle (0.2);
-\node[font=\sffamily\bfseries\small, text=phaseA] at (0.34,-0.28) {A};
-\node[anchor=west, font=\sffamily\bfseries\small, text=white] at (0.68,-0.28)
-  {Does the memory help, and whom?};
-\foreach \i in {0,...,3} { \draw[col=phaseA] (\i*\step,-0.72) rectangle ++(\cw,-2.62); }
+% 1. three contents for one slot of a fixed agent
+\node[title=phaseA] at (3.5,-0.33) {1. Fill one slot of a fixed agent};
+\node[card=black, draw=black!40, fill=white, dashed, text width=3.6cm] (c0) at (2.1,-0.98) {no memory};
+\node[card=phaseB, text width=3.6cm] (c1) at (2.1,-1.78) {\textbf{matched control}\\same shape, unrelated text};
+\node[card=salmon, text width=3.6cm] (c2) at (2.1,-2.75) {\textbf{distilled memory}\\rules from past runs};
+\draw[draw=phaseA!70, fill=phaseA!10, rounded corners=3pt, line width=0.6pt] (4.6,-0.68) rectangle (6.8,-3.12);
+\node[font=\sffamily\bfseries\fontsize{8}{9.5}\selectfont] at (5.7,-0.95) {fixed agent};
+\node[text=black!65] at (5.7,-1.38) {instructions};
+\node[text=black!65] at (5.7,-1.74) {demonstrations};
+\node[draw=salmon, dashed, fill=white, rounded corners=2pt, line width=0.6pt, minimum width=1.8cm,
+      minimum height=0.6cm, text=salmon, font=\sffamily\bfseries\fontsize{8}{9.5}\selectfont] (slot) at (5.7,-2.45) {slot};
+\draw[flow] (c0.east) to[out=0, in=180] (slot.west);
+\draw[flow] (c1.east) to[out=0, in=180] (slot.west);
+\draw[flow] (c2.east) to[out=0, in=180] (slot.west);
 
-\node[steptitle=phaseA] at (\hc,-0.98) {1. Distill experience};
-\node[body] at (\hc,-1.36) {past successful runs};
-\node[body] at (\hc,-1.66) {$\downarrow$ distill};
-\node[card=phaseA, text width=3.0cm] at (\hc,-2.15) {\textbf{experience memory}\\short rules per task type};
-\node[note] at (\hc,-2.95) {[clean] Identify the target \ldots};
+% 2. the decomposition, read as T = I + R
+\node[title=phaseB] at (9.1,-0.33) {2. Split the gain};
+\node[card=black, draw=black!45, fill=black!5, text width=2.6cm, inner sep=2pt] (T) at (9.3,-1.03) {\textbf{net gain} $T$\\memory $-$ none};
+\node[sign] at (7.62,-1.98) {$=$};
+\node[card=phaseB, text width=2.6cm, inner sep=2pt] (I) at (9.3,-1.98) {\textbf{reading cost} $I$\\control $-$ none};
+\node[sign] at (7.62,-2.93) {$+$};
+\node[card=salmon, text width=2.6cm, inner sep=2pt] (R) at (9.3,-2.93) {\textbf{\color{salmon!80!black}content value} $R$\\memory $-$ control};
 
-\node[steptitle=phaseA] at (\hc+\step,-0.98) {2. Insert into the agent};
-\node[layer] at (\hc+\step,-1.42) {task instruction};
-\node[layer] at (\hc+\step,-1.80) {demonstrations};
-\node[layer, draw=salmon, fill=salmon!15, font=\sffamily\bfseries\scriptsize] at (\hc+\step,-2.18) {experience memory};
-\node[note] at (\hc+\step,-2.85) {the rest of the harness\\is held fixed};
+% 3. what the content value is made of
+\node[title=phaseC] at (13.5,-0.33) {3. What is $R$ made of?};
+\foreach \y/\q in {-1.0/{Experience or generic advice?}, -1.75/{Whose experience?},
+                   -2.6/{How much do pools built\\the same way differ?}} {
+  \fill[phaseC] (11.5,\y) circle (0.06);
+  \node[anchor=west, align=left] at (11.62,\y) {\q};
+}
 
-\node[steptitle=phaseA] at (\hc+2*\step,-0.98) {3. Run six readers};
-\node[card=gptblue, text width=3.3cm, inner sep=1.5pt] at (\hc+2*\step,-1.55) {\textbf{hosted:} GPT-4o-mini,\\GPT-4.1-mini};
-\node[card=qwenmint, text width=3.3cm, inner sep=1.5pt] at (\hc+2*\step,-2.35) {\textbf{local:} Qwen3-8B/14B/32B,\\Llama-3.1-8B};
-\node[body] at (\hc+2*\step,-3.08) {same tasks, with and without};
-
-\node[steptitle=phaseA] at (\hc+3*\step,-0.98) {4. Compare the gains};
-\node[body] at (\hc+3*\step,-1.38) {per reader};
-\node[card=salmon, text width=2.9cm] at (\hc+3*\step,-2.0) {\textbf{net gain} $T$\\success with $-$ without};
-\node[body] at (\hc+3*\step,-2.85) {a gain for one reader\\need not appear for another};
-
-\foreach \i in {0,...,2} { \draw[flow] (\i*\step+\cw+0.02,-2.1) -- (\i*\step+\cw+\gap-0.02,-2.1); }
-
-% ============================ Band B =======================================
-\def\yb{-3.55}
-\fill[phaseB, rounded corners=5pt] (0,\yb) rectangle (\W,\yb-0.56);
-\fill[white] (0.34,\yb-0.28) circle (0.2);
-\node[font=\sffamily\bfseries\small, text=phaseB] at (0.34,\yb-0.28) {B};
-\node[anchor=west, font=\sffamily\bfseries\small, text=white] at (0.68,\yb-0.28)
-  {Is the gain due to what the memory says?};
-\foreach \i in {0,...,3} { \draw[col=phaseB] (\i*\step,\yb-0.72) rectangle ++(\cw,-2.62); }
-
-\node[steptitle=phaseB] at (\hc,\yb-0.98) {1. Match a control};
-\node[card=salmon, text width=3.45cm, align=left, inner sep=1.5pt] at (\hc,\yb-1.62)
-  {\textbf{memory:} Identify the \ldots};
-\node[card=phaseB, text width=3.45cm, align=left, inner sep=1.5pt] at (\hc,\yb-2.14)
-  {\textbf{control:} Water the x early \ldots};
-\node[note] at (\hc,\yb-2.88) {same items, tags, word counts,\\order and token count};
-
-\node[steptitle=phaseB] at (\hc+\step,\yb-0.98) {2. Run the conditions};
-\node[card=gptblue, text width=3.3cm, inner sep=1.5pt] at (\hc+\step,\yb-1.55) {\textbf{ALFWorld:} four studies,\\six readers, 24 pools};
-\node[card=qwenmint, text width=3.3cm, inner sep=1.5pt] at (\hc+\step,\yb-2.3) {\textbf{WebShop:} one study,\\three readers, one pool};
-\node[body] at (\hc+\step,\yb-3.05) {none, control, memory};
-
-\node[steptitle=phaseB] at (\hc+2*\step,\yb-0.98) {3. Split the gain};
-\node[card=black, text width=1.55cm] (n0) at (\hc+2*\step-0.8,\yb-1.45) {no memory};
-\node[card=phaseB, text width=1.55cm] (n1) at (\hc+2*\step-0.8,\yb-2.2) {gardening};
-\node[card=salmon, text width=1.55cm] (n2) at (\hc+2*\step-0.8,\yb-2.95) {memory};
-\draw[flow] (n0.south) -- (n1.north);
-\draw[flow] (n1.south) -- (n2.north);
-\node[font=\sffamily\scriptsize, text=black!70, anchor=west, align=left] at (\hc+2*\step+0.1,\yb-1.83) {reading\\cost $I$};
-\node[font=\sffamily\scriptsize\bfseries, text=salmon, anchor=west, align=left] at (\hc+2*\step+0.1,\yb-2.58) {content\\value $R$};
-
-\node[steptitle=phaseB] at (\hc+3*\step,\yb-0.98) {4. Compare $I$ and $R$};
-\node[card=salmon, text width=3.3cm] at (\hc+3*\step,\yb-1.75) {across readers: does the effect\\lie in \textbf{reading} or in \textbf{content}?};
-\node[note] at (\hc+3*\step,\yb-2.8) {predictions written down\\before each study's runs};
-
-\foreach \i in {0,...,2} { \draw[flow] (\i*\step+\cw+0.02,\yb-2.1) -- (\i*\step+\cw+\gap-0.02,\yb-2.1); }
-
-% ============================ Band C =======================================
-\def\yc{-7.1}
-\fill[phaseC, rounded corners=5pt] (0,\yc) rectangle (\W,\yc-0.56);
-\fill[white] (0.34,\yc-0.28) circle (0.2);
-\node[font=\sffamily\bfseries\small, text=phaseC] at (0.34,\yc-0.28) {C};
-\node[anchor=west, font=\sffamily\bfseries\small, text=white] at (0.68,\yc-0.28)
-  {What does the content value consist of?};
-\foreach \i in {0,...,3} { \draw[col=phaseC] (\i*\step,\yc-0.72) rectangle ++(\cw,-1.62); }
-
-\node[steptitle=phaseC] at (\hc,\yc-0.98) {Generic rules};
-\node[body] at (\hc,\yc-1.6) {same length, written from the\\task description alone;\\$E$ = memory $-$ generic};
-
-\node[steptitle=phaseC] at (\hc+\step,\yc-0.98) {Source and distiller};
-\node[body] at (\hc+\step,\yc-1.6) {3 source agents $\times$ 2 distillers,\\the same number of trajectories\\per task type from each source};
-
-\node[steptitle=phaseC] at (\hc+2*\step,\yc-0.98) {Replicate pools};
-\node[body] at (\hc+2*\step,\yc-1.6) {three replicates per pairing,\\18 pools, and a pool-replication\\study: spread between pools};
-
-\node[steptitle=phaseC] at (\hc+3*\step,\yc-0.98) {Second topic};
-\node[body] at (\hc+3*\step,\yc-1.6) {an astronomy control\\built like the gardening one;\\does $I$ depend on the topic?};
+% links between the columns
+\draw[flow] (7.02,-1.03) -- (7.28,-1.03);
+\draw[flow] (10.92,-2.93) -- (11.18,-2.93);
 \end{tikzpicture}
