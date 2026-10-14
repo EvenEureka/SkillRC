@@ -1,0 +1,96 @@
+{
+  "pool": "data/pools/w1a_q32_d32_r1_insights.jsonl",
+  "control": "data/pools/w1a_q32_d32_r1_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20262690,
+  "n_items": 35,
+  "body_words": 480,
+  "distinct_templates": 35,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 708,
+      "before": 708,
+      "control": 708
+    },
+    "qwen3_8b": {
+      "target": 712,
+      "before": 712,
+      "control": 712
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0805,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q32_d32_r1_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q32_d32_r1_irrelevant.jsonl"
+  },
+  "templates_used": [
+    151,
+    124,
+    6,
+    94,
+    15,
+    73,
+    164,
+    44,
+    1,
+    24,
+    34,
+    84,
+    26,
+    42,
+    131,
+    146,
+    8,
+    67,
+    5,
+    16,
+    57,
+    53,
+    2,
+    85,
+    79,
+    68,
+    3,
+    56,
+    22,
+    72,
+    150,
+    29,
+    175,
+    28,
+    18
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Search for the object in likely locations such as countertops, cabinets, drawers, or sink basins based on the object type.",
+      "control": "[clean] Improve heavy clay with coarse grit (3\u20136 mm) and composted bark in autumn before winter frosts break up the clods."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin before placing it in the target location.",
+      "control": "[clean] Apply nematodes (Phasmarhabditis hermaphrodita) in spring or autumn to control slugs without pellets."
+    },
+    {
+      "original": "[clean] Always check if a container (e.g., drawer, cabinet) is closed before attempting to access its contents.",
+      "control": "[clean] If the leaves turn yellow, test the soil before adding any more fertilizer to the patch."
+    },
+    {
+      "original": "[clean] Prioritize checking the most probable locations first to minimize unnecessary movements.",
+      "control": "[clean] Ventilate the greenhouse so that humid air does not encourage mould."
+    }
+  ]
+}

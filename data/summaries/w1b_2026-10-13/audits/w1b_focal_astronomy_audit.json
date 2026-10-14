@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/expel_insights.jsonl",
+  "control": "data/pools/w1b_focal_astronomy.jsonl",
+  "domain": "amateur astronomy",
+  "bank": "data/pools/w1b_astronomy_bank.txt",
+  "seed": 20268455,
+  "n_items": 33,
+  "body_words": 472,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 645,
+      "before": 645,
+      "control": 645
+    },
+    "qwen3_8b": {
+      "target": 645,
+      "before": 645,
+      "control": 645
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0391,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/expel_insights.jsonl",
+    "payload_corpus": "data/pools/w1b_focal_astronomy.jsonl"
+  },
+  "templates_used": [
+    35,
+    45,
+    48,
+    37,
+    61,
+    42,
+    40,
+    31,
+    36,
+    82,
+    34,
+    25,
+    2,
+    85,
+    53,
+    62,
+    51,
+    50,
+    76,
+    16,
+    49,
+    81,
+    11,
+    29,
+    80,
+    0,
+    13,
+    1,
+    58,
+    73,
+    44,
+    54,
+    78
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Identify the target item and its cleaning requirements before starting the task.",
+      "control": "[clean] Photograph the moon near the terminator, where long shadows reveal crater walls."
+    },
+    {
+      "original": "[clean] Prioritize checking locations where the target item is likely to be found, such as countertops, cabinets, and drawers.",
+      "control": "[clean] Write down the limiting magnitude at the start of each session so that nights can be compared fairly."
+    },
+    {
+      "original": "[clean] Always clean the item using the designated cleaning area before placing it in the final location.",
+      "control": "[clean] Mount the camera on a sturdy tracking head and begin with short exposures of bright constellations."
+    },
+    {
+      "original": "[clean] Confirm the cleanliness of the item if necessary before moving it to the final destination.",
+      "control": "[clean] Report fireball sightings promptly to the meteor network with the time and direction of travel."
+    }
+  ]
+}

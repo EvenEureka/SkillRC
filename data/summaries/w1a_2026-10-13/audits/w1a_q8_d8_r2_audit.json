@@ -1,0 +1,119 @@
+{
+  "pool": "w1a_q8_d8_r2",
+  "source": "q8",
+  "source_runs": [
+    "SRC1011_COLLECT_QWEN"
+  ],
+  "replicate": 2,
+  "subsample_seed": 20261035,
+  "k_per_type": {
+    "clean": 6,
+    "cool": 6,
+    "examine": 6,
+    "heat": 1,
+    "put": 6,
+    "puttwo": 6
+  },
+  "distiller": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "served_as": "qwen3-8b",
+    "server": "vLLM 0.24, tensor parallel 1, bf16, max-model-len 16384",
+    "enable_thinking": false
+  },
+  "temperature": 0.0,
+  "max_completion_tokens": 512,
+  "types": {
+    "clean": {
+      "games_used": [
+        7,
+        46,
+        59,
+        73,
+        77,
+        110
+      ],
+      "n_insights": 5,
+      "finish_reason": "stop",
+      "prompt_tokens": 5548,
+      "completion_tokens": 108,
+      "response": "- Check common locations like fridge, countertops, dining tables, and sink basins first when searching for items.\n- Clean items using the sinkbasin before placing them in their final destination.\n- Systematically search through cabinets, drawers, and other storage units if the item is not found in obvious places.\n- Verify the target location is accessible and open before attempting to place an item there.\n- If an item is not found in expected locations, expand the search to less obvious areas like shelves, garbage cans, or bathtubs."
+    },
+    "cool": {
+      "games_used": [
+        28,
+        35,
+        41,
+        70,
+        113,
+        124
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 6107,
+      "completion_tokens": 135,
+      "response": "- Check common storage locations like fridge, countertops, cabinets, and drawers systematically before moving to less likely areas.  \n- Cool the object using the fridge after retrieving it, as cooling is typically done with the fridge.  \n- Always verify the target location is accessible and open before attempting to place the cooled object there.  \n- If the object is not found in the initial expected locations, expand the search to other plausible areas such as dining tables, sink basins, or other appliances.  \n- Follow a clear sequence: find, retrieve, cool, and place the object in the designated location.  \n- Use the same object name and location references consistently to avoid confusion."
+    },
+    "examine": {
+      "games_used": [
+        4,
+        11,
+        23,
+        56,
+        103,
+        128
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5744,
+      "completion_tokens": 114,
+      "response": "- Check common storage locations like drawers, desks, and sidetables before moving to less likely areas.  \n- Open closed containers systematically to ensure no item is missed.  \n- Use the desklamp after locating it to illuminate areas where items might be hidden.  \n- Prioritize checking the same location for both the object and the desklamp if they are in proximity.  \n- If an object is not found in expected places, systematically check all remaining likely locations.  \n- Always confirm the desklamp is turned on before attempting to look under it."
+    },
+    "heat": {
+      "games_used": [
+        81
+      ],
+      "n_insights": 5,
+      "finish_reason": "stop",
+      "prompt_tokens": 861,
+      "completion_tokens": 72,
+      "response": "- Check common storage locations like fridge, cabinets, and drawers to find the tomato.  \n- Use the microwave to heat the tomato after retrieving it.  \n- Place the heated tomato on the dining table as instructed.  \n- Open containers before interacting with their contents.  \n- Follow a clear sequence: find, take, heat, and place the tomato."
+    },
+    "put": {
+      "games_used": [
+        1,
+        3,
+        54,
+        66,
+        67,
+        108
+      ],
+      "n_insights": 5,
+      "finish_reason": "stop",
+      "prompt_tokens": 4764,
+      "completion_tokens": 106,
+      "response": "- Check common storage locations like cabinets, drawers, and countertops first before moving to less likely areas.  \n- Open containers systematically to ensure you don't miss any items inside.  \n- If an item is not found in expected locations, expand the search to other potential storage areas such as shelves, sidetables, or furniture.  \n- Always verify the target location is accessible and clear before attempting to place an item there.  \n- If an item is found, directly move it to the target location without unnecessary detours."
+    },
+    "puttwo": {
+      "games_used": [
+        21,
+        53,
+        69,
+        130,
+        131,
+        133
+      ],
+      "n_insights": 4,
+      "finish_reason": "stop",
+      "prompt_tokens": 8586,
+      "completion_tokens": 100,
+      "response": "- Check likely storage locations (drawers, shelves, tables) systematically before moving to less common areas.  \n- If an item is not found in the initial search, re-examine previously checked locations to ensure no items were missed.  \n- Take and place items one at a time, ensuring you return to the original location to retrieve the second item if needed.  \n- If an item is not immediately available, consider that it may be in a different location and systematically search all possible areas."
+    }
+  },
+  "n_items": 31,
+  "footprint_o200k": 679,
+  "body_words": 482,
+  "finish_reasons": [
+    "stop"
+  ]
+}

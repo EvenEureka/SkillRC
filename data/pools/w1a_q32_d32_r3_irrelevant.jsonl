@@ -1,0 +1,35 @@
+{"text": "[clean] Start by testing the soil pH and amending it carefully before sowing the first seeds of spring.", "task_type": "clean"}
+{"text": "[clean] Prune fruit trees in late winter while the branches are completely bare of leaves.", "task_type": "clean"}
+{"text": "[clean] Rake the plot to a fine tilth before sowing,, because small seeds germinate in lumpy ground.", "task_type": "clean"}
+{"text": "[clean] Cut back flower stalks so the plant directs energy into new growth.", "task_type": "clean"}
+{"text": "[clean] Choose varieties for crops that suffered blight, and record how each variety performed.", "task_type": "clean"}
+{"text": "[clean] If the first sowing fails to sprout, resow a fresh batch.", "task_type": "clean"}
+{"text": "[cool] Pick courgettes while they are small and glossy, because a single forgotten marrow signals the plant to stop flowering for weeks.", "task_type": "cool"}
+{"text": "[cool] Pinch off the lower leaves of young vines to improve the air flow.", "task_type": "cool"}
+{"text": "[cool] Add slow-release organic fertilizer (blood, fish and bone) and again in midsummer.", "task_type": "cool"}
+{"text": "[cool] Grow a succession of crops (spring onions, radishes, salad leaves, dwarf beans).", "task_type": "cool"}
+{"text": "[cool] Earth up leeks as they grow, drawing soil around them so the stems stay pale.", "task_type": "cool"}
+{"text": "[examine] Before a dry spell, soak the ground deeply rather than sprinkling it daily with a hose.", "task_type": "examine"}
+{"text": "[examine] Ventilate the greenhouse on sunny mornings so that humid air does not encourage mould and young cuttings.", "task_type": "examine"}
+{"text": "[examine] Sprinkle a fine layer of sand over sown seeds to stop moss.", "task_type": "examine"}
+{"text": "[examine] Leave fallen leaves under hedges as shelter for beetles.", "task_type": "examine"}
+{"text": "[examine] Build a compost heap at least a meter wide so that it decomposes rapidly and evenly.", "task_type": "examine"}
+{"text": "[examine] If the leaves turn yellow, test the soil before adding any more fertilizer to the patch.", "task_type": "examine"}
+{"text": "[heat] Sow quick-maturing radishes (e.g., 'French Breakfast') between slower rows of parsnips or leeks.", "task_type": "heat"}
+{"text": "[heat] Rake the soil to a fine tilth before sowing small seeds.", "task_type": "heat"}
+{"text": "[heat] Rotate crops so no family grows in the same patch.", "task_type": "heat"}
+{"text": "[heat] Snap off rhubarb stalks rather than cutting them.", "task_type": "heat"}
+{"text": "[heat] Label each row with the variety name and the sowing date.", "task_type": "heat"}
+{"text": "[heat] Grow tall crops on the north side so that nothing shades the shorter rows.", "task_type": "heat"}
+{"text": "[put] Grow long-keeping winter squash (e.g., 'Crown Prince', 'Uchiki Kuri') for storage through the winter months.", "task_type": "put"}
+{"text": "[put] Turn the compost pile so it keeps breaking down through the summer.", "task_type": "put"}
+{"text": "[put] Save seed only from plants so the next season starts out strong.", "task_type": "put"}
+{"text": "[put] Wait until the soil crumbles in your hand before digging in spring, because working wet clay too early destroys its structure.", "task_type": "put"}
+{"text": "[put] Let the soil dry slightly between irrigations so the roots grow deep.", "task_type": "put"}
+{"text": "[put] Start squash seeds indoors about six weeks before the last expected frost of spring.", "task_type": "put"}
+{"text": "[puttwo] Plant garlic cloves pointed end up, a span apart in loose soil.", "task_type": "puttwo"}
+{"text": "[puttwo] Sow green manures (phacelia, mustard, crimson clover) on bare ground after the last harvest.", "task_type": "puttwo"}
+{"text": "[puttwo] Stake tall flowers before storms arrive so the stems do not snap.", "task_type": "puttwo"}
+{"text": "[puttwo] Mulch newly planted rows with fresh straw to hold moisture in the soil through dry spells.", "task_type": "puttwo"}
+{"text": "[puttwo] Interplant marigolds, nasturtiums, and calendula among the vegetables to lure aphids away and attract hoverflies.", "task_type": "puttwo"}
+{"text": "[puttwo] Once the pods swell, pick peas every other day to keep the vines producing.", "task_type": "puttwo"}

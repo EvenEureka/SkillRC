@@ -1,0 +1,201 @@
+{
+  "seed": 20260713,
+  "domain": "choral singing practice",
+  "n_items": 30,
+  "body_words": 377,
+  "nonce_replacements": 20,
+  "retained_body_fraction": 0.9469,
+  "tries": 19,
+  "context_tokens": {
+    "gpt_4o_mini": {
+      "target": 524,
+      "before": 546,
+      "control": 524
+    },
+    "qwen3_8b": {
+      "target": 529,
+      "before": 551,
+      "control": 529
+    }
+  },
+  "test_instruction_vocab_overlap": {
+    "true_pool": 0.0952,
+    "control": 0.0544
+  },
+  "forbidden_words": [
+    "attribute",
+    "attributes",
+    "beauty",
+    "black",
+    "brand",
+    "buy",
+    "buying",
+    "cart",
+    "cheap",
+    "click",
+    "color",
+    "colors",
+    "colour",
+    "cost",
+    "count",
+    "description",
+    "dollar",
+    "dollars",
+    "electronics",
+    "fashion",
+    "garden",
+    "grocery",
+    "inch",
+    "instruction",
+    "instructions",
+    "item",
+    "items",
+    "king",
+    "listing",
+    "match",
+    "matches",
+    "option",
+    "options",
+    "order",
+    "ounce",
+    "pack",
+    "page",
+    "pages",
+    "price",
+    "priced",
+    "prices",
+    "product",
+    "products",
+    "purchase",
+    "quantity",
+    "queen",
+    "query",
+    "requirement",
+    "requirements",
+    "result",
+    "results",
+    "search",
+    "searching",
+    "shop",
+    "shopping",
+    "size",
+    "sizes",
+    "white"
+  ],
+  "replacements": [
+    {
+      "doc_index": 18,
+      "word_index": 11,
+      "original_word": "sagging"
+    },
+    {
+      "doc_index": 18,
+      "word_index": 12,
+      "original_word": "pitches,"
+    },
+    {
+      "doc_index": 24,
+      "word_index": 3,
+      "original_word": "quick,"
+    },
+    {
+      "doc_index": 14,
+      "word_index": 12,
+      "original_word": "anthems."
+    },
+    {
+      "doc_index": 25,
+      "word_index": 9,
+      "original_word": "score,"
+    },
+    {
+      "doc_index": 20,
+      "word_index": 11,
+      "original_word": "conductor's"
+    },
+    {
+      "doc_index": 16,
+      "word_index": 1,
+      "original_word": "Articulate"
+    },
+    {
+      "doc_index": 14,
+      "word_index": 10,
+      "original_word": "unaccompanied"
+    },
+    {
+      "doc_index": 23,
+      "word_index": 11,
+      "original_word": "diction"
+    },
+    {
+      "doc_index": 7,
+      "word_index": 8,
+      "original_word": "syllable"
+    },
+    {
+      "doc_index": 6,
+      "word_index": 3,
+      "original_word": "conductor's"
+    },
+    {
+      "doc_index": 4,
+      "word_index": 9,
+      "original_word": "consonant."
+    },
+    {
+      "doc_index": 22,
+      "word_index": 1,
+      "original_word": "Memorize"
+    },
+    {
+      "doc_index": 18,
+      "word_index": 14,
+      "original_word": "entrances,"
+    },
+    {
+      "doc_index": 20,
+      "word_index": 4,
+      "original_word": "drags"
+    },
+    {
+      "doc_index": 15,
+      "word_index": 8,
+      "original_word": "music,"
+    },
+    {
+      "doc_index": 28,
+      "word_index": 8,
+      "original_word": "phrase,"
+    },
+    {
+      "doc_index": 16,
+      "word_index": 3,
+      "original_word": "consonants"
+    },
+    {
+      "doc_index": 23,
+      "word_index": 13,
+      "original_word": "phrasing."
+    },
+    {
+      "doc_index": 11,
+      "word_index": 1,
+      "original_word": "Sustain"
+    }
+  ],
+  "examples": [
+    {
+      "original": "[beauty] Always include specific attributes and price limits in your search queries.",
+      "control": "[beauty] Always warm up your voice with gentle humming before choir rehearsal."
+    },
+    {
+      "original": "[beauty] Use concise and relevant keywords to improve search accuracy.",
+      "control": "[beauty] Breathe deeply from the diaphragm rather than the shoulders."
+    },
+    {
+      "original": "[beauty] Click on products that match your criteria to verify details before purchasing.",
+      "control": "[beauty] Listen to the singers beside you and blend your tone with theirs."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "pool": "w1a_q8_d32_r1",
+  "source": "q8",
+  "source_runs": [
+    "SRC1011_COLLECT_QWEN"
+  ],
+  "replicate": 1,
+  "subsample_seed": 20261034,
+  "k_per_type": {
+    "clean": 6,
+    "cool": 6,
+    "examine": 6,
+    "heat": 1,
+    "put": 6,
+    "puttwo": 6
+  },
+  "distiller": {
+    "model": "Qwen/Qwen3-32B",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+    "served_as": "qwen3-32b",
+    "server": "vLLM 0.24, tensor parallel 2, bf16, max-model-len 16384",
+    "enable_thinking": false
+  },
+  "temperature": 0.0,
+  "max_completion_tokens": 512,
+  "types": {
+    "clean": {
+      "games_used": [
+        25,
+        33,
+        37,
+        59,
+        73,
+        77
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5159,
+      "completion_tokens": 123,
+      "response": "- Start by identifying the object's likely locations based on its type and common usage.  \n- Always clean the object using a sinkbasin before placing it in the target location.  \n- Check the most probable locations first, such as the diningtable, sinkbasin, or storage areas like cabinets and drawers.  \n- If the object is not found in initial locations, systematically check other likely storage or usage areas.  \n- After cleaning, return to the target location and place the object there.  \n- Open containers (e.g., cabinets, drawers) if the object is not visible on the surface."
+    },
+    "cool": {
+      "games_used": [
+        16,
+        45,
+        70,
+        79,
+        119,
+        122
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 6280,
+      "completion_tokens": 135,
+      "response": "- Start by identifying the object type and systematically check likely locations based on common sense (e.g., fridge, diningtable, countertop, cabinets).  \n- Always open containers (e.g., fridge, cabinet, drawer) before searching inside them.  \n- Cool the object using the fridge after it has been picked up.  \n- After cooling, move the object to the target location specified in the task.  \n- If the object is not found in initial likely locations, proceed methodically through all possible storage areas.  \n- Ensure the target container (e.g., cabinet, microwave, garbagecan) is accessible (open or unblocked) before placing the object."
+    },
+    "examine": {
+      "games_used": [
+        23,
+        29,
+        40,
+        56,
+        61,
+        104
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5177,
+      "completion_tokens": 117,
+      "response": "- Start by identifying the target object and the tool needed to examine it.  \n- Systematically check likely locations for the target object, starting with the most probable ones.  \n- Open or interact with containers (drawers, cabinets, etc.) to access hidden items.  \n- Once the target object is found, locate and activate the desklamp to complete the examination.  \n- Use the desklamp in the same room or area where the target object is located for optimal results.  \n- Re-examine areas if the task implies something is hidden or not immediately visible."
+    },
+    "heat": {
+      "games_used": [
+        65
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 797,
+      "completion_tokens": 83,
+      "response": "- Find a mug by checking common locations like dining tables, countertops, or cabinets.  \n- Heat the mug using the microwave after opening it.  \n- Place the heated mug in any available cabinet.  \n- Always check if an object is inside a closed container before interacting.  \n- Prioritize nearby objects and locations to minimize movement.  \n- Complete one step of the task before moving on to the next."
+    },
+    "put": {
+      "games_used": [
+        44,
+        55,
+        63,
+        78,
+        84,
+        111
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3519,
+      "completion_tokens": 118,
+      "response": "- Start by checking the most likely locations for the object based on common sense and room setup.  \n- If the object is not found in obvious places, systematically search all possible storage or surface areas.  \n- Open closed containers (e.g., cabinets, drawers) if the target object might be inside.  \n- Once the object is found and taken, proceed directly to the target location to place it.  \n- Avoid unnecessary detours; prioritize the shortest path to the next relevant location.  \n- If the object is not found in initial searches, consider less obvious or unexpected locations."
+    },
+    "puttwo": {
+      "games_used": [
+        21,
+        43,
+        69,
+        92,
+        112,
+        131
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 7593,
+      "completion_tokens": 131,
+      "response": "- Start by systematically searching likely object locations (e.g., drawers, shelves, tables) in a logical order.  \n- After finding and placing the first object, return to the original location to retrieve the second object if it remains there.  \n- If the second object is not found immediately, expand the search to other likely locations based on object type and environment.  \n- Always confirm the current location before attempting to interact with objects to avoid errors.  \n- Use the target location as a potential source for the first object, especially if it is a container or surface.  \n- Keep track of which locations have already been checked to avoid redundant searches."
+    }
+  },
+  "n_items": 36,
+  "footprint_o200k": 753,
+  "body_words": 520,
+  "finish_reasons": [
+    "stop"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "source_run": "SRC1011_COLLECT_GPT",
+  "episodes": 140,
+  "successes": 73,
+  "distiller": "gpt-4o-mini",
+  "temperature": 0.0,
+  "max_per_type": 6,
+  "types": {
+    "clean": {
+      "successes": 13,
+      "games_used": [
+        15,
+        18,
+        19,
+        37,
+        46,
+        48
+      ],
+      "n_insights": 6,
+      "response": "- Identify the item you need to clean and locate it in the environment.\n- Use the sinkbasin to clean the item before attempting to place it elsewhere.\n- Check multiple locations for the item, including countertops, drawers, and cabinets.\n- If placing the item in a specific location fails, try moving it to a different location.\n- Be aware of any restrictions on where items can be placed; examine the target location if necessary.\n- Always ensure the item is clean before attempting to place it in the desired location."
+    },
+    "cool": {
+      "successes": 12,
+      "games_used": [
+        22,
+        26,
+        60,
+        64,
+        70,
+        72
+      ],
+      "n_insights": 5,
+      "response": "- Start by identifying the item you need to find and its likely locations.\n- Always check the fridge first for items that may need cooling.\n- After obtaining the item, ensure to cool it before proceeding to the next step.\n- When placing the item, consider all possible locations and choose one that fits the task.\n- If the first location you check does not have the item, systematically explore other potential locations."
+    },
+    "examine": {
+      "successes": 10,
+      "games_used": [
+        4,
+        6,
+        29,
+        40,
+        56,
+        61
+      ],
+      "n_insights": 5,
+      "response": "- Identify the primary objects needed for the task and prioritize finding them.\n- Check locations where the required objects are most likely to be found, such as common furniture.\n- Open closed drawers and containers systematically to maximize the chances of finding items.\n- Once the first object is found, shift focus to locating the second object needed for the task.\n- Use the found objects in the correct sequence to complete the task effectively."
+    },
+    "heat": {
+      "successes": 1,
+      "games_used": [
+        42
+      ],
+      "n_insights": 6,
+      "response": "- Start by identifying the most likely locations for the required item.  \n- Always check for heating appliances after acquiring an item that needs to be heated.  \n- Prioritize opening containers or appliances before attempting to use or place items inside them.  \n- Move systematically from one task to the next, ensuring each step logically follows the previous one.  \n- Keep track of the items you have and their current state to avoid unnecessary backtracking.  \n- When placing items, ensure the destination is accessible and appropriate for the item type.  "
+    },
+    "put": {
+      "successes": 27,
+      "games_used": [
+        0,
+        1,
+        8,
+        44,
+        47,
+        54
+      ],
+      "n_insights": 6,
+      "response": "- Start by identifying likely locations for the target object based on common storage habits.\n- Check multiple potential locations systematically if the first choice does not yield results.\n- Always take the object before attempting to place it in the target location.\n- If placing the object directly does not work, try moving it to an intermediary location first.\n- Be prepared to revisit locations if initial attempts to place the object fail. \n- Examine the object if you encounter issues with placement to ensure there are no special conditions affecting it."
+    },
+    "puttwo": {
+      "successes": 10,
+      "games_used": [
+        5,
+        21,
+        39,
+        53,
+        83,
+        91
+      ],
+      "n_insights": 6,
+      "response": "- Start by checking the most likely locations for the target items, such as drawers, shelves, or desks.\n- If the first search does not yield results, systematically check other potential locations in a logical order.\n- Once an item is found, immediately move it to the designated location before searching for the next item.\n- If multiple items are needed, prioritize checking the same location again if the first item was found there.\n- Keep track of what has already been searched to avoid unnecessary repetition.\n- Always consider the context of the task to guide your search strategy effectively."
+    }
+  },
+  "n_items": 34,
+  "footprint_gpt4omini": 661
+}

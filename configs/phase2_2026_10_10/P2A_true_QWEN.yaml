@@ -1,0 +1,27 @@
+run_id: P2A_TRUE_QWEN
+milestone: phase2-2026-10-10-P2A
+out_dir: results
+env: alfworld
+task_ids: [0, 1, 3, 5, 6, 8, 9, 11, 13, 14, 16, 17, 18, 19, 22, 23, 24, 25, 29, 30,
+  33, 34, 36, 37, 39, 41, 43, 44, 45, 47, 53, 57, 58, 59, 60, 61, 64, 65, 66, 67,
+  69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 85, 86, 87, 89, 95, 97, 101, 102, 103, 107,
+  108, 109, 116, 118, 120, 121, 122, 124, 125, 127, 129, 130, 132, 133]
+provider: openai
+model: qwen3-8b
+base_url: http://localhost:8000/v1
+api_key: EMPTY
+chat_template_kwargs: {enable_thinking: false}
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true
+fewshot_file: configs/alfworld_react_fewshot.json
+memory: expel
+retriever: bm25
+memory_k: 20
+token_budget: 645
+demo_pool: data/pools/expel_insights.jsonl
+seeds: [0, 1, 5]
+save_trajectories: true

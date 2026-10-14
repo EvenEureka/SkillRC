@@ -1,0 +1,12 @@
+{
+  "unsloth/Llama-3.1-8B-Instruct": {
+    "true": 645,
+    "placebo": 645,
+    "irrelevant": 645
+  },
+  "Qwen/Qwen3-14B": {
+    "true": 645,
+    "placebo": 645,
+    "irrelevant": 645
+  }
+}

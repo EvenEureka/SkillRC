@@ -155,14 +155,6 @@
     "qwen/placebo": 0.6333,
     "qwen/irrelevant": 0.6667
   },
-  "drift_vs_2026_07": {
-    "gpt/none": 0.0449,
-    "gpt/true": -0.0143,
-    "gpt/placebo": -0.0719,
-    "qwen/none": -0.0224,
-    "qwen/true": 0.0337,
-    "qwen/placebo": 0.0133
-  },
   "footprint": {
     "gpt/true": [
       645

@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/w1a_q32_d8_r3_insights.jsonl",
+  "control": "data/pools/w1a_q32_d8_r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20267282,
+  "n_items": 33,
+  "body_words": 490,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 701,
+      "before": 701,
+      "control": 701
+    },
+    "qwen3_8b": {
+      "target": 703,
+      "before": 703,
+      "control": 703
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0548,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q32_d8_r3_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q32_d8_r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    72,
+    24,
+    99,
+    42,
+    39,
+    3,
+    180,
+    58,
+    73,
+    108,
+    1,
+    22,
+    77,
+    12,
+    6,
+    50,
+    84,
+    35,
+    7,
+    2,
+    41,
+    76,
+    62,
+    124,
+    182,
+    83,
+    164,
+    5,
+    90,
+    177,
+    172,
+    28,
+    85
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations for the object first, such as sinkbasins, countertops, cabinets, or drawers.",
+      "control": "[clean] Edge the lawn each month so grass does not creep into the flower borders."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin before placing it in the target location.",
+      "control": "[clean] Let the soil dry slightly between irrigations so that the roots grow deep."
+    },
+    {
+      "original": "[clean] If the object is not immediately found, systematically search through likely storage areas like cabinets, shelves, or drawers.",
+      "control": "[clean] Add slow-release organic fertilizer (blood, fish and bone) to hungry crops at planting time and again in midsummer."
+    },
+    {
+      "original": "[clean] Open closed containers before searching inside them for the required item.",
+      "control": "[clean] Train climbing beans up tall sturdy poles to save ground space."
+    }
+  ]
+}

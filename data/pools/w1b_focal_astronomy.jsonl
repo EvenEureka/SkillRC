@@ -1,0 +1,33 @@
+{"text": "[clean] Photograph the moon near the terminator, where long shadows reveal crater walls.", "task_type": "clean"}
+{"text": "[clean] Write down the limiting magnitude at the start of each session so that nights can be compared fairly.", "task_type": "clean"}
+{"text": "[clean] Mount the camera on a sturdy tracking head and begin with short exposures of bright constellations.", "task_type": "clean"}
+{"text": "[clean] Report fireball sightings promptly to the meteor network with the time and direction of travel.", "task_type": "clean"}
+{"text": "[clean] Drift-align the mount on a star near the celestial equator for the most accurate exposures.", "task_type": "clean"}
+{"text": "[cool] Download satellite pass predictions so that a passing station never ruins an exposure.", "task_type": "cool"}
+{"text": "[cool] Give each faint galaxy several minutes, since detail often emerges only slowly.", "task_type": "cool"}
+{"text": "[cool] Plan the list so that showpieces near the western horizon come first.", "task_type": "cool"}
+{"text": "[cool] Follow the variable stars each week and compare their brightness against nearby reference stars.", "task_type": "cool"}
+{"text": "[cool] Plot the lunar occultations in advance and set reminders for each event.", "task_type": "cool"}
+{"text": "[cool] Keep batteries in an inside pocket, since night air drains them fast.", "task_type": "cool"}
+{"text": "[examine] Join a local astronomy club to learn from more experienced observers and borrow larger instruments.", "task_type": "examine"}
+{"text": "[examine] Set the telescope outside an hour before observing so that its optics settle.", "task_type": "examine"}
+{"text": "[examine] Prefer steady nights after a weather front has passed for the sharpest planetary detail.", "task_type": "examine"}
+{"text": "[examine] Let newcomers adapt to the darkness before inviting them to the eyepiece.", "task_type": "examine"}
+{"text": "[examine] Plan lunar sessions around the first and last quarters, when the terminator reveals the most dramatic crater shadows.", "task_type": "examine"}
+{"text": "[examine] Seek a site with a low southern horizon for views of the star clouds.", "task_type": "examine"}
+{"text": "[heat] Follow the bright comet as its tail lengthens, and sketch its changing shape.", "task_type": "heat"}
+{"text": "[heat] Start imaging run with a test frame to judge focus and framing.", "task_type": "heat"}
+{"text": "[heat] Wait until Jupiter climbs well above the horizon, where the atmosphere blurs its belts less.", "task_type": "heat"}
+{"text": "[heat] Read the sky guide so you know which planets rise after dusk.", "task_type": "heat"}
+{"text": "[heat] Dim all screens to their red setting before stepping outside.", "task_type": "heat"}
+{"text": "[put] Never aim the telescope at the sun without a solar filter firmly fitted over the front of the tube.", "task_type": "put"}
+{"text": "[put] Tap the tube and time how long the image shakes to judge the mount's stability.", "task_type": "put"}
+{"text": "[put] Note the phase of Venus each week as it swings around the sun.", "task_type": "put"}
+{"text": "[put] Let your eyes adapt to the darkness for at least twenty minutes before judging faint galaxies.", "task_type": "put"}
+{"text": "[put] Level the tripod on firm ground so that the mount stays steady during long exposures.", "task_type": "put"}
+{"text": "[put] Carry a red torch so your night vision survives while you read the star charts.", "task_type": "put"}
+{"text": "[puttwo] Choose an eyepiece whose exit pupil matches your eye for the brightest views of nebulae.", "task_type": "puttwo"}
+{"text": "[puttwo] Pick a night of transparency rather than steady seeing for faint galaxies.", "task_type": "puttwo"}
+{"text": "[puttwo] Compare each galaxy at low and high power on successive nights to learn which magnification shows its spiral arms.", "task_type": "puttwo"}
+{"text": "[puttwo] Keep the dew shield extended at all times on damp nights, since moisture forms first on the exposed front lens.", "task_type": "puttwo"}
+{"text": "[puttwo] Name the bright summer triangle stars for beginners first : Vega, Deneb and Altair.", "task_type": "puttwo"}

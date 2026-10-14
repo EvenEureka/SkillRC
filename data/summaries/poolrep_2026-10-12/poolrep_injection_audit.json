@@ -1,0 +1,122 @@
+{
+  "GREF": {
+    "n_items": 36,
+    "token_budget_o200k": 706,
+    "items_injected_per_game": [
+      36
+    ],
+    "o200k_true": [
+      706
+    ],
+    "o200k_control": [
+      706
+    ],
+    "o200k_mismatch_games": 0,
+    "qwen3_8b_true": [
+      706
+    ],
+    "qwen3_8b_control": [
+      706
+    ],
+    "qwen3_8b_mismatch_games": 0,
+    "qwen3_8b_max_abs_diff": 0,
+    "order_mismatch_games": 0,
+    "games": 134
+  },
+  "Q32R0": {
+    "n_items": 33,
+    "token_budget_o200k": 756,
+    "items_injected_per_game": [
+      33
+    ],
+    "o200k_true": [
+      756
+    ],
+    "o200k_control": [
+      756
+    ],
+    "o200k_mismatch_games": 0,
+    "qwen3_8b_true": [
+      764
+    ],
+    "qwen3_8b_control": [
+      764
+    ],
+    "qwen3_8b_mismatch_games": 0,
+    "qwen3_8b_max_abs_diff": 0,
+    "order_mismatch_games": 0,
+    "games": 134
+  },
+  "Q32R1": {
+    "n_items": 36,
+    "token_budget_o200k": 773,
+    "items_injected_per_game": [
+      36
+    ],
+    "o200k_true": [
+      773
+    ],
+    "o200k_control": [
+      773
+    ],
+    "o200k_mismatch_games": 0,
+    "qwen3_8b_true": [
+      775
+    ],
+    "qwen3_8b_control": [
+      775
+    ],
+    "qwen3_8b_mismatch_games": 0,
+    "qwen3_8b_max_abs_diff": 0,
+    "order_mismatch_games": 0,
+    "games": 134
+  },
+  "Q32R2": {
+    "n_items": 36,
+    "token_budget_o200k": 790,
+    "items_injected_per_game": [
+      36
+    ],
+    "o200k_true": [
+      790
+    ],
+    "o200k_control": [
+      790
+    ],
+    "o200k_mismatch_games": 0,
+    "qwen3_8b_true": [
+      794
+    ],
+    "qwen3_8b_control": [
+      794
+    ],
+    "qwen3_8b_mismatch_games": 0,
+    "qwen3_8b_max_abs_diff": 0,
+    "order_mismatch_games": 0,
+    "games": 134
+  },
+  "Q32R3": {
+    "n_items": 36,
+    "token_budget_o200k": 752,
+    "items_injected_per_game": [
+      36
+    ],
+    "o200k_true": [
+      752
+    ],
+    "o200k_control": [
+      752
+    ],
+    "o200k_mismatch_games": 0,
+    "qwen3_8b_true": [
+      759
+    ],
+    "qwen3_8b_control": [
+      759
+    ],
+    "qwen3_8b_mismatch_games": 0,
+    "qwen3_8b_max_abs_diff": 0,
+    "order_mismatch_games": 0,
+    "games": 134
+  }
+}

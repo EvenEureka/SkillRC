@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/w1a_q8_d32_r2_insights.jsonl",
+  "control": "data/pools/w1a_q8_d32_r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20262219,
+  "n_items": 36,
+  "body_words": 515,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 763,
+      "before": 763,
+      "control": 763
+    },
+    "qwen3_8b": {
+      "target": 768,
+      "before": 768,
+      "control": 768
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1034,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q8_d32_r2_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q8_d32_r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    55,
+    3,
+    12,
+    45,
+    146,
+    71,
+    56,
+    4,
+    165,
+    84,
+    38,
+    99,
+    93,
+    85,
+    104,
+    75,
+    82,
+    124,
+    125,
+    58,
+    1,
+    57,
+    92,
+    119,
+    177,
+    72,
+    83,
+    26,
+    79,
+    101,
+    180,
+    91,
+    50,
+    2,
+    42,
+    76
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Start by identifying the object to clean and the likely locations it might be found.",
+      "control": "[clean] Never dig heavy wet clay, because treading on it ruins the soil structure for months."
+    },
+    {
+      "original": "[clean] Check common storage or usage areas first, such as sinkbasin, countertop, diningtable, or cabinets.",
+      "control": "[clean] Rotate crops so that no family grows in the same patch year after year."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin before placing it in the target location.",
+      "control": "[clean] Label each row with the variety name and sowing date in permanent ink."
+    },
+    {
+      "original": "[clean] Always open cabinets or drawers before attempting to place an object inside.",
+      "control": "[clean] Plant garlic cloves pointed end up, a span apart in loose soil."
+    }
+  ]
+}

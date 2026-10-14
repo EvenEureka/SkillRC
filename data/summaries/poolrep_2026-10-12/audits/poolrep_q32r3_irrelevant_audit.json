@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/poolrep_q32r3_insights.jsonl",
+  "control": "data/pools/poolrep_q32r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/poolrep_gardening_bank.txt",
+  "seed": 20264888,
+  "n_items": 36,
+  "body_words": 503,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 752,
+      "before": 752,
+      "control": 752
+    },
+    "qwen3_8b": {
+      "target": 759,
+      "before": 759,
+      "control": 759
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1368,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/poolrep_q32r3_insights.jsonl",
+    "payload_corpus": "data/pools/poolrep_q32r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    99,
+    15,
+    109,
+    100,
+    8,
+    83,
+    82,
+    128,
+    2,
+    96,
+    79,
+    62,
+    65,
+    53,
+    3,
+    104,
+    32,
+    84,
+    41,
+    1,
+    61,
+    59,
+    50,
+    5,
+    57,
+    35,
+    146,
+    17,
+    135,
+    23,
+    98,
+    131,
+    77,
+    91,
+    14,
+    85
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common object locations systematically, starting with the most likely (e.g., fridge, countertop, diningtable).",
+      "control": "[clean] Add slow-release organic fertilizer (blood, fish and bone) to hungry crops at planting time."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin as soon as it is obtained.",
+      "control": "[clean] Prune fruit trees in late winter while the branches are still bare."
+    },
+    {
+      "original": "[clean] Always verify the object is clean before placing it in the target location.",
+      "control": "[clean] Add mycorrhizal granules to planting holes to help roots establish in poor soil."
+    },
+    {
+      "original": "[clean] Prioritize accessible and open locations to avoid unnecessary opening actions.",
+      "control": "[clean] Keep soil pH between 6.0 and 7.0 for most vegetables."
+    }
+  ]
+}

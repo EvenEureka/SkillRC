@@ -1,0 +1,1094 @@
+{
+  "missing_types": [],
+  "addendum_B": {
+    "executors": {
+      "GPT-4o-mini": {
+        "none": 0.5945,
+        "T": 0.0796,
+        "cost_I": 0.0,
+        "vocab_cue_P_minus_I": 0.0274,
+        "procedure_S": 0.0522,
+        "content_R": 0.0796,
+        "I_ci": [
+          -0.0423,
+          0.0423
+        ],
+        "R_ci": [
+          0.0299,
+          0.1294
+        ]
+      },
+      "Qwen3-8B": {
+        "none": 0.6766,
+        "T": 0.0174,
+        "cost_I": -0.0224,
+        "vocab_cue_P_minus_I": -0.0398,
+        "procedure_S": 0.0796,
+        "content_R": 0.0398,
+        "I_ci": [
+          -0.0721,
+          0.0274
+        ],
+        "R_ci": [
+          -0.005,
+          0.0846
+        ]
+      },
+      "GPT-4.1-mini": {
+        "none": 0.7214,
+        "T": -0.0075,
+        "cost_I": -0.0398,
+        "vocab_cue_P_minus_I": 0.0149,
+        "procedure_S": 0.0174,
+        "content_R": 0.0323,
+        "I_ci": [
+          -0.0871,
+          0.005
+        ],
+        "R_ci": [
+          -0.0174,
+          0.0821
+        ]
+      },
+      "Llama-3.1-8B": {
+        "none": 0.2587,
+        "T": -0.0274,
+        "cost_I": -0.0299,
+        "vocab_cue_P_minus_I": -0.0224,
+        "procedure_S": 0.0249,
+        "content_R": 0.0025,
+        "I_ci": [
+          -0.0796,
+          0.0174
+        ],
+        "R_ci": [
+          -0.0323,
+          0.0398
+        ]
+      },
+      "Qwen3-14B": {
+        "none": 0.7935,
+        "T": -0.005,
+        "cost_I": -0.0174,
+        "vocab_cue_P_minus_I": -0.0174,
+        "procedure_S": 0.0299,
+        "content_R": 0.0124,
+        "I_ci": [
+          -0.0522,
+          0.0149
+        ],
+        "R_ci": [
+          -0.0224,
+          0.0498
+        ]
+      }
+    },
+    "D1_range_I_gt_range_R": {
+      "holds": false,
+      "range_I": 0.0398,
+      "range_R": 0.0771
+    },
+    "D2_loo": {
+      "per_executor": {
+        "GPT-4o-mini": {
+          "observed_T": 0.0796,
+          "decomposition_pred": 0.0217,
+          "naive_pred": -0.0056
+        },
+        "Qwen3-8B": {
+          "observed_T": 0.0174,
+          "decomposition_pred": 0.0093,
+          "naive_pred": 0.0099
+        },
+        "GPT-4.1-mini": {
+          "observed_T": -0.0075,
+          "decomposition_pred": -0.0062,
+          "naive_pred": 0.0161
+        },
+        "Llama-3.1-8B": {
+          "observed_T": -0.0274,
+          "decomposition_pred": 0.0111,
+          "naive_pred": 0.0211
+        },
+        "Qwen3-14B": {
+          "observed_T": -0.005,
+          "decomposition_pred": 0.0212,
+          "naive_pred": 0.0155
+        }
+      },
+      "mae_decomposition": 0.0264,
+      "mae_naive": 0.0371,
+      "holds": true
+    },
+    "D3_content_by_crossfit_difficulty": {
+      "GPT-4o-mini": {
+        "easy": {
+          "R": 0.0056,
+          "n_obs": 178
+        },
+        "hard": {
+          "R": 0.1961,
+          "n_obs": 102
+        },
+        "mixed": {
+          "R": 0.0902,
+          "n_obs": 122
+        }
+      },
+      "Qwen3-8B": {
+        "easy": {
+          "R": 0.0044,
+          "n_obs": 227
+        },
+        "hard": {
+          "R": 0.0706,
+          "n_obs": 85
+        },
+        "mixed": {
+          "R": 0.1,
+          "n_obs": 90
+        }
+      },
+      "GPT-4.1-mini": {
+        "easy": {
+          "R": 0.0169,
+          "n_obs": 236
+        },
+        "hard": {
+          "R": 0.1034,
+          "n_obs": 58
+        },
+        "mixed": {
+          "R": 0.0278,
+          "n_obs": 108
+        }
+      },
+      "Llama-3.1-8B": {
+        "easy": {
+          "R": 0.1,
+          "n_obs": 60
+        },
+        "hard": {
+          "R": -0.0039,
+          "n_obs": 254
+        },
+        "mixed": {
+          "R": -0.0455,
+          "n_obs": 88
+        }
+      },
+      "Qwen3-14B": {
+        "easy": {
+          "R": -0.0104,
+          "n_obs": 288
+        },
+        "hard": {
+          "R": 0.0192,
+          "n_obs": 52
+        },
+        "mixed": {
+          "R": 0.1129,
+          "n_obs": 62
+        }
+      }
+    }
+  },
+  "blocks": {
+    "A74/GPT": {
+      "means": {
+        "none": 0.5991,
+        "true": 0.6802,
+        "placebo": 0.6712,
+        "irrelevant": 0.6216
+      },
+      "estimands": {
+        "T": {
+          "mean": 0.0811,
+          "ci95": [
+            0.009,
+            0.1532
+          ]
+        },
+        "P": {
+          "mean": 0.0721,
+          "ci95": [
+            0.0135,
+            0.1306
+          ]
+        },
+        "I": {
+          "mean": 0.0225,
+          "ci95": [
+            -0.036,
+            0.0811
+          ]
+        },
+        "S": {
+          "mean": 0.009,
+          "ci95": [
+            -0.0405,
+            0.0586
+          ]
+        },
+        "R": {
+          "mean": 0.0586,
+          "ci95": [
+            -0.009,
+            0.1261
+          ]
+        },
+        "C": {
+          "mean": -0.0495,
+          "ci95": [
+            -0.1171,
+            0.018
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "no content increment over placebo at 95%"
+    },
+    "A74/QWEN": {
+      "means": {
+        "none": 0.6532,
+        "true": 0.6757,
+        "placebo": 0.5991,
+        "irrelevant": 0.6441
+      },
+      "estimands": {
+        "T": {
+          "mean": 0.0225,
+          "ci95": [
+            -0.0405,
+            0.0856
+          ]
+        },
+        "P": {
+          "mean": -0.0541,
+          "ci95": [
+            -0.1126,
+            0.0045
+          ]
+        },
+        "I": {
+          "mean": -0.009,
+          "ci95": [
+            -0.0631,
+            0.045
+          ]
+        },
+        "S": {
+          "mean": 0.0766,
+          "ci95": [
+            0.0225,
+            0.1351
+          ]
+        },
+        "R": {
+          "mean": 0.0315,
+          "ci95": [
+            -0.0225,
+            0.0811
+          ]
+        },
+        "C": {
+          "mean": 0.045,
+          "ci95": [
+            -0.0045,
+            0.0946
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "content increment over placebo; R interval includes 0"
+    },
+    "run1_134/GPT": {
+      "means": {
+        "none": 0.5945,
+        "true": 0.6741,
+        "placebo": 0.6219,
+        "irrelevant": 0.5945
+      },
+      "estimands": {
+        "T": {
+          "mean": 0.0796,
+          "ci95": [
+            0.0274,
+            0.1318
+          ]
+        },
+        "P": {
+          "mean": 0.0274,
+          "ci95": [
+            -0.0199,
+            0.0721
+          ]
+        },
+        "I": {
+          "mean": 0.0,
+          "ci95": [
+            -0.0423,
+            0.0423
+          ]
+        },
+        "S": {
+          "mean": 0.0522,
+          "ci95": [
+            0.005,
+            0.0995
+          ]
+        },
+        "R": {
+          "mean": 0.0796,
+          "ci95": [
+            0.0299,
+            0.1294
+          ]
+        },
+        "C": {
+          "mean": -0.0274,
+          "ci95": [
+            -0.0771,
+            0.0224
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "content increment present; controls agree (rule 1 if R also > 0)"
+    },
+    "run1_134/QWEN": {
+      "means": {
+        "none": 0.6766,
+        "true": 0.694,
+        "placebo": 0.6144,
+        "irrelevant": 0.6542
+      },
+      "estimands": {
+        "T": {
+          "mean": 0.0174,
+          "ci95": [
+            -0.0299,
+            0.0647
+          ]
+        },
+        "P": {
+          "mean": -0.0622,
+          "ci95": [
+            -0.1095,
+            -0.0149
+          ]
+        },
+        "I": {
+          "mean": -0.0224,
+          "ci95": [
+            -0.0721,
+            0.0274
+          ]
+        },
+        "S": {
+          "mean": 0.0796,
+          "ci95": [
+            0.0373,
+            0.1219
+          ]
+        },
+        "R": {
+          "mean": 0.0398,
+          "ci95": [
+            -0.005,
+            0.0846
+          ]
+        },
+        "C": {
+          "mean": 0.0398,
+          "ci95": [
+            0.0,
+            0.0796
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "content increment over placebo; R interval includes 0"
+    },
+    "run2_134/GPT": {
+      "means": {
+        "none": 0.592,
+        "true": 0.6891,
+        "placebo": 0.6343,
+        "irrelevant": 0.5871
+      },
+      "estimands": {
+        "T": {
+          "mean": 0.097,
+          "ci95": [
+            0.0473,
+            0.1468
+          ]
+        },
+        "P": {
+          "mean": 0.0423,
+          "ci95": [
+            -0.005,
+            0.0896
+          ]
+        },
+        "I": {
+          "mean": -0.005,
+          "ci95": [
+            -0.0498,
+            0.0398
+          ]
+        },
+        "S": {
+          "mean": 0.0547,
+          "ci95": [
+            0.01,
+            0.0995
+          ]
+        },
+        "R": {
+          "mean": 0.102,
+          "ci95": [
+            0.0498,
+            0.1542
+          ]
+        },
+        "C": {
+          "mean": -0.0473,
+          "ci95": [
+            -0.0995,
+            0.005
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "content increment present; controls agree (rule 1 if R also > 0)"
+    },
+    "C134/GPT41MINI": {
+      "means": {
+        "none": 0.7214,
+        "true": 0.7139,
+        "placebo": 0.6965,
+        "irrelevant": 0.6816
+      },
+      "estimands": {
+        "T": {
+          "mean": -0.0075,
+          "ci95": [
+            -0.0522,
+            0.0373
+          ]
+        },
+        "P": {
+          "mean": -0.0249,
+          "ci95": [
+            -0.0672,
+            0.0174
+          ]
+        },
+        "I": {
+          "mean": -0.0398,
+          "ci95": [
+            -0.0871,
+            0.005
+          ]
+        },
+        "S": {
+          "mean": 0.0174,
+          "ci95": [
+            -0.0274,
+            0.0597
+          ]
+        },
+        "R": {
+          "mean": 0.0323,
+          "ci95": [
+            -0.0174,
+            0.0821
+          ]
+        },
+        "C": {
+          "mean": -0.0149,
+          "ci95": [
+            -0.0622,
+            0.0299
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "no content increment over placebo at 95%"
+    },
+    "C134/LLAMA8B": {
+      "means": {
+        "none": 0.2587,
+        "true": 0.2313,
+        "placebo": 0.2065,
+        "irrelevant": 0.2289
+      },
+      "estimands": {
+        "T": {
+          "mean": -0.0274,
+          "ci95": [
+            -0.0721,
+            0.0149
+          ]
+        },
+        "P": {
+          "mean": -0.0522,
+          "ci95": [
+            -0.102,
+            -0.005
+          ]
+        },
+        "I": {
+          "mean": -0.0299,
+          "ci95": [
+            -0.0796,
+            0.0174
+          ]
+        },
+        "S": {
+          "mean": 0.0249,
+          "ci95": [
+            -0.0199,
+            0.0697
+          ]
+        },
+        "R": {
+          "mean": 0.0025,
+          "ci95": [
+            -0.0323,
+            0.0398
+          ]
+        },
+        "C": {
+          "mean": 0.0224,
+          "ci95": [
+            -0.0174,
+            0.0622
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "no content increment over placebo at 95%"
+    },
+    "C134/QWEN14B": {
+      "means": {
+        "none": 0.7935,
+        "true": 0.7886,
+        "placebo": 0.7587,
+        "irrelevant": 0.7761
+      },
+      "estimands": {
+        "T": {
+          "mean": -0.005,
+          "ci95": [
+            -0.0423,
+            0.0323
+          ]
+        },
+        "P": {
+          "mean": -0.0348,
+          "ci95": [
+            -0.0672,
+            -0.0025
+          ]
+        },
+        "I": {
+          "mean": -0.0174,
+          "ci95": [
+            -0.0522,
+            0.0149
+          ]
+        },
+        "S": {
+          "mean": 0.0299,
+          "ci95": [
+            -0.0025,
+            0.0647
+          ]
+        },
+        "R": {
+          "mean": 0.0124,
+          "ci95": [
+            -0.0224,
+            0.0498
+          ]
+        },
+        "C": {
+          "mean": 0.0174,
+          "ci95": [
+            -0.0174,
+            0.0522
+          ]
+        }
+      },
+      "info": {
+        "none": {
+          "errors": 0
+        },
+        "true": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "placebo": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        },
+        "irrelevant": {
+          "errors": 0,
+          "footprint": [
+            645
+          ]
+        }
+      },
+      "decision": "no content increment over placebo at 95%"
+    }
+  },
+  "gaps": {
+    "A74 Qwen-GPT": {
+      "T": {
+        "mean": -0.0586,
+        "ci95": [
+          -0.1577,
+          0.036
+        ]
+      },
+      "P": {
+        "mean": -0.1261,
+        "ci95": [
+          -0.2117,
+          -0.045
+        ]
+      },
+      "I": {
+        "mean": -0.0315,
+        "ci95": [
+          -0.1126,
+          0.0495
+        ]
+      },
+      "S": {
+        "mean": 0.0676,
+        "ci95": [
+          -0.009,
+          0.1441
+        ]
+      },
+      "R": {
+        "mean": -0.027,
+        "ci95": [
+          -0.1126,
+          0.0586
+        ]
+      },
+      "C": {
+        "mean": 0.0946,
+        "ci95": [
+          0.0135,
+          0.1802
+        ]
+      }
+    },
+    "134 Qwen-GPT": {
+      "T": {
+        "mean": -0.0622,
+        "ci95": [
+          -0.1318,
+          0.005
+        ]
+      },
+      "P": {
+        "mean": -0.0896,
+        "ci95": [
+          -0.1567,
+          -0.0199
+        ]
+      },
+      "I": {
+        "mean": -0.0224,
+        "ci95": [
+          -0.0846,
+          0.0423
+        ]
+      },
+      "S": {
+        "mean": 0.0274,
+        "ci95": [
+          -0.0398,
+          0.092
+        ]
+      },
+      "R": {
+        "mean": -0.0398,
+        "ci95": [
+          -0.1045,
+          0.0249
+        ]
+      },
+      "C": {
+        "mean": 0.0672,
+        "ci95": [
+          0.0,
+          0.1318
+        ]
+      }
+    },
+    "134 GPT4.1mini-GPT": {
+      "T": {
+        "mean": -0.0871,
+        "ci95": [
+          -0.1517,
+          -0.0249
+        ]
+      },
+      "P": {
+        "mean": -0.0522,
+        "ci95": [
+          -0.1169,
+          0.0124
+        ]
+      },
+      "I": {
+        "mean": -0.0398,
+        "ci95": [
+          -0.0995,
+          0.0199
+        ]
+      },
+      "S": {
+        "mean": -0.0348,
+        "ci95": [
+          -0.0995,
+          0.0299
+        ]
+      },
+      "R": {
+        "mean": -0.0473,
+        "ci95": [
+          -0.107,
+          0.0124
+        ]
+      },
+      "C": {
+        "mean": 0.0124,
+        "ci95": [
+          -0.0547,
+          0.0771
+        ]
+      }
+    },
+    "134 Llama8B-GPT": {
+      "T": {
+        "mean": -0.107,
+        "ci95": [
+          -0.1741,
+          -0.0398
+        ]
+      },
+      "P": {
+        "mean": -0.0796,
+        "ci95": [
+          -0.1393,
+          -0.0199
+        ]
+      },
+      "I": {
+        "mean": -0.0299,
+        "ci95": [
+          -0.097,
+          0.0373
+        ]
+      },
+      "S": {
+        "mean": -0.0274,
+        "ci95": [
+          -0.0896,
+          0.0323
+        ]
+      },
+      "R": {
+        "mean": -0.0771,
+        "ci95": [
+          -0.1418,
+          -0.0124
+        ]
+      },
+      "C": {
+        "mean": 0.0498,
+        "ci95": [
+          -0.01,
+          0.1095
+        ]
+      }
+    },
+    "134 Qwen14B-GPT": {
+      "T": {
+        "mean": -0.0846,
+        "ci95": [
+          -0.1368,
+          -0.0323
+        ]
+      },
+      "P": {
+        "mean": -0.0622,
+        "ci95": [
+          -0.1194,
+          -0.0025
+        ]
+      },
+      "I": {
+        "mean": -0.0174,
+        "ci95": [
+          -0.0647,
+          0.0299
+        ]
+      },
+      "S": {
+        "mean": -0.0224,
+        "ci95": [
+          -0.0746,
+          0.0323
+        ]
+      },
+      "R": {
+        "mean": -0.0672,
+        "ci95": [
+          -0.1219,
+          -0.0124
+        ]
+      },
+      "C": {
+        "mean": 0.0448,
+        "ci95": [
+          -0.0199,
+          0.107
+        ]
+      }
+    }
+  },
+  "noise_floor_gpt4omini": {
+    "none": {
+      "episodes": 402,
+      "disagree": 71,
+      "rate": 0.1766
+    },
+    "true": {
+      "episodes": 402,
+      "disagree": 70,
+      "rate": 0.1741
+    },
+    "placebo": {
+      "episodes": 402,
+      "disagree": 79,
+      "rate": 0.1965
+    },
+    "irrelevant": {
+      "episodes": 402,
+      "disagree": 73,
+      "rate": 0.1816
+    },
+    "estimands_on_run_average": {
+      "T": {
+        "mean": 0.0883,
+        "ci95": [
+          0.0498,
+          0.1281
+        ]
+      },
+      "P": {
+        "mean": 0.0348,
+        "ci95": [
+          -0.0025,
+          0.0709
+        ]
+      },
+      "I": {
+        "mean": -0.0025,
+        "ci95": [
+          -0.0373,
+          0.0311
+        ]
+      },
+      "S": {
+        "mean": 0.0535,
+        "ci95": [
+          0.0199,
+          0.0883
+        ]
+      },
+      "R": {
+        "mean": 0.0908,
+        "ci95": [
+          0.0498,
+          0.1331
+        ]
+      },
+      "C": {
+        "mean": -0.0373,
+        "ci95": [
+          -0.0771,
+          0.0025
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{"text": "[beauty] Always include specific attributes and price limits in your search queries.", "task_type": "beauty"}
+{"text": "[beauty] Use concise and relevant keywords to improve search accuracy.", "task_type": "beauty"}
+{"text": "[beauty] Click on products that match your criteria to verify details before purchasing.", "task_type": "beauty"}
+{"text": "[beauty] Utilize pagination to explore multiple pages of search results if necessary.", "task_type": "beauty"}
+{"text": "[beauty] Confirm product specifications and features before finalizing the purchase.", "task_type": "beauty"}
+{"text": "[beauty] Ensure the product meets all specified requirements to avoid returns.", "task_type": "beauty"}
+{"text": "[electronics] Use specific keywords that describe the product features and requirements.", "task_type": "electronics"}
+{"text": "[electronics] Include price constraints in the search query to filter results effectively.", "task_type": "electronics"}
+{"text": "[electronics] Click on the first relevant product to streamline the purchasing process.", "task_type": "electronics"}
+{"text": "[electronics] Ensure to check product details for compliance with specified features before buying.", "task_type": "electronics"}
+{"text": "[electronics] Utilize pagination to explore more options if initial results are unsatisfactory.", "task_type": "electronics"}
+{"text": "[electronics] Confirm product attributes such as color and style during the selection process.", "task_type": "electronics"}
+{"text": "[fashion] Use specific keywords related to the product features when searching.", "task_type": "fashion"}
+{"text": "[fashion] Click on the relevant filters for size and color after the initial search.", "task_type": "fashion"}
+{"text": "[fashion] Always check the price range to ensure it meets the budget criteria.", "task_type": "fashion"}
+{"text": "[fashion] If the desired product is not found, consider re-searching with the same criteria.", "task_type": "fashion"}
+{"text": "[fashion] Prioritize clicking on the product that matches all specified attributes.", "task_type": "fashion"}
+{"text": "[fashion] Complete the purchase by confirming the selected options before finalizing.", "task_type": "fashion"}
+{"text": "[garden] Always include specific attributes like color, size, and price in your search queries to narrow down results effectively.", "task_type": "garden"}
+{"text": "[garden] Utilize filters for size and color after initial search results to refine options further.", "task_type": "garden"}
+{"text": "[garden] If the first search does not yield satisfactory results, repeat the search with the same parameters to ensure consistency.", "task_type": "garden"}
+{"text": "[garden] Click on relevant product options to verify details before making a purchase decision.", "task_type": "garden"}
+{"text": "[garden] Prioritize products that meet all specified criteria to avoid unnecessary browsing.", "task_type": "garden"}
+{"text": "[garden] Use clear and concise language in instructions to enhance search accuracy and efficiency.", "task_type": "garden"}
+{"text": "[grocery] Use specific dietary and product attributes in your search queries to narrow down results effectively.", "task_type": "grocery"}
+{"text": "[grocery] Always include price constraints in your search to filter out options that exceed your budget.", "task_type": "grocery"}
+{"text": "[grocery] If initial search results do not yield desired products, refine your search terms and try again.", "task_type": "grocery"}
+{"text": "[grocery] Utilize product attributes like flavor and size to ensure the items meet your specific requirements.", "task_type": "grocery"}
+{"text": "[grocery] Click through search results methodically, checking for the correct product attributes before making a purchase.", "task_type": "grocery"}
+{"text": "[grocery] If you encounter irrelevant results, return to the search and adjust your keywords for better accuracy.", "task_type": "grocery"}

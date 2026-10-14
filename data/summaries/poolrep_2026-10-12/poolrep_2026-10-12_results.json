@@ -1,0 +1,554 @@
+{
+  "runs": {
+    "PRP1012_NONE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6915,
+      "memory_tokens": [
+        0
+      ]
+    },
+    "PRP1012_GREF661_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.7214,
+      "memory_tokens": [
+        656
+      ]
+    },
+    "PRP1012_Q32R1_TRUEDUP_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.694,
+      "memory_tokens": [
+        773
+      ]
+    },
+    "PRP1012_GREF_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.7189,
+      "memory_tokens": [
+        706
+      ]
+    },
+    "PRP1012_GREF_IRR_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6517,
+      "memory_tokens": [
+        706
+      ]
+    },
+    "PRP1012_Q32R0_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.7015,
+      "memory_tokens": [
+        756
+      ]
+    },
+    "PRP1012_Q32R0_IRR_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6692,
+      "memory_tokens": [
+        756
+      ]
+    },
+    "PRP1012_Q32R1_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6816,
+      "memory_tokens": [
+        773
+      ]
+    },
+    "PRP1012_Q32R1_IRR_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.7065,
+      "memory_tokens": [
+        773
+      ]
+    },
+    "PRP1012_Q32R2_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6592,
+      "memory_tokens": [
+        790
+      ]
+    },
+    "PRP1012_Q32R2_IRR_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6741,
+      "memory_tokens": [
+        790
+      ]
+    },
+    "PRP1012_Q32R3_TRUE_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.7015,
+      "memory_tokens": [
+        752
+      ]
+    },
+    "PRP1012_Q32R3_IRR_QWEN": {
+      "episodes": 402,
+      "errors": 0,
+      "flag_errors_gt_2pct": false,
+      "success": 0.6493,
+      "memory_tokens": [
+        752
+      ]
+    }
+  },
+  "pools": {
+    "GREF": {
+      "R": {
+        "mean": 0.0672,
+        "ci95": [
+          0.0199,
+          0.1144
+        ]
+      },
+      "R_by_type": {
+        "clean": 0.1613,
+        "cool": 0.0,
+        "examine": 0.0926,
+        "heat": 0.058,
+        "put": -0.0556,
+        "puttwo": 0.1373
+      },
+      "T": {
+        "mean": 0.0274,
+        "ci95": [
+          -0.0224,
+          0.0771
+        ]
+      },
+      "I": {
+        "mean": -0.0398,
+        "ci95": [
+          -0.0846,
+          0.005
+        ]
+      },
+      "true_mean": 0.7189,
+      "irr_mean": 0.6517
+    },
+    "Q32R0": {
+      "R": {
+        "mean": 0.0323,
+        "ci95": [
+          -0.0174,
+          0.0846
+        ]
+      },
+      "R_by_type": {
+        "clean": 0.0968,
+        "cool": -0.0476,
+        "examine": 0.0,
+        "heat": 0.0435,
+        "put": -0.0417,
+        "puttwo": 0.1373
+      },
+      "T": {
+        "mean": 0.01,
+        "ci95": [
+          -0.0373,
+          0.0572
+        ]
+      },
+      "I": {
+        "mean": -0.0224,
+        "ci95": [
+          -0.0672,
+          0.0224
+        ]
+      },
+      "true_mean": 0.7015,
+      "irr_mean": 0.6692
+    },
+    "Q32R1": {
+      "R": {
+        "mean": -0.0249,
+        "ci95": [
+          -0.0672,
+          0.0174
+        ]
+      },
+      "R_by_type": {
+        "clean": 0.0323,
+        "cool": -0.0317,
+        "examine": 0.0,
+        "heat": 0.058,
+        "put": -0.1528,
+        "puttwo": -0.0784
+      },
+      "T": {
+        "mean": -0.01,
+        "ci95": [
+          -0.0547,
+          0.0348
+        ]
+      },
+      "I": {
+        "mean": 0.0149,
+        "ci95": [
+          -0.0274,
+          0.0547
+        ]
+      },
+      "true_mean": 0.6816,
+      "irr_mean": 0.7065
+    },
+    "Q32R2": {
+      "R": {
+        "mean": -0.0149,
+        "ci95": [
+          -0.0597,
+          0.0274
+        ]
+      },
+      "R_by_type": {
+        "clean": -0.0538,
+        "cool": -0.0159,
+        "examine": 0.0556,
+        "heat": 0.0145,
+        "put": -0.0556,
+        "puttwo": 0.0
+      },
+      "T": {
+        "mean": -0.0323,
+        "ci95": [
+          -0.0771,
+          0.0124
+        ]
+      },
+      "I": {
+        "mean": -0.0174,
+        "ci95": [
+          -0.0672,
+          0.0323
+        ]
+      },
+      "true_mean": 0.6592,
+      "irr_mean": 0.6741
+    },
+    "Q32R3": {
+      "R": {
+        "mean": 0.0522,
+        "ci95": [
+          0.005,
+          0.0995
+        ]
+      },
+      "R_by_type": {
+        "clean": 0.129,
+        "cool": -0.0159,
+        "examine": 0.1111,
+        "heat": 0.1014,
+        "put": -0.125,
+        "puttwo": 0.1176
+      },
+      "T": {
+        "mean": 0.01,
+        "ci95": [
+          -0.0323,
+          0.0522
+        ]
+      },
+      "I": {
+        "mean": -0.0423,
+        "ci95": [
+          -0.092,
+          0.005
+        ]
+      },
+      "true_mean": 0.7015,
+      "irr_mean": 0.6493
+    }
+  },
+  "replicates": {
+    "available": [
+      "Q32R1",
+      "Q32R2",
+      "Q32R3"
+    ],
+    "R_bar": {
+      "mean": 0.0041,
+      "ci95": [
+        -0.0232,
+        0.0315
+      ]
+    },
+    "R_values": {
+      "Q32R1": -0.0249,
+      "Q32R2": -0.0149,
+      "Q32R3": 0.0522
+    },
+    "R_range": 0.0771,
+    "R_sd": 0.0419,
+    "pairwise": {
+      "Q32R1-Q32R2": {
+        "mean": -0.01,
+        "ci95": [
+          -0.0697,
+          0.0498
+        ]
+      },
+      "Q32R1-Q32R3": {
+        "mean": -0.0771,
+        "ci95": [
+          -0.1319,
+          -0.0199
+        ]
+      },
+      "Q32R2-Q32R3": {
+        "mean": -0.0672,
+        "ci95": [
+          -0.1343,
+          -0.0
+        ]
+      }
+    },
+    "T_bar": {
+      "mean": -0.0108,
+      "ci95": [
+        -0.0473,
+        0.0257
+      ]
+    },
+    "I_bar": {
+      "mean": -0.0149,
+      "ci95": [
+        -0.0547,
+        0.024
+      ]
+    }
+  },
+  "secondary": {
+    "DUP": {
+      "mean": -0.0124,
+      "ci95": [
+        -0.0473,
+        0.0224
+      ]
+    },
+    "DUP_share_episodes_differing": 0.1318,
+    "distiller_R_Q32R0_minus_R_GREF": {
+      "mean": -0.0348,
+      "ci95": [
+        -0.097,
+        0.0249
+      ]
+    },
+    "T_GREF661": {
+      "mean": 0.0299,
+      "ci95": [
+        -0.0174,
+        0.0771
+      ]
+    },
+    "GREF_whole_minus_661": {
+      "mean": -0.0025,
+      "ci95": [
+        -0.0473,
+        0.0448
+      ]
+    }
+  },
+  "audits": {
+    "GREF": {
+      "n_items": 36,
+      "footprint_o200k": 706,
+      "insights_per_type": {
+        "clean": 6,
+        "cool": 6,
+        "examine": 6,
+        "heat": 6,
+        "put": 6,
+        "puttwo": 6
+      },
+      "control": {
+        "nonce_replacements": 3,
+        "retained_body_fraction": 0.9941,
+        "context_tokens": {
+          "gpt_4o_mini_o200k": {
+            "target": 706,
+            "before": 707,
+            "control": 706
+          },
+          "qwen3_8b": {
+            "target": 706,
+            "before": 710,
+            "control": 706
+          }
+        },
+        "test_game_vocab_overlap": {
+          "true_pool": 0.055,
+          "control": 0.0
+        }
+      },
+      "memory_tokens_mismatched_episodes": 0
+    },
+    "Q32R0": {
+      "n_items": 33,
+      "footprint_o200k": 756,
+      "insights_per_type": {
+        "clean": 6,
+        "cool": 6,
+        "examine": 6,
+        "heat": 6,
+        "put": 6,
+        "puttwo": 3
+      },
+      "control": {
+        "nonce_replacements": 0,
+        "retained_body_fraction": 1.0,
+        "context_tokens": {
+          "gpt_4o_mini_o200k": {
+            "target": 756,
+            "before": 756,
+            "control": 756
+          },
+          "qwen3_8b": {
+            "target": 764,
+            "before": 764,
+            "control": 764
+          }
+        },
+        "test_game_vocab_overlap": {
+          "true_pool": 0.1296,
+          "control": 0.0
+        }
+      },
+      "memory_tokens_mismatched_episodes": 0
+    },
+    "Q32R1": {
+      "n_items": 36,
+      "footprint_o200k": 773,
+      "insights_per_type": {
+        "clean": 6,
+        "cool": 6,
+        "examine": 6,
+        "heat": 6,
+        "put": 6,
+        "puttwo": 6
+      },
+      "control": {
+        "nonce_replacements": 3,
+        "retained_body_fraction": 0.9943,
+        "context_tokens": {
+          "gpt_4o_mini_o200k": {
+            "target": 773,
+            "before": 774,
+            "control": 773
+          },
+          "qwen3_8b": {
+            "target": 775,
+            "before": 778,
+            "control": 775
+          }
+        },
+        "test_game_vocab_overlap": {
+          "true_pool": 0.1087,
+          "control": 0.0
+        }
+      },
+      "memory_tokens_mismatched_episodes": 0
+    },
+    "Q32R2": {
+      "n_items": 36,
+      "footprint_o200k": 790,
+      "insights_per_type": {
+        "clean": 6,
+        "cool": 6,
+        "examine": 6,
+        "heat": 6,
+        "put": 6,
+        "puttwo": 6
+      },
+      "control": {
+        "nonce_replacements": 0,
+        "retained_body_fraction": 1.0,
+        "context_tokens": {
+          "gpt_4o_mini_o200k": {
+            "target": 790,
+            "before": 790,
+            "control": 790
+          },
+          "qwen3_8b": {
+            "target": 794,
+            "before": 794,
+            "control": 794
+          }
+        },
+        "test_game_vocab_overlap": {
+          "true_pool": 0.0833,
+          "control": 0.0
+        }
+      },
+      "memory_tokens_mismatched_episodes": 0
+    },
+    "Q32R3": {
+      "n_items": 36,
+      "footprint_o200k": 752,
+      "insights_per_type": {
+        "clean": 6,
+        "cool": 6,
+        "examine": 6,
+        "heat": 6,
+        "put": 6,
+        "puttwo": 6
+      },
+      "control": {
+        "nonce_replacements": 0,
+        "retained_body_fraction": 1.0,
+        "context_tokens": {
+          "gpt_4o_mini_o200k": {
+            "target": 752,
+            "before": 752,
+            "control": 752
+          },
+          "qwen3_8b": {
+            "target": 759,
+            "before": 759,
+            "control": 759
+          }
+        },
+        "test_game_vocab_overlap": {
+          "true_pool": 0.1368,
+          "control": 0.0
+        }
+      },
+      "memory_tokens_mismatched_episodes": 0
+    }
+  },
+  "none_mean": 0.6915,
+  "predictions": {
+    "P1 R_bar > 0, CI excludes 0": false,
+    "P2 range of R over Q32R1-3 < 0.05": false,
+    "P3 no pairwise R_i - R_j CI excludes 0": false,
+    "P4 |I_bar| <= 0.04": true,
+    "secondary: distiller alone changes R (CI excludes 0)": false,
+    "secondary: DUP CI includes 0": true,
+    "secondary: |DUP| >= 0.03 (a 0.05 pool range is within run noise)": false
+  }
+}

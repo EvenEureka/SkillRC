@@ -1,332 +1,205 @@
 #!/usr/bin/env python3
-"""Render the result figures from the frozen summary statistics.
+"""Render the two result figures of the manuscript from the released result files.
 
-Every number below is copied from the frozen result records of the study
-(complete prompt-axis result, order-placebo gate, task-transfer taxonomy,
-representation matrix, and the WebShop comparison). Per-episode logs are not
-part of the public release, so the figures plot reported estimates and counts;
-nothing is re-estimated here.  Run:  python paper/figures/make_figures.py
+Every number is read from data/summaries/ (the JSON files written by the analysis scripts);
+nothing is re-estimated here.
+
+  fig_readers   Reading cost I and content value R per reader: one pool and five readers
+                (five-reader study), and 18 pools and three Qwen3 readers (crossover study).
+  fig_contrasts The protocol contrasts of the crossover and generic-rule studies, each with
+                its prediction and outcome.
+
+Run:  python paper/figures/make_figures.py
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
-import matplotlib.ticker as mticker  # noqa: E402
-from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
-from matplotlib.patches import Patch  # noqa: E402
+from matplotlib.lines import Line2D  # noqa: E402
 
+ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
+SUM = ROOT / "data/summaries"
 
-# Pastel palette in the style of the MemoHarness figures.
-LAV, LAV_D = "#C9C5E8", "#7F78BE"      # baseline / no memory
-BLUE, BLUE_D = "#BDCFEA", "#5F86C2"    # GPT-4o-mini
-MINT, MINT_D = "#BFE3D9", "#4FA58C"    # Qwen3-8B
-SALM, SALM_D = "#F4C4B5", "#D9735A"    # SkillRC memory / highlight
-GREY_BAND = "#F3F3F3"
-INK, MUTED, GRID = "#3A3A3A", "#7A7A7A", "#E6E6E6"
+INK, MUTED, GRID = "#2F2F2F", "#6B6B6B", "#E4E4E4"
+COST = "#8A8A8A"          # reading cost
+VALUE = "#C2552F"         # content value
+VALUE_LIGHT = "#EDB59F"   # one pool's content value
+BAND = "#F1F1F1"
 
 plt.rcParams.update({
     "font.family": "sans-serif",
-    "font.sans-serif": ["Droid Sans", "DejaVu Sans"],
-    "font.size": 9,
+    "font.sans-serif": ["Liberation Sans", "Nimbus Sans", "DejaVu Sans"],
+    "font.size": 8,
     "axes.edgecolor": "#BDBDBD",
-    "axes.linewidth": 0.7,
+    "axes.linewidth": 0.6,
+    "axes.labelcolor": INK,
     "xtick.color": INK,
     "ytick.color": MUTED,
-    "xtick.labelsize": 8.5,
-    "ytick.labelsize": 8,
-    "axes.labelcolor": INK,
+    "xtick.labelsize": 7.5,
+    "ytick.labelsize": 7.5,
+    "legend.fontsize": 7.5,
     "pdf.fonttype": 42,
     "savefig.bbox": "tight",
-    "savefig.pad_inches": 0.03,
+    "savefig.pad_inches": 0.02,
 })
 
 
-def _save(fig, name):
+def load(rel):
+    return json.loads((SUM / rel).read_text())
+
+
+def save(fig, name):
     fig.savefig(OUT / f"{name}.pdf")
-    fig.savefig(OUT / f"{name}.png", dpi=220)
+    fig.savefig(OUT / f"{name}.png", dpi=240)
     plt.close(fig)
 
 
-def _style(ax, ygrid=True):
-    for s in ("top", "right", "left"):
+def style(ax):
+    for s in ("top", "right"):
         ax.spines[s].set_visible(False)
-    ax.tick_params(axis="both", length=0)
-    if ygrid:
-        ax.yaxis.grid(True, color=GRID, linewidth=0.7)
+    ax.tick_params(axis="both", length=2, width=0.5)
+    ax.yaxis.grid(True, color=GRID, linewidth=0.6)
     ax.set_axisbelow(True)
 
 
-def _title(fig, text, legend=None, y=0.995, below=False):
-    fig.text(0.01, y, text, ha="left", va="top", fontsize=11, color=INK)
-    if legend:
-        anchor, loc = ((0.0, y - 0.075), "upper left") if below else ((0.995, y + 0.012), "upper right")
-        fig.legend(handles=[Patch(facecolor=c, label=lab) for lab, c in legend], loc=loc,
-                   bbox_to_anchor=anchor, ncol=len(legend), frameon=False, fontsize=8,
-                   handlelength=0.9, handleheight=0.9, columnspacing=1.1, handletextpad=0.4)
+def check_ticklabel_gaps(fig, axes, min_gap_pt=3.0):
+    """Fail if neighbouring x tick labels come closer than min_gap_pt (in points at the saved size)."""
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    for ax in axes:
+        boxes = sorted((lab.get_window_extent(r) for lab in ax.get_xticklabels() if lab.get_text()), key=lambda b: b.x0)
+        for a, b in zip(boxes, boxes[1:]):
+            gap = (b.x0 - a.x1) * 72 / fig.dpi
+            assert gap >= min_gap_pt, f"tick labels {gap:.1f} pt apart"
 
 
-def _bands(ax, n, start=0):
-    for i in range(n):
-        if (i + start) % 2 == 1:
-            ax.axvspan(i - 0.5, i + 0.5, color=GREY_BAND, zorder=0, lw=0)
+def errpoint(ax, x, est, ci, color, filled, size=4.2):
+    ax.plot([x, x], ci, color=color, lw=1.1, solid_capstyle="butt", zorder=3)
+    ax.plot([x], [est], marker="o", ms=size, color=color, mfc=color if filled else "white",
+            mew=1.1, zorder=4, ls="none")
 
 
-def _r3(v, signed=False):
-    """Round half up to three decimals, as in the paper text (0.1045 -> 0.105)."""
-    from decimal import ROUND_HALF_UP, Decimal
-    d = Decimal(str(v)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
-    return (f"+{d}" if signed and d > 0 else str(d)).replace("-", "−")
+def fig_readers():
+    p2 = load("phase2_2026-10-10/phase2_2026-10-10_results.json")
+    w1a = load("w1a_2026-10-13/w1a_2026-10-13_results.json")
+
+    # Five-reader study: one pool (the focal pool), single runs (GPT-4o-mini: run 1, as in the protocol).
+    b = p2["blocks"]
+    blocks = {"Llama-3.1-8B": b["C134/LLAMA8B"], "GPT-4o-mini": b["run1_134/GPT"], "Qwen3-8B": b["run1_134/QWEN"],
+              "GPT-4.1-mini": b["C134/GPT41MINI"], "Qwen3-14B": b["C134/QWEN14B"]}
+    five = sorted(blocks.items(), key=lambda kv: kv[1]["means"]["none"])
+
+    # Crossover study: 18 balanced pools, three Qwen3 readers, hierarchical intervals.
+    readers = [("Qwen3-8B", "Q8"), ("Qwen3-14B", "Q14"), ("Qwen3-32B", "Q32")]
+    bal = [p for p in w1a["pools"] if p not in ("GPTREF", "GREF")]
+    assert len(bal) == 18
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.3, 2.45), sharey=True,
+                                 gridspec_kw={"width_ratios": [5.6, 3.0], "wspace": 0.03})
+    off = 0.14
+    for ax in (a1, a2):
+        style(ax)
+        ax.axhspan(-0.04, 0.04, color=BAND, zorder=0, lw=0)
+        ax.axhline(0, color="#9A9A9A", lw=0.7, zorder=1)
+
+    for i, (name, b) in enumerate(five):
+        e = b["estimands"]
+        errpoint(a1, i - off, e["I"]["mean"], e["I"]["ci95"], COST, False)
+        errpoint(a1, i + off, e["R"]["mean"], e["R"]["ci95"], VALUE, True)
+    a1.set_xticks(range(len(five)))
+    a1.set_xticklabels([f"{n}\n{b['means']['none']:.2f}" for n, b in five], fontsize=7)
+    a1.set_xlim(-0.5, len(five) - 0.5)
+    a1.set_title("One pool, five readers", fontsize=8.5, color=INK, loc="left", pad=4)
+    a1.set_ylabel("Change in success rate", fontsize=8)
+
+    for i, (name, rd) in enumerate(readers):
+        pooled = w1a["pooled"]
+        rs = sorted(w1a["pools"][p][rd]["R"]["mean"] for p in bal)
+        xs = [i + off + 0.20 + 0.012 * (k % 3) for k in range(len(rs))]
+        a2.scatter(xs, rs, s=7, color=VALUE_LIGHT, edgecolor="none", zorder=2)
+        errpoint(a2, i - off, pooled[f"I_bar_{rd}"]["mean"], pooled[f"I_bar_{rd}"]["ci95"], COST, False)
+        errpoint(a2, i + off, pooled[f"R_bar_{rd}"]["mean"], pooled[f"R_bar_{rd}"]["ci95"], VALUE, True)
+    a2.set_xticks(range(len(readers)))
+    a2.set_xticklabels([f"{n}\n{w1a['none_mean'][rd]:.2f}" for n, rd in readers], fontsize=7)
+    a2.set_xlim(-0.5, len(readers) - 0.5)
+    a2.set_title("18 pools, three Qwen3 readers", fontsize=8.5, color=INK, loc="left", pad=4)
+    a2.tick_params(axis="y", length=0)
+
+    a1.set_ylim(-0.10, 0.155)
+    a1.set_yticks([-0.08, -0.04, 0, 0.04, 0.08, 0.12])
+    a1.set_yticklabels(["−0.08", "−0.04", "0", "+0.04", "+0.08", "+0.12"])
+    handles = [Line2D([], [], marker="o", color=COST, mfc="white", mew=1.1, ms=4.2, lw=1.1,
+                      label=r"Reading cost ($I$)"),
+               Line2D([], [], marker="o", color=VALUE, ms=4.2, lw=1.1,
+                      label=r"Content value ($R$)"),
+               Line2D([], [], marker="o", color=VALUE_LIGHT, ms=3.2, lw=0, label=r"$R$ of one pool")]
+    fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.965), ncol=3, frameon=False,
+               handletextpad=0.4, columnspacing=1.4)
+    fig.text(0.005, -0.04, "Below each reader: its success rate without memory.", fontsize=7, color=MUTED)
+    check_ticklabel_gaps(fig, (a1, a2))
+    save(fig, "fig_readers")
 
 
-def _label(ax, x, v, color, dy=0.006, signed=False):
-    txt = _r3(v, signed)
-    ax.text(x, v + (dy if v >= 0 else -dy), txt, ha="center", va="bottom" if v >= 0 else "top",
-            fontsize=7, color=color)
-
-
-def fig_success():
-    """RQ1: equal-pair ALFWorld success without and with the experience memory."""
-    groups = ["GPT-4o-mini", "Qwen3-8B"]
-    none, mem = [0.5871, 0.7040], [0.7139, 0.6828]
-    fig, ax = plt.subplots(figsize=(3.1, 2.05))
-    _bands(ax, 2, start=1)
-    w = 0.32
-    for i in range(2):
-        ax.bar(i - w / 2 - 0.02, none[i], w, color=LAV, zorder=2)
-        ax.bar(i + w / 2 + 0.02, mem[i], w, color=SALM, zorder=2)
-        _label(ax, i - w / 2 - 0.02, none[i], LAV_D)
-        _label(ax, i + w / 2 + 0.02, mem[i], SALM_D)
-    ax.set_xticks(range(2))
-    ax.set_xticklabels(groups, fontweight="bold")
-    ax.set_ylim(0.5, 0.76)
-    ax.set_xlim(-0.55, 1.55)
-    ax.yaxis.set_major_formatter(mticker.PercentFormatter(1.0, decimals=0))
-    _style(ax)
-    _title(fig, "ALFWorld Success (134 tasks)", [("No memory", LAV), ("SkillRC memory", SALM)], y=1.17, below=True)
-    _save(fig, "fig_success")
-
-
-def fig_pairs():
-    """RQ2: memory gain on each unique prompt pair and the equal-pair estimate."""
-    labels = ["Pair 01", "Pair 02", "Pair 12", "Mean"]
-    gpt = [0.1119, 0.0970, 0.1716, 0.1269]
-    qwen = [0.0075, -0.0821, 0.0112, -0.0211]
-    cis = [(0.0721, 0.1841, BLUE_D), (-0.0622, 0.0199, MINT_D)]
-    fig, ax = plt.subplots(figsize=(3.9, 2.05))
-    _bands(ax, 4)
-    w = 0.34
-    xs = []
-    for i in range(4):
-        xg, xq = i - w / 2 - 0.02, i + w / 2 + 0.02
-        ax.bar(xg, gpt[i], w, color=BLUE, zorder=2)
-        ax.bar(xq, qwen[i], w, color=MINT, zorder=2)
-        _label(ax, xg, gpt[i], BLUE_D, signed=True, dy=(0.1841 - gpt[i] + 0.006) if i == 3 else 0.006)
-        _label(ax, xq, qwen[i], MINT_D, signed=True, dy=(qwen[i] + 0.0622 + 0.006) if i == 3 else 0.006)
-        xs = [xg, xq]
-    for x, (lo, hi, c) in zip(xs, cis):
-        ax.plot([x, x], [lo, hi], color=c, lw=1.3, zorder=3)
-        for yv in (lo, hi):
-            ax.plot([x - 0.05, x + 0.05], [yv, yv], color=c, lw=1.3, zorder=3)
-    ax.axhline(0, color="#9E9E9E", lw=0.8, zorder=1)
-    ax.set_xticks(range(4))
-    ax.set_xticklabels(labels, fontweight="bold")
-    ax.set_ylim(-0.11, 0.215)
-    ax.set_xlim(-0.55, 3.55)
-    ax.set_ylabel("Paired gain", fontsize=8.5)
-    _style(ax)
-    _title(fig, "Memory Gain by Prompt Pair", [("GPT-4o-mini", BLUE), ("Qwen3-8B", MINT)], y=1.17, below=True)
-    _save(fig, "fig_pairs")
-
-
-def fig_placebo():
-    """RQ3: no memory / order placebo / true memory on the 60-task gate, plus increments."""
-    fig = plt.figure(figsize=(6.6, 2.5))
-    gs = fig.add_gridspec(1, 4, width_ratios=[1, 1, 0.62, 1.55], wspace=0.3)
-    data = {"GPT-4o-mini": (0.5444, 0.5444 + 0.0889, 0.6806),
-            "Qwen3-8B": (0.7278, 0.7278 - 0.1083, 0.6833)}
-    for k, (name, vals) in enumerate(data.items()):
-        ax = fig.add_subplot(gs[0, k])
-        for i, (v, c, cd) in enumerate(zip(vals, [LAV, BLUE, SALM], [LAV_D, BLUE_D, SALM_D])):
-            ax.bar(i, v, 0.64, color=c, zorder=2)
-            _label(ax, i, v, cd)
-        ax.set_xticks(range(3))
-        ax.set_xticklabels(["None", "Placebo", "True"], fontsize=8)
-        ax.set_ylim(0.5, 0.77)
-        ax.yaxis.set_major_formatter(mticker.PercentFormatter(1.0, decimals=0))
-        ax.set_title(name, fontsize=9, color=INK, fontweight="bold", pad=4)
-        _style(ax)
-    ax = fig.add_subplot(gs[0, 3])
-    rows = [("GPT: true − none", 0.1361, 0.0750, 0.2000, BLUE, BLUE_D),
-            ("GPT: placebo − none", 0.0889, 0.0250, 0.1528, BLUE, BLUE_D),
-            ("GPT: true − placebo", 0.0472, -0.0194, 0.1167, BLUE, BLUE_D),
-            ("Qwen: true − none", -0.0444, -0.1000, 0.0056, MINT, MINT_D),
-            ("Qwen: placebo − none", -0.1083, -0.1639, -0.0528, MINT, MINT_D),
-            ("Qwen: true − placebo", 0.0639, 0.0000, 0.1278, MINT, MINT_D),
-            ("Gap (Qwen − GPT)", 0.0167, -0.0750, 0.1083, SALM, SALM_D)]
-    ax.axvspan(-0.05, 0.05, color=GREY_BAND, zorder=0, lw=0)
-    for j, (lab, est, lo, hi, c, cd) in enumerate(rows):
-        y = len(rows) - 1 - j
-        ax.barh(y, est, 0.62, color=c, zorder=2)
-        ax.plot([lo, hi], [y, y], color=cd, lw=1.2, zorder=3)
-        ax.text(0.30, y, _r3(est, True), va="center", ha="right", fontsize=7, color=cd)
-    ax.axvline(0, color="#9E9E9E", lw=0.8, zorder=1)
-    ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([r[0] for r in rows][::-1], fontsize=7.5)
-    ax.set_xlim(-0.2, 0.30)
-    ax.set_title("Paired effects (95% CI)", fontsize=9, color=INK, fontweight="bold", pad=4)
-    for s in ("top", "right", "left"):
-        ax.spines[s].set_visible(False)
-    ax.tick_params(length=0)
-    ax.xaxis.grid(True, color=GRID, lw=0.7)
-    ax.set_axisbelow(True)
-    _title(fig, "Order-Placebo Gate (60 frozen tasks)",
-           [("No memory", LAV), ("Order placebo", BLUE), ("True memory", SALM)], y=1.11)
-    _save(fig, "fig_placebo")
-
-
-def fig_rerun():
-    """RQ3, same-window rerun (2026-10-10): none / scrambled placebo / coherent irrelevant / true memory on 60 tasks,
-    plus the pre-registered increments. Every number is read from results/placebo/rerun_2026-10-10_results.json
-    (copied to data/summaries/rerun_2026-10-10/)."""
-    import json
-    src = OUT.parents[1] / "data" / "summaries" / "rerun_2026-10-10" / "rerun_2026-10-10_results.json"
-    R = json.loads(src.read_text())
-    m, e = R["means"], R["estimands"]
-    TEAL, TEAL_D = "#E6DDB8", "#A08A3C"   # coherent irrelevant control
-    fig = plt.figure(figsize=(7.2, 2.7))
-    gs = fig.add_gridspec(1, 4, width_ratios=[1.3, 1.3, 0.55, 1.6], wspace=0.3)
-    for k, (name, ex) in enumerate((("GPT-4o-mini", "gpt"), ("Qwen3-8B", "qwen"))):
-        ax = fig.add_subplot(gs[0, k])
-        vals = [m[f"{ex}/{c}"] for c in ("none", "placebo", "irrelevant", "true")]
-        for i, (v, c, cd) in enumerate(zip(vals, [LAV, BLUE, TEAL, SALM], [LAV_D, BLUE_D, TEAL_D, SALM_D])):
-            ax.bar(i, v, 0.66, color=c, zorder=2)
-            _label(ax, i, v, cd)
-        ax.set_xticks(range(4))
-        ax.set_xticklabels(["None", "Scram-\nbled", "Irrel-\nevant", "True"], fontsize=7.2, linespacing=0.95)
-        ax.set_ylim(0.5, 0.77)
-        ax.yaxis.set_major_formatter(mticker.PercentFormatter(1.0, decimals=0))
-        ax.set_title(name, fontsize=9, color=INK, fontweight="bold", pad=4)
-        _style(ax)
-    ax = fig.add_subplot(gs[0, 3])
-    rows = []
-    for ex, c, cd, tag in (("gpt", BLUE, BLUE_D, "GPT"), ("qwen", MINT, MINT_D, "Qwen")):
-        for key, lab in (("T", "true − none"), ("S", "true − scrambled"), ("R", "true − irrelevant"), ("C", "irrelevant − scrambled")):
-            x = e[f"{key}_{ex}"]
-            rows.append((f"{tag}: {lab}", x["mean"], x["ci95"][0], x["ci95"][1], c, cd))
-    ax.axvspan(-0.05, 0.05, color=GREY_BAND, zorder=0, lw=0)
-    for j, (lab, est, lo, hi, c, cd) in enumerate(rows):
-        y = len(rows) - 1 - j
-        ax.barh(y, est, 0.62, color=c, zorder=2)
-        ax.plot([lo, hi], [y, y], color=cd, lw=1.2, zorder=3)
-        ax.text(0.30, y, _r3(est, True), va="center", ha="right", fontsize=7, color=cd)
-    ax.axvline(0, color="#9E9E9E", lw=0.8, zorder=1)
-    ax.set_yticks(range(len(rows)))
-    ax.set_yticklabels([r[0] for r in rows][::-1], fontsize=7.3)
-    ax.set_xlim(-0.16, 0.30)
-    ax.set_title("Paired effects (95% CI)", fontsize=9, color=INK, fontweight="bold", pad=4)
-    for s_ in ("top", "right", "left"):
-        ax.spines[s_].set_visible(False)
-    ax.tick_params(length=0)
-    ax.xaxis.grid(True, color=GRID, lw=0.7)
-    ax.set_axisbelow(True)
-    _title(fig, "Rerun, 60 tasks",
-           [("No memory", LAV), ("Scrambled placebo", BLUE), ("Coherent, irrelevant", TEAL), ("True memory", SALM)], y=1.11)
-    _save(fig, "fig_rerun")
-
-
-def fig_transport():
-    """RQ4: task-level transport map and GPT gain by task type."""
-    fig = plt.figure(figsize=(6.2, 2.45))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.35], wspace=0.35)
-    ax = fig.add_subplot(gs[0, 0])
-    labels = ["hurt", "neutral", "help"]
-    counts = {("hurt", "hurt"): 6, ("hurt", "neutral"): 11, ("hurt", "help"): 14,
-              ("neutral", "hurt"): 11, ("neutral", "neutral"): 35, ("neutral", "help"): 31,
-              ("help", "hurt"): 5, ("help", "neutral"): 12, ("help", "help"): 9}
-    assert sum(counts.values()) == 134
-    grid = [[counts[(q, g)] for g in labels] for q in labels]
-    cmap = LinearSegmentedColormap.from_list("mauve", ["#FBF8F9", "#F4E3E7", "#E3C2CA", "#C98E9C"])
-    ax.imshow(grid, cmap=cmap, vmin=0, vmax=38, origin="lower")
-    for i, q in enumerate(labels):
-        for j, g in enumerate(labels):
-            ax.text(j, i, str(counts[(q, g)]), ha="center", va="center", fontsize=9.5, color=INK,
-                    fontweight="bold" if g == "help" else "normal")
-    for s in ax.spines.values():
-        s.set_visible(False)
-    ax.set_xticks(range(3))
-    ax.set_xticklabels(labels)
-    ax.set_yticks(range(3))
-    ax.set_yticklabels(labels)
-    ax.set_xticks([0.5, 1.5], minor=True)
-    ax.set_yticks([0.5, 1.5], minor=True)
-    ax.grid(which="minor", color="white", linewidth=2.5)
-    ax.tick_params(which="both", length=0)
-    ax.set_xlabel("GPT-4o-mini memory effect", fontsize=8.5)
-    ax.set_ylabel("Qwen3-8B memory effect", fontsize=8.5)
-    ax.set_title("Tasks by sign of paired effect", fontsize=9, color=INK, fontweight="bold", pad=4)
-
-    ax = fig.add_subplot(gs[0, 1])
-    types = ["puttwo", "heat", "clean", "examine", "put", "cool"]
-    gains = [0.2549, 0.2464, 0.2151, 0.1852, 0.0833, -0.1111]
-    _bands(ax, len(types))
-    for i, g in enumerate(gains):
-        ax.bar(i, g, 0.6, color=SALM if g > 0 else LAV, zorder=2)
-        _label(ax, i, g, SALM_D if g > 0 else LAV_D, signed=True)
-    ax.axhline(0, color="#9E9E9E", lw=0.8)
-    ax.set_xticks(range(len(types)))
-    ax.set_xticklabels(types, fontsize=8)
-    ax.set_ylim(-0.16, 0.31)
-    ax.set_xlim(-0.55, len(types) - 0.45)
-    ax.set_title("GPT-4o-mini gain by task type", fontsize=9, color=INK, fontweight="bold", pad=4)
-    _style(ax)
-    _title(fig, "Task-Level Transfer (134 ALFWorld tasks)", None, y=1.09)
-    _save(fig, "fig_transport")
-
-
-def fig_webshop():
-    """RQ5: train-disjoint WebShop comparison with local Qwen3-8B."""
-    fig = plt.figure(figsize=(6.2, 2.0))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.5], wspace=0.3)
-    ax = fig.add_subplot(gs[0, 0])
-    vals = [(0.1944, 0.1045), (0.09, 0.07)]
-    _bands(ax, 2, start=1)
-    w = 0.32
-    for i, (a, b) in enumerate(vals):
-        ax.bar(i - w / 2 - 0.02, a, w, color=LAV, zorder=2)
-        ax.bar(i + w / 2 + 0.02, b, w, color=SALM, zorder=2)
-        _label(ax, i - w / 2 - 0.02, a, LAV_D, dy=0.004)
-        _label(ax, i + w / 2 + 0.02, b, SALM_D, dy=0.004)
-    ax.set_xticks(range(2))
-    ax.set_xticklabels(["Reward", "Exact success"], fontweight="bold")
-    ax.set_ylim(0, 0.24)
-    ax.set_xlim(-0.55, 1.55)
-    _style(ax)
-    ax = fig.add_subplot(gs[0, 1])
-    left = 0
-    for name, n, c, cd in [("Declined", 20, SALM, SALM_D), ("Tied", 72, "#E8E8E8", MUTED),
-                           ("Improved", 8, MINT, MINT_D)]:
-        ax.barh(0, n, left=left, color=c, height=0.5, edgecolor="white", linewidth=2)
-        ax.text(left + n / 2, 0, str(n), ha="center", va="center", fontsize=8.5, color=INK)
-        ax.text(left + n / 2, 0.36, name, ha="center", va="bottom", fontsize=7.5, color=cd)
-        left += n
-    ax.set_xlim(0, 100)
-    ax.set_ylim(-0.4, 0.75)
+def fig_contrasts():
+    w1a = load("w1a_2026-10-13/w1a_2026-10-13_results.json")["pooled"]
+    w1b = load("w1b_2026-10-13/w1b_2026-10-13_results.json")["pooled"]
+    pr = load("poolrep_2026-10-12/poolrep_2026-10-12_results.json")
+    rows = [
+        ("What the content is", None, None, None),
+        ("Experience rules − generic rules", w1b["E_bar"], "> 0", "holds"),
+        ("Generic rules − unrelated text", w1b["G_bar"], "> 0", "fails"),
+        ("Whose experience", None, None, None),
+        ("Source: Qwen3-8B − GPT-4o-mini", w1a["src_Q8_minus_GPT"], "includes 0", "holds"),
+        ("Distiller: Qwen3-32B − Qwen3-8B", w1a["D32_minus_D8"], "two-sided", "none detected"),
+        ("Own-source advantage", w1a["Delta_own"], "includes 0, < +0.05", "unresolved"),
+        ("Who reads", None, None, None),
+        ("Reader: Qwen3-8B − Qwen3-32B", w1a["R_Q8_minus_R_Q32"], "> 0", "fails"),
+        ("Which unrelated text", None, None, None),
+        ("Astronomy − gardening control", w1b["dI_bar"], "|Δ| < 0.03, incl. 0", "fails"),
+        ("Which pool (pool replication)", None, None, None),
+        ("Mean of three replicate pools", pr["replicates"]["R_bar"], "> 0", "fails"),
+        (f"Replicate 1 − replicate 3", pr["replicates"]["pairwise"]["Q32R1-Q32R3"], "includes 0", "fails"),
+    ]
+    n = len(rows)
+    fig = plt.figure(figsize=(6.3, 3.05))
+    ax = fig.add_axes([0.37, 0.10, 0.33, 0.84])
+    style(ax)
+    ax.yaxis.grid(False)
+    ax.xaxis.grid(True, color=GRID, linewidth=0.6)
+    ax.axvline(0, color="#9A9A9A", lw=0.7, zorder=1)
+    ax.set_ylim(n - 0.4, -0.7)
+    ax.set_xlim(-0.14, 0.095)
+    ax.set_xticks([-0.12, -0.09, -0.06, -0.03, 0, 0.03, 0.06, 0.09])
+    ax.set_xticklabels(["−0.12", "", "−0.06", "", "0", "", "+0.06", ""])
     ax.set_yticks([])
-    ax.set_xlabel("Sessions (paired reward change, memory vs. none)", fontsize=8)
-    for s in ("top", "right", "left"):
-        ax.spines[s].set_visible(False)
-    ax.tick_params(length=0)
-    _title(fig, "WebShop (Qwen3-8B, 100 train-disjoint sessions)",
-           [("No memory", LAV), ("SkillRC memory", SALM)], y=1.12)
-    _save(fig, "fig_webshop")
+    ax.spines["left"].set_visible(False)
+    ax.set_xlabel("Difference in success rate (95% interval)", fontsize=7.5)
+    tr = ax.get_yaxis_transform()
+    fig.text(0.71, 0.955, "Predicted", fontsize=7.5, color=MUTED, ha="left")
+    fig.text(0.885, 0.955, "Outcome", fontsize=7.5, color=MUTED, ha="left")
+    for y, (label, est, pred, outcome) in enumerate(rows):
+        if est is None:
+            ax.text(-0.02, y, label, transform=tr, ha="right", va="center", fontsize=7.5,
+                    color=INK, fontweight="bold")
+            continue
+        ax.text(-0.02, y, label, transform=tr, ha="right", va="center", fontsize=7.5, color=INK)
+        lo, hi = est["ci95"]
+        excl = lo > 0 or hi < 0
+        col = VALUE if excl else INK
+        ax.plot([lo, hi], [y, y], color=col, lw=1.2, zorder=3, solid_capstyle="butt")
+        ax.plot([est["mean"]], [y], marker="o", ms=4, color=col, mfc=col if excl else "white", mew=1.1, zorder=4)
+        ax.text(1.03, y, pred, transform=tr, ha="left", va="center", fontsize=7.5, color=INK)
+        ax.text(1.56, y, outcome, transform=tr, ha="left", va="center", fontsize=7.5, color=INK)
+    save(fig, "fig_contrasts")
 
 
 if __name__ == "__main__":
-    for f in (fig_success, fig_pairs, fig_placebo, fig_rerun, fig_transport, fig_webshop):
-        f()
-    print("wrote", sorted(p.name for p in OUT.glob("fig_*.pdf")))
+    fig_readers()
+    fig_contrasts()
+    print("wrote", OUT / "fig_readers.pdf", OUT / "fig_contrasts.pdf")

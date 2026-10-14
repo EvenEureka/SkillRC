@@ -1,0 +1,36 @@
+{"text": "[clean] Identify the item you need to find and prioritize locations where it is likely to be found.", "task_type": "clean"}
+{"text": "[clean] Always check common areas first, such as tables and countertops, before exploring less likely spots.", "task_type": "clean"}
+{"text": "[clean] Clean the item using the designated cleaning area before placing it in the final location.", "task_type": "clean"}
+{"text": "[clean] Ensure you have the correct item before moving to the next step in the task.", "task_type": "clean"}
+{"text": "[clean] Keep track of the sequence of actions: find, clean, and then place the item.", "task_type": "clean"}
+{"text": "[clean] If the first location does not yield the item, systematically check other potential locations.", "task_type": "clean"}
+{"text": "[cool] Identify the target item and its likely locations before searching.", "task_type": "cool"}
+{"text": "[cool] Check common storage areas systematically to maximize efficiency.", "task_type": "cool"}
+{"text": "[cool] Always verify if the required appliance is open before using it.", "task_type": "cool"}
+{"text": "[cool] Follow the task sequence logically: find, cool, and then place the item.", "task_type": "cool"}
+{"text": "[cool] If the first location doesn't yield results, move to the next most probable location.", "task_type": "cool"}
+{"text": "[cool] Ensure the final placement is in the correct designated area as per the task.", "task_type": "cool"}
+{"text": "[examine] Identify the target object and its likely locations before searching.", "task_type": "examine"}
+{"text": "[examine] Prioritize checking containers and surfaces where the target object is most likely to be found.", "task_type": "examine"}
+{"text": "[examine] If an object is not found in one location, systematically check other potential locations.", "task_type": "examine"}
+{"text": "[examine] Use available tools, like a desklamp, to illuminate areas that may be obscured or difficult to see.", "task_type": "examine"}
+{"text": "[examine] Revisit previously checked locations if necessary, as items may be hidden or overlooked.", "task_type": "examine"}
+{"text": "[examine] Maintain a logical sequence in your search to ensure thoroughness and efficiency.", "task_type": "examine"}
+{"text": "[heat] Start by identifying the most likely locations for the target item based on the task requirements.", "task_type": "heat"}
+{"text": "[heat] Check each location systematically, prioritizing those with higher likelihoods of containing the desired item.", "task_type": "heat"}
+{"text": "[heat] Once the item is found, proceed to the heating appliance without delay.", "task_type": "heat"}
+{"text": "[heat] Ensure the heating appliance is open before attempting to heat the item.", "task_type": "heat"}
+{"text": "[heat] After heating, confirm the final destination for placing the item and navigate there directly.", "task_type": "heat"}
+{"text": "[heat] Maintain a clear sequence of actions: find, heat, and place the item to avoid confusion.", "task_type": "heat"}
+{"text": "[put] Start by identifying likely locations for the target item based on common storage patterns.", "task_type": "put"}
+{"text": "[put] Check each location systematically, ensuring to open closed containers before searching their contents.", "task_type": "put"}
+{"text": "[put] If the first location does not yield the item, move to the next most probable location without skipping options.", "task_type": "put"}
+{"text": "[put] Once the item is found, navigate to the designated placement area directly.", "task_type": "put"}
+{"text": "[put] Ensure the placement area is clear of obstructions before placing the item.", "task_type": "put"}
+{"text": "[put] Confirm the task is complete by verifying the item is in the correct location after placement.", "task_type": "put"}
+{"text": "[puttwo] Start by checking the most likely locations for the target items first, such as countertops, drawers, and cabinets.", "task_type": "puttwo"}
+{"text": "[puttwo] If the first search does not yield results, systematically check other potential locations in a logical order.", "task_type": "puttwo"}
+{"text": "[puttwo] Once an item is found, immediately plan the next steps to retrieve and place it in the designated location.", "task_type": "puttwo"}
+{"text": "[puttwo] Keep track of where items are found to avoid unnecessary backtracking.", "task_type": "puttwo"}
+{"text": "[puttwo] If an item cannot be picked up, re-examine the location or try different commands to interact with it.", "task_type": "puttwo"}
+{"text": "[puttwo] Always confirm the state of the target location before placing items to ensure it is still available.", "task_type": "puttwo"}

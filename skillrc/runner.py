@@ -1,9 +1,9 @@
 """Config-driven run entry point.
 
 Usage:
-  python -m skillrc.runner --config configs/m0_sanity_mock.yaml
-  python -m skillrc.runner --config configs/m0_alfworld.yaml --max-tasks 3 --seeds 0
-  python -m skillrc.runner --config configs/m0_alfworld.yaml --dry-run   # force mock, no API
+  python -m skillrc.runner --config configs/mock_smoke.yaml
+  python -m skillrc.runner --config configs/w1_2026_10_13/eval/W1A1013_NONE_Q8.yaml --max-tasks 3 --seeds 0
+  python -m skillrc.runner --config configs/w1_2026_10_13/eval/W1A1013_NONE_Q8.yaml --dry-run   # force mock, no API
 
 Episodes stream to results/<run_id>.episodes.jsonl as they finish (crash-safe);
 a single crash is recorded as a failed episode and the run continues.
@@ -30,7 +30,7 @@ def build_env(cfg: RunConfig):
         return MockEnv()
     if cfg.env == "alfworld":
         from .envs.alfworld_env import ALFWorldEnv
-        return ALFWorldEnv(max_steps=cfg.max_steps)
+        return ALFWorldEnv(split=getattr(cfg, "alfworld_split", "eval_out_of_distribution"), max_steps=cfg.max_steps)
     if cfg.env == "webshop":
         from .envs.webshop_env import WebShopEnv
         return WebShopEnv(

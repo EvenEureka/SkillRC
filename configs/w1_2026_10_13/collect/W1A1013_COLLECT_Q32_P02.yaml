@@ -1,0 +1,37 @@
+out_dir: results
+env: alfworld
+temperature: 0.0
+max_completion_tokens: 256
+max_steps: 30
+n_fewshot: 2
+prompt_style: react_alfworld
+inject_admissible: true
+fewshot_file: configs/alfworld_react_fewshot.json
+memory: none
+seeds:
+- 0
+save_trajectories: true
+run_id: W1A1013_COLLECT_Q32_P02
+milestone: w1a-2026-10-13-collect
+provider: openai
+model: qwen3-32b
+api_key: EMPTY
+base_url: http://127.0.0.1:8000/v1
+chat_template_kwargs:
+  enable_thinking: false
+alfworld_split: eval_in_distribution
+task_ids:
+- 14
+- 15
+- 16
+- 17
+- 18
+- 19
+- 20
+- 21
+- 22
+- 23
+- 24
+- 25
+- 26
+- 27

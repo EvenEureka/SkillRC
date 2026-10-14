@@ -1,13 +1,14 @@
 __pycache__/
 *.pyc
 results/
-data/alfworld/
 logs/
+data/alfworld/
+third_party/
 configs/alfworld_react_fewshot.json
+configs/alfworld_base_config.yaml
 paper/*.aux
 paper/*.bbl
 paper/*.blg
 paper/*.log
 paper/*.out
 paper/*.listing
-configs/alfworld_base_config.yaml

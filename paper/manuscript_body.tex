@@ -1,837 +1,729 @@
 \section{Introduction}
-\label{sec:introduction}
+\label{sec:intro}
 
-The performance of an LLM agent depends not only on the underlying language
-model but on the \emph{agent harness} that surrounds it: the control layer that
-constructs context, exposes tools and retrieval, orchestrates calls, retains
-memory, and processes outputs \citep{huang2026memoharness,lee2026metaharness}.
-A growing line of work makes this layer \emph{learn from experience}. ExpeL
-distills natural-language insights from past trajectories and recalls them at
-inference \citep{zhao2023expel}; Reflexion turns feedback into verbal memory
-\citep{shinn2023reflexion}; SkillOpt and SkillOS edit or curate skill libraries
-around a frozen executor \citep{yang2026skillopt,ouyang2026skillos}; and
-\memoharness accumulates an experience bank that it uses to search over and adapt
-the harness itself \citep{huang2026memoharness}. These systems
-share one mechanism: execution experience is converted into text that re-enters
-the model's context.
+A common way to let an LLM agent learn from experience is to collect its successful runs, ask a language
+model to distill them into a short list of rules, and place the list in the agent's prompt
+\citep{zhao2023expel,shinn2023reflexion,wang2025awm}. The gains are uneven. Evaluations of agent skills
+find gains that vary across tasks and models and are sometimes negative
+\citep{li2026skillsbench,han2026sweskills}, and that shrink when skills have to be retrieved under
+realistic conditions \citep{liu2026wildskills}. In our own runs, the same 33 rules raise GPT-4o-mini's
+success on ALFWorld by 0.08 and change the success of Llama-3.1-8B, GPT-4.1-mini and Qwen3-14B by less
+than 0.03. A practitioner cannot tell from such a result whether to change the rules or the model.
 
-Despite this progress, the evidence that an experience memory helps is usually a
-with-versus-without comparison on a single base model, and the memory is rarely
-separated from the other changes it brings to the prompt. Skill benchmarks find small,
-heterogeneous, or negative marginal value at substantial token cost
-\citep{li2026skillsbench,han2026sweskills,liu2026wildskills}, but they cannot
-say \emph{why} a skill helps one configuration and hurts another. What is missing
-is a measurement layer for the experience component itself: one that asks whether
-an experience edit to the harness transfers across executors, and whether its
-gain comes from what the experience says.
+A comparison with and without the memory cannot settle this, because adding a memory changes two things
+at once. The model has more text to read, and the text says something about the task. Language models
+are sensitive to irrelevant context and to the length and format of their input
+\citep{shi2023distracted,levy2024sametask,sclar2023quantifying}, so the first change alone could move
+success by as much as the gains being reported. We call the effect of the first change the
+\emph{reading cost} of a memory and the effect of the second its \emph{content value}. Our title asks
+which of the two differs from one model to the next: the skill, meaning what the memory says, or the
+stack, meaning the reader model with its tokenizer, chat template and serving. The harness, the layer
+around the model that builds its context, exposes tools and retrieval, keeps memory and parses outputs
+\citep{huang2026memoharness,lee2026metaharness}, is held fixed except for the memory block.
 
-This setting creates three challenges. First, \textbf{the executor is a stack},
-not a model: weights, tokenizer, chat template, serving runtime, and decoding
-change together, and the same memory may help one stack while disrupting
-another. Second, \textbf{a with-versus-without contrast confounds content with
-context}: language models are sensitive to spurious prompt features
-\citep{sclar2023quantifying} and to irrelevant context \citep{shi2023distracted},
-and when a memory pool fits inside the context budget, every retriever injects the
-same items and differs only in their order. Third, \textbf{aggregate gains hide
-transfer structure}: a positive mean can combine rescues on some tasks with harm
-on others.
+We call our evaluation design SkillRC, a reality check for agent skills. It measures the two parts with
+a control that keeps everything about the memory except its content. The control has the same number of
+items with the same tags, each item has the same number of words, the items appear in the same order,
+and the block has the same token count under every reader's tokenizer, but each rule is replaced by a
+sentence about vegetable gardening. The control minus no memory is the reading cost, and the memory minus
+the control is the content value. Two further contrasts ask what the content value consists of. A list of
+generic rules of the same length, written by a model that saw only a description of the task, tests
+whether the value needs experience at all. A crossover of the agents that supply the experience with the
+models that distill it, with three replicate pools for each pairing, tests whether it matters whose
+experience it is and how much pools built the same way differ.
 
-We address this gap with \method, a \emph{reality check} (RC) for agent skills: a
-controlled experience-memory harness and evaluation protocol. \method makes three
-design choices.
-\textbf{(1)~Experience memory as a controlled harness intervention.} We describe the
-harness by the factors a memory comparison can change, namely the executor stack and
-the memory's content, representation, presentation, and footprint, vary one factor
-at a time on identical tasks, and audit the items, order, and tokens that actually
-reach the model (\S\ref{sec:harness_space}).
-\textbf{(2)~Interaction-first transfer estimation.} The focal quantity is the
-\emph{transport gap}, the difference between two executor stacks' paired memory
-gains on identical tasks, prompts, and memory, estimated with task-clustered
-uncertainty (\S\ref{sec:transport}).
-\textbf{(3)~A pre-registered order-placebo gate.} Before outcomes are inspected,
-we freeze a placebo that preserves item membership, retrieval order, and token
-footprint while removing every original adjacent word pair, together with the
-rule for attributing a gain to content (\S\ref{sec:placebo}).
-Figure~\ref{fig:pipeline} summarizes the protocol.
+We find that no reader pays a measurable cost for reading a memory-length block, and that the reader
+differences we could attribute lie in what the memory says. The content was worth $+0.08$ to
+GPT-4o-mini, reading a pool built from its own runs, about $+0.04$ to Qwen3-8B across 18 pools, nothing
+measurable to the other four readers on ALFWorld, and a loss on WebShop for both readers that can do the
+task. For the Qwen3 readers we tested, distilled rules beat generic rules of the same length, and the
+agent that supplied the experience made no difference once coverage was equal. Two pools built by the
+same pipeline can differ by as much as these effects.
 
-We evaluate \method on ALFWorld \citep{shridhar2021alfworld} with two executor
-stacks and on WebShop \citep{yao2022webshop}. The experience memory improves the
-harness for \gptm, raising success from $0.587$ to $0.714$ on every demonstration
-pair, and the most compact memory, 33 rules in 645 tokens, is also the most
-effective one. The improvement, however, is specific to the stack: the same memory
-leaves \qwenm unchanged. A first placebo gate was inconclusive about why, so we
-added a coherent, equal-length memory about an unrelated activity and reran every
-condition in one window. The rerun locates the gain in the memory's task-relevant
-content: the coherent control behaves like the scrambled placebo, and the true
-memory exceeds the placebo on both executors. What differs between the executors is
-the cost of reading an added block, which leaves \qwenm's net gain near zero. We
-read these results as a progression: the first establishes that the memory helps;
-the second that its effect depends on the stack that reads it, which a
-single-model comparison cannot see; and the third, after two controls, that the
-benefit comes from what the memory says while the stack decides how much of it
-survives.
+Our contribution is an evaluation design for experience memory: a decomposition into reading cost and
+content value with controls matched in items, order and token count, and audits that check that every
+task receives the same items in the same order under each condition (\S\ref{sec:method}). We apply it in
+five studies on ALFWorld \citep{shridhar2021alfworld} and WebShop \citep{yao2022webshop} whose
+predictions were written down before their runs (\S\ref{sec:results}), with six readers and 24 ALFWorld
+pools in all.
 
-\methodlabel{Contributions.}
-The main contributions of this work are as follows:
-\begin{itemize}[leftmargin=1.35em, itemsep=0pt, topsep=1pt, parsep=0pt, partopsep=0pt]
-  \item A \emph{controlled experience-memory harness} that describes a memory
-  comparison by explicit factors (executor, content, representation, presentation,
-  footprint), varies one at a time, and audits the realized payload through a
-  SHA-256 payload passport
-  (\S\ref{sec:harness_space} and~\S\ref{sec:audit}).
-  \item An \emph{interaction-first evaluation protocol} that estimates executor
-  transport gaps with task-clustered intervals and gates content claims behind a
-  payload-matched order placebo frozen before outcomes
-  (\S\ref{sec:transport} and~\S\ref{sec:placebo}).
-  \item Empirical evidence that a compact skill memory improves one executor but not
-  another; that, against two payload-matched controls run in one window, its
-  benefit comes from task-relevant content on both executors while the executors
-  differ in the cost of an added block; that transfer varies widely across tasks;
-  and that the same kind of memory can hurt in a second environment
-  (\S\ref{sec:experiments}).
-\end{itemize}
+\section{Related Work}
+\label{sec:related}
+
+Agents that learn from experience store it in many forms: executable skills \citep{wang2024voyager},
+verbal reflections \citep{shinn2023reflexion}, distilled insights and guidelines
+\citep{zhao2023expel,fu2024autoguide}, reusable workflows \citep{wang2025awm}, evolving playbooks
+\citep{zhang2026ace}, and strategies distilled from both successes and failures
+\citep{ouyang2026reasoningbank}. Later systems curate or revise skills around a fixed executor
+\citep{yang2026skillopt,ouyang2026skillos,gao2026selfevoskill}, or optimize the whole harness in which
+a memory sits \citep{lee2026metaharness,huang2026memoharness}. Most of this work supports its methods
+with a gain over the same agent without memory, usually measured on one or two strong models.
+
+Evaluations that look across tasks and models find such gains unstable. SkillsBench reports broad
+average gains from curated skills together with negative deltas on some tasks, and it notes that an
+injected skill also adds context, using self-generated skills as a partial control
+\citep{li2026skillsbench}. SWE-Skills-Bench finds limited gains and a token overhead in software
+engineering \citep{han2026sweskills}, and realistic retrieval erodes skill gains further
+\citep{liu2026wildskills}. On ALFWorld, abstract procedural memories transfer better than raw
+trajectories, with negative transfer concentrated on hard cases \citep{hu2026memory}, and agents follow
+retrieved experience closely enough to be misled by it \citep{xiong2026memory}. SelfEvoSkill compares
+executions with and without a skill while holding the agent, task and workspace fixed, and uses the
+difference to revise the skill \citep{gao2026selfevoskill}; we use the same kind of matched comparison
+to evaluate a fixed memory, adding a control for the act of reading. These studies show that the effect
+of a memory varies, without separating the part due to reading added text.
+
+Prompting research has made that kind of separation for a long time. Content-free inputs calibrate
+few-shot predictions \citep{zhao2021calibrate}, irrelevant or misleading instructions can work about as
+well as good ones \citep{webson2022prompt}, and demonstrations with random labels keep much of their
+benefit \citep{min2022rethinking}. Irrelevant context, longer inputs, formatting and position all change
+what a model does \citep{shi2023distracted,levy2024sametask,sclar2023quantifying,liu2024lost}. On
+ALFWorld itself, ReAct performance is driven by the similarity between demonstration tasks and queries
+more than by the content of the reasoning traces \citep{verma2024brittle}. Most of these controls were
+designed for a single prompt. An agent's memory is reread at every step of an episode, by
+models whose tokenizers and handling of context differ, and its content is distilled from experience
+that might be replaceable by advice requiring none. We have not found a study that separates reading
+cost from content value for agent memory across readers, asks whether the content value is specific to
+experience, or measures how much it changes between pools built by the same pipeline. These are the
+questions we take up.
 
 \section{Method}
 \label{sec:method}
 
-\methodlabel{Overview.}
-We study \emph{experience memory} as one component of an agent harness: a pool of
-text distilled from past executions that a frozen executor reads at inference.
-\method treats the memory as a controlled edit to a harness whose other dimensions
-are fixed, executes the edited and unedited harness on identical tasks under
-several executor stacks, and estimates how the paired gain changes across stacks.
-It follows a \narraemph{content-attribution-first} principle: a gain is credited
-to the experience content only if it survives a payload-matched placebo whose
-decision rule is fixed in advance. Figure~\ref{fig:pipeline} shows the two phases
-of the protocol.
-
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\resizebox{\columnwidth}{!}{\input{figures/pipeline_tikz}}
-\vspace{-12pt}
-\caption{Overview of \method. \textbf{Phase~A} asks whether a memory's gain transfers:
-past successful runs are distilled into a skill memory, inserted into an agent whose
-other parts stay the same, and run with and without the memory on two executors; the
-difference between their gains is the \emph{transport gap}. \textbf{Phase~B} asks
-whether the gain comes from what the memory says: a placebo keeps the same rules,
-order, and length but scrambles the words, which splits the gain into a
-\emph{context effect} (no memory $\rightarrow$ placebo) and a \emph{content effect}
-(placebo $\rightarrow$ true memory), and a rule fixed in advance decides whether
-content explains the gap.}
-\label{fig:pipeline}
-\vspace{-10pt}
-\end{figure}
+\input{figures/protocol_tikz}
+\caption{The design. A memory distilled from past runs is inserted as one block into an otherwise fixed
+agent and read by six models (A). A matched control with the same items, order and token count splits
+each reader's gain into a reading cost and a content value (B). Further contrasts ask what the content
+value consists of (C).}
+\label{fig:design}
+\end{figure*}
 
-\subsection{Motivation}
-\label{sec:motivation}
+\subsection{Reading cost and content value}
+\label{sec:decomposition}
 
-Experience memories are usually reported as properties of an artifact: a pool is
-built once, injected, and credited with the gain it produces. This treats the
-artifact as portable across executors and as acting through its content. Both
-assumptions are testable. Portability is an interaction between the memory and
-the executor stack, and content use is a contrast between the memory and a
-control that carries the same prompt-level intervention without its content.
-\method makes both contrasts explicit and holds everything else in the harness
-fixed, so that a reported gain names exactly which harness dimensions produced it.
+An experience memory here is a pool of short rules, each tagged with a task type, distilled from
+successful trajectories and inserted as one block into the prompt of a frozen model, the
+\emph{reader}. The harness ranks the items against the current task with BM25
+\citep{robertson2009bm25} and inserts them up to a token budget. In all our studies the whole pool fits,
+so ranking only sets the order. Nothing else in the prompt changes (Figure~\ref{fig:design}). For each
+task $t$, the realized payload of a condition is the set of pool positions it inserts, $I_t$, their order
+$\sigma_t$ and their token count $\ell_t$. Two conditions are \emph{payload-matched} when $I_t$ and
+$\sigma_t$ coincide for every task and $\ell_t$ is equal under every reader's tokenizer. The harness logs
+$\ell_t$ in every episode, and an offline audit replays the retrieval on every task to check $I_t$ and
+$\sigma_t$.
 
-\subsection{Problem Formulation}
-\label{sec:formulation}
-
-\begin{definition}[Evaluation Cases and Executor Stacks]
-\label{def:case}
-Let $\mathcal{T}=\{t_1,\ldots,t_n\}$ be evaluation tasks, disjoint from the
-executions used to build any memory. An executor stack $E\in\mathcal{E}$ bundles
-model weights, tokenizer, chat template, serving runtime, and decoding
-parameters. In this paper $\mathcal{E}=\{G,Q\}$, with $G$ denoting \gptm and $Q$
-denoting \qwenm.
-\end{definition}
-
-\begin{definition}[Harness Configuration]
-\label{def:harness}
-A \method configuration is
+Let $\bar Y_{\text{none}}$, $\bar Y_{\text{mem}}$ and $\bar Y_{\text{irr}}$ be a reader's mean success
+without memory, with the memory and with the irrelevant control. The net effect splits as
 \begin{equation}
-\label{eq:harness}
-H = \bigl(E,\; M,\; d\bigr),
-\qquad M = \bigl(c,\; r,\; p,\; B\bigr),
+\label{eq:decomp}
+\underbrace{\bar Y_{\text{mem}}-\bar Y_{\text{none}}}_{T\text{, net effect}}
+=\underbrace{\bar Y_{\text{irr}}-\bar Y_{\text{none}}}_{I\text{, reading cost}}
++\underbrace{\bar Y_{\text{mem}}-\bar Y_{\text{irr}}}_{R\text{, content value}} .
 \end{equation}
-an executor stack $E$, a memory condition $M$, and a demonstration pair $d$. The
-memory condition fixes the content $c\in\{\text{none},\text{true},\text{placebo}\}$,
-the representation $r$, the presentation $p$, and the token budget $B$
-(Section~\ref{sec:harness_space}). The agent loop, decoding, and action parsing are
-shared by every configuration and are not factors.
-\end{definition}
-
-\begin{definition}[Experience Memory and Realized Payload]
-\label{def:payload}
-A memory condition $M$ is inserted as one block after the task scaffold and changes
-nothing else in the prompt. We write $M=0$ for no memory and $M=P$ for the order
-placebo, which has placebo content and the same representation, presentation, and
-budget as the true memory. For task $t$, the
-realized payload is
-\begin{equation}
-\label{eq:payload}
-\pi_t(M) = \bigl(I_t,\; \sigma_t,\; \ell_t\bigr),
-\end{equation}
-the injected item set, its order, and its token count. Two conditions are
-\emph{payload-matched} if $I_t$ and $\sigma_t$ coincide for every $t$ and $\ell_t$
-is equal under every tokenizer in the study.
-\end{definition}
-
-\noindent
-Executing task $t$ under stack $E$, memory $M$, and demonstration pair $d$
-produces an environment-native outcome and a trajectory with lightweight
-runtime diagnostics,
-\begin{equation}
-\label{eq:trajectory}
-\tau_{E,M,t,d} = \bigl(Y_{E,M,t,d},\; \mathcal{A}_{E,M,t,d},\; \kappa_{E,M,t,d}\bigr),
-\qquad
-\kappa = \bigl(n^{\mathrm{step}},\; n^{\mathrm{prompt}},\; \ell_t\bigr),
-\end{equation}
-where $Y\in\{0,1\}$ is success on ALFWorld and $Y\in[0,1]$ is reward on WebShop,
-$\mathcal{A}$ is the action--observation trace, and $\kappa$ records environment
-steps, cumulative prompt tokens, and realized memory tokens. Cost enters the
-analysis only as a reported quantity, never as a selection criterion.
-
-\subsection{Harness Factors}
-\label{sec:harness_space}
-
-\begin{insightbox}[title={Design rationale}]
-A memory comparison changes more than ``the memory''. It changes which items reach the
-model, in which order, and how much context they occupy, and its effect is read by a
-particular executor stack. We therefore describe the harness by the factors a memory
-comparison can change and vary one factor at a time, keeping the rest of the agent
-identical by construction.
-\end{insightbox}
+A reading cost can be positive if an added block of any content helps. The split assumes that the cost
+of reading does not depend on what the text is about, an assumption we return to in
+Section~\ref{sec:what}. It is also only as good as the control, which is payload-matched to the memory and, as far
+as we could check, differs from it only in content. Each item keeps its tag and its word count, and its
+body becomes an imperative sentence about vegetable gardening, drawn from a bank of templates that use no
+ALFWorld object, receptacle or action word (Table~\ref{tab:examples}). We wanted the control to read like
+advice. It is ranked with the true pool's BM25 scores and inserted at the same positions. A deterministic
+pass then replaces the fewest body words with the nonce token \texttt{x} until the block has the memory's
+token count under the tokenizer of every reader in the study. The 18 crossover controls and the astronomy
+controls needed no replacement. The focal pool's control, used in the five-reader and generic-rule
+studies, needed 30 replacements in 472 body words, spread over 19 of its 33 items (for example ``Rotate
+crops every x x then x x then x to rest the tired soil''). The Qwen-sourced pool's control and one
+pool-replication control needed 3 each, and the WebShop control, about choral singing because WebShop
+sells garden products, needed 20 in 377 body words.
 
 \begin{table}[t]
 \centering
-\caption{Factors of the \method harness. Each comparison varies one factor on
-identical tasks. The agent loop (ReAct with admissible actions and a fixed step
-limit), decoding (temperature 0, 256 completion tokens per turn), and action parsing
-are shared by every configuration and are not factors.}
-\label{tab:dimensions}
 \small
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.24}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}M{0.20\textwidth}C{0.15\textwidth}M{0.59\textwidth}@{}}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lL{0.74\columnwidth}@{}}
 \toprule
-\rowcolor{tableheadbg}
-\tablehead{Factor} & \tablehead{Role} & \tablehead{Definition and levels in this study} \\
+Condition & Item 3 of the focal pool, tag \texttt{[clean]} \\
 \midrule
-\rowcolor{tablestripebg}
-\dimcell{E}{Executor}{stack}
-  & \stagecell{varied}{(transfer)}
-  & \defop{The model stack that reads the memory: weights, tokenizer, chat template, serving runtime.}
-    {GPT-4o-mini (hosted API) | Qwen3-8B (vLLM, thinking off)} \\
-\addlinespace[3pt]
-\dimcell{c}{Memory}{content}
-  & \stagecell{varied}{(attribution)}
-  & \defop{Whether the injected items carry coherent experience.}
-    {none | true insights | order placebo} \\
-\addlinespace[3pt]
-\rowcolor{tablestripebg}
-\dimcell{r}{Memory}{representation}
-  & \stagecell{varied}{(exploratory)}
-  & \defop{What an item is: a distilled rule, a raw trajectory, or a procedure.}
-    {33 compact insights | raw trajectories | Markdown procedures} \\
-\addlinespace[3pt]
-\dimcellone{p}{Presentation}
-  & \stagecell{varied}{(exploratory)}
-  & \defop{How items are ranked for the task; when the pool fits in B, this sets order, not membership.}
-    {BM25 | dense | reference-ranked (placebo)} \\
-\addlinespace[3pt]
-\rowcolor{tablestripebg}
-\dimcellone{B}{Footprint}
-  & \stagecell{measured}{and matched}
-  & \defop{The nominal budget and the tokens actually injected.}
-    {B = 2048; realized 645 (insights), 1779-1780 (trajectories), 1970-1989 (Markdown)} \\
-\addlinespace[3pt]
-\dimcell{d}{Demonstration}{pair}
-  & \stagecell{averaged}{(nuisance)}
-  & \defop{Which two of three ReAct demonstrations the prompt shows.}
-    {pairs 01 | 02 | 12, weighted equally} \\
+Memory & Always clean the item using the designated cleaning area before placing it in the final location. \\
+Generic & To verify the task is complete, carefully examine the object or look at the receptacle closely. \\
+Gardening & Always pull weeds while they are small so they never set seed across the whole garden. \\
+Astronomy & Mount the camera on a sturdy tracking head and begin with short exposures of bright constellations. \\
 \bottomrule
 \end{tabular}
-\arrayrulecolor{black}
-\vspace{-12pt}
+\caption{One item in each condition, copied from the released pools. All four have 16 words, and each
+whole block has the memory's token count under every reader's tokenizer. This gardening item needed no
+placeholder.}
+\label{tab:examples}
 \end{table}
 
-\noindent
-Two consequences follow from these factors (Table~\ref{tab:dimensions}). First,
-presentation claims require a membership audit: the focal pool holds 33 items and
-645 tokens, so under the 2{,}048-token budget both BM25 and dense ranking inject the
-complete pool, and their contrast changes only the order. Second, nominal budgets do
-not equalize footprint: compact insights realize 645 tokens, raw trajectories about
-1{,}779, and Markdown procedures 1{,}970--1{,}989 under the same budget, so a
-representation comparison also changes how much context the memory occupies.
+All estimates in this paper are differences of paired task means. Intervals are 95\% percentile
+intervals from 20,000 bootstrap draws of tasks within task type (product category on WebShop), with
+pools also resampled where Section~\ref{sec:crossover} says so.
 
-\subsection{Realized-Payload Audit}
-\label{sec:audit}
+\subsection{What the content value consists of}
+\label{sec:crossover}
 
-Every episode logs the injected text, its token count under the executor's
-tokenizer, and the retrieval order. A \emph{payload passport} records SHA-256
-hashes of the pool and payload together with the retriever, budget, and item cap;
-in strict mode a run is rejected when the executor or payload hash does not match
-the card. The audit turns ``we used BM25 over the skill pool'' into a checkable
-statement about which items reached the model, in which order, and at what cost.
+\paragraph{Experience or generic advice.} If the distilled rules only restated what a model can infer
+from the task description, a list written without any experience should do as well. For each ALFWorld
+task type, Qwen3-32B received a fixed description of the environment and of the goal, together with the
+instruction wording of the distillation prompt, and wrote six rules without seeing a trajectory. The
+rules were then paired with the memory's items, rewritten to the same word count and matched in token
+count and order (Appendix~\ref{app:controls}). The contrast
+$E=\bar Y_{\text{mem}}-\bar Y_{\text{gen}}$ is what experience adds beyond generic advice, and
+$G=\bar Y_{\text{gen}}-\bar Y_{\text{irr}}$ is what generic advice adds over unrelated text. A second
+unrelated control about amateur astronomy, built like the gardening one, shows how much the reading
+cost depends on the topic of the control.
 
-\subsection{Interaction-First Transfer Estimation}
-\label{sec:transport}
+\paragraph{Source, distiller and replicate pools.} Pools distilled from different agents differ in
+coverage as well as in whose experience they hold. On the 140 seen ALFWorld games, GPT-4o-mini succeeded
+in 73 games, Qwen3-8B in 111 and Qwen3-32B in 116, and GPT-4o-mini solved only one heat game. A pool
+built from all successes therefore confounds the source with how much of the task its trajectories
+cover. We drew the same number of successful trajectories per task type from each source, six per type
+except one for heat, 31 in all. Each source has three replicate subsamples drawn with different seeds,
+and each subsample was distilled once by Qwen3-32B and once by Qwen3-8B with the same prompt. The result
+is 18 pools of 31 to 36 rules (660 to 777 tokens), each with its own gardening control. Intervals for
+pooled estimates resample tasks within type and, for each source, its three subsamples, so they include
+the variation between pools. A smaller pool-replication study took the same approach with one source,
+one distiller and one reader: Qwen3-32B distilled four pools from Qwen3-8B's successes, the first six
+trajectories per type and three random subsamples of six per type, and Qwen3-8B read them.
 
-The scaffold selects two of three demonstrations per task type, so there are
-three unique demonstration pairs $d\in\mathcal{D}=\{01,02,12\}$. We average
-repeated executions within a pair and weight pairs equally,
-\begin{equation}
-\label{eq:pairavg}
-\bar Y_{E,M,t}=\frac{1}{|\mathcal{D}|}\sum_{d\in\mathcal{D}} Y_{E,M,t,d}.
-\end{equation}
-The paired memory gain of stack $E$ and the \emph{transport gap} between stacks
-are
-\begin{equation}
-\label{eq:transport}
-U_E(M)=\mathbb{E}_t\bigl[\bar Y_{E,M,t}-\bar Y_{E,0,t}\bigr],
-\qquad
-\Delta_{E\times M}=U_Q(M)-U_G(M).
-\end{equation}
-$\Delta_{E\times M}$ is the focal portability estimand: a memory transfers when the
-gap is near zero, regardless of whether each stack's gain is separately
-significant. Intervals are percentile intervals from 10{,}000 resamples of task
-clusters, so repeated prompt conditions are never treated as independent seeds.
-
-\subsection{Order-Placebo Gate}
-\label{sec:placebo}
-
-The placebo shuffles the body words of each item until no original adjacent body
-bigram remains, keeping task tags, item indices, and word counts. Shuffling
-lengthens the payload from 645 to 673 BPE tokens, so a deterministic greedy pass
-replaces 28 of 472 body words with a nonce, restoring exactly 645 tokens while
-retaining 94.1\% of body words. To hold presentation fixed, the placebo is not re-indexed:
-BM25 ranks the \emph{original} pool as a read-only reference, and the placebo items
-are injected at the same indices. Comparing the true memory with the placebo
-defines the \emph{coherent-content increment}
-\begin{equation}
-\label{eq:content}
-S_E=\mathbb{E}_t\bigl[\bar Y_{E,M,t}-\bar Y_{E,P,t}\bigr],
-\qquad
-\Delta_{E\times S}=S_Q-S_G.
-\end{equation}
-
-\begin{insightbox}[title={Frozen decision rule}]
-Executor-dependent use of experience content is claimed only if the interval for
-$S_G$ excludes zero positively \emph{and} the interval for $\Delta_{E\times S}$
-excludes zero negatively. True and placebo are treated as equivalent for
-\gptm only if the interval for $S_G$ lies inside $[-0.05,+0.05]$. Otherwise the
-mechanism is \emph{inconclusive}.
-\end{insightbox}
-
-\noindent
-The task sample (ten tasks per type, RNG seed 20260713, chosen from task IDs and
-types only), the estimands, the stratified bootstrap, and the rule were frozen
-before any placebo outcome was read. Two earlier payloads were stopped before
-outcome inspection: one left only 31 items complete after truncation, and the
-other replaced 74.4\% of words with a repeated nonce. None of their episodes enter
-the analysis.
-
-\section{Experiments}
-\label{sec:experiments}
-
-We organize the evaluation around five research questions that build on one
-another. RQ1 asks whether experience memory improves the harness. RQ2 examines
-whether the improvement transfers across executor stacks. RQ3 tests how much of the
-stack-specific gain the content of the experience explains. RQ4 asks where transfer
-succeeds or fails across tasks. RQ5 measures whether more experience context buys
-more utility and whether the pattern appears in a second environment.
-
-\subsection{Setup}
+\subsection{Readers, environments and studies}
 \label{sec:setup}
 
-We evaluate \method on the 134-task unseen split of ALFWorld
-\citep{shridhar2021alfworld}, covering six task types, with a ReAct scaffold
-\citep{yao2023react} that sees admissible actions. The executors are the hosted
-\gptm API and locally served \qwenm, both at temperature zero with Qwen thinking
-disabled. The focal memory is a pool of 33 compact ExpeL-style insights distilled
-from successful trajectories on the seen validation split; exploratory conditions
-use raw successful trajectories and SkillOS-style Markdown procedures built from
-the same source. For RQ5 we use WebShop-small with 1{,}000 products
-\citep{yao2022webshop}. All effects are paired on tasks. We report the no-memory
-harness as the baseline for each stack and, for content attribution, the
-payload-matched placebo. Appendix~\ref{app:experimental_details} gives benchmark,
-model, and protocol details.
+\paragraph{ALFWorld.} We use the 134 unseen games with a ReAct scaffold \citep{yao2023react} that lists
+the admissible actions, two demonstrations per prompt and a limit of 30 steps. Each run covers every
+game with three demonstration pairs, 402 episodes. The focal pool holds 33 rules (645 tokens) that
+GPT-4o-mini distilled from at most six of its own successful trajectories per task type on the seen
+games. The generic-rule and pool-replication studies also use a second pool, which we call the
+Qwen-sourced pool: 36 rules (706 tokens) that GPT-4o-mini distilled from Qwen3-8B's successes.
 
-\subsection{Results}
-\label{sec:results}
+\paragraph{WebShop.} WebShop replaces rooms and objects with search and product pages, so it tests whether
+the decomposition carries over to a different action space. We use the 1,000-product environment with a server that seeds its random
+generation of prices, so that every session has the same instruction across restarts. The 500 test
+sessions allow 15 steps and are scored in $[0,1]$. The pool holds 30 rules (524 tokens) that
+GPT-4o-mini distilled from its own successes on 576 training sessions.
 
-\noindent\rqtag{RQ1}\hspace{0.45em}\textbf{Does experience memory improve the harness?}\par\nopagebreak
+\paragraph{Readers.} Our question concerns differences between readers, so the readers span a range of
+ability, from 0.26 to 0.90 success without memory on ALFWorld. GPT-4o-mini and GPT-4.1-mini are called
+through the OpenAI API. Llama-3.1-8B
+\citep{grattafiori2024llama3} and Qwen3-8B, Qwen3-14B and Qwen3-32B \citep{yang2025qwen3}, with
+thinking off, are served locally with vLLM \citep{kwon2023vllm}. All decode at temperature zero.
+Table~\ref{tab:studies} lists the five studies.
 
-\begin{figure}[t]
+\begin{table*}[t]
 \centering
-\begin{minipage}[b]{0.395\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures/fig_success.pdf}\\[-2pt]
-{\small (a) Success without and with memory}
-\end{minipage}\hfill
-\begin{minipage}[b]{0.585\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures/fig_pairs.pdf}\\[-2pt]
-{\small (b) Paired gain per demonstration pair}
-\end{minipage}
-\vspace{2pt}
-\caption{ALFWorld results for the 645-token experience memory. (a) Equal-pair
-success: the memory raises \gptm from $0.587$ to $0.714$ but not \qwenm. (b) Paired
-gain on each demonstration pair and the equal-pair mean with its 95\%
-task-bootstrap interval. \gptm gains on every pair; the transport gap
-$\Delta_{E\times M}=-0.148$ excludes zero.}
-\label{fig:success}
-\vspace{-8pt}
-\end{figure}
-
-Figure~\ref{fig:success}a compares the no-memory harness with the experience-memory
-harness under both executor stacks. For \gptm, the memory raises success from
-$0.587$ to $0.714$, a paired gain of $+0.127$ (\ci{+0.072}{+0.184}). The gain is
-present on every demonstration pair ($+0.112$, $+0.097$, and $+0.172$ on pairs 01,
-02, and 12), so it is not produced by one favorable prompt. It is also obtained
-with the smallest payload we test: the compact insights realize 645 memory tokens,
-whereas raw trajectories and Markdown procedures realize 1{,}779--1{,}989 tokens
-under the same budget and none of them exceeds this gain (RQ5).
-
-The improvement is therefore real within the stack where the memory was built:
-the same frozen executor, the same scaffold, and the same tasks become more
-successful when 33 distilled rules are placed in context. This is the effect that
-experience-driven harnesses are designed to produce, and it is the reference
-point for the questions that follow.
-
-\noindent\rqtag{RQ2}\hspace{0.45em}\textbf{Does the improvement transfer across executor stacks?}\par\nopagebreak
-
-
-
-The gain is specific to the stack it was built with. Under \qwenm, the same memory moves success from $0.704$ to $0.683$,
-a change of $-0.021$ (\ci{-0.062}{+0.020}), and the pairwise effects are $+0.008$,
-$-0.082$, and $+0.011$ (Figure~\ref{fig:success}b). The transport gap is
-$\Delta_{E\times M}=-0.148$ (\ci{-0.218}{-0.080}). The focal contrast was
-designated after a seed-axis audit showed that two nominal seeds selected the same
-demonstration pair (Appendix~\ref{app:seedaxis}); using only the two originally
-observed pairs gives a gap of $-0.170$ (\ci{-0.252}{-0.088}).
-
-\begin{observationbox}
-The improvement does not transfer, and the gap is not explained by one prompt
-pair. The second stack starts from higher no-memory success ($70.4\%$ against
-$58.7\%$), leaving less headroom, and RQ3 shows that it also responds to the added
-block differently. The interval identifies moderation of the whole
-payload by the stack; it does not identify which stack component, whether weights,
-tokenizer, template, or runtime, is responsible.
-\end{observationbox}
-
-\noindent\rqtag{RQ3}\hspace{0.45em}\textbf{Is the improvement driven by experience content?}\par\nopagebreak
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_placebo.pdf}
-\vspace{-14pt}
-\caption{Pre-registered order-placebo gate on 60 frozen tasks. Left: equal-pair
-success under no memory, the order placebo, and the true memory; placebo success
-equals no-memory success plus the reported placebo effect. Right: paired effects
-with 95\% stratified task-bootstrap intervals; the grey band is the frozen
-equivalence region $[-0.05,+0.05]$.}
-\label{fig:placebo}
-\vspace{-8pt}
-\end{figure}
-
-\methodlabel{The first gate.} On the 60-task gate the true memory reproduces the original
-direction: \gptm rises from $0.544$ to $0.681$ ($+0.136$, \ci{+0.075}{+0.200}) and
-\qwenm falls from $0.728$ to $0.683$ ($-0.044$, \ci{-0.100}{+0.006}). The placebo,
-which carries the same items in the same order at the same footprint but no
-coherent text, already moves the stacks apart: $+0.089$ for \gptm
-(\ci{+0.025}{+0.153}) and $-0.108$ for \qwenm (\ci{-0.164}{-0.053};
-Figure~\ref{fig:placebo}). Coherent content then adds $S_G=+0.047$ for \gptm
-(\ci{-0.019}{+0.117}; 21/16/23 task wins, losses, and ties) and $S_Q=+0.064$ for
-\qwenm (\ci{0.000}{+0.128}; 18/11/31). The gap in this increment is
-$\Delta_{E\times S}=+0.017$ (\ci{-0.075}{+0.108}).
-
-Under the frozen rule this first gate was \emph{inconclusive}: in point estimates the
-placebo alone opened a stack gap of $-0.197$, as large as the true memory's $-0.181$,
-and the content increments for both stacks had intervals that included zero. A
-scrambled block is also not a neutral control: it may distract differently from
-coherent text, and it keeps the memory's vocabulary.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_rerun.pdf}
-\vspace{-14pt}
-\caption{Pre-registered same-window rerun on 60 ALFWorld games (2026-10-10). Left:
-equal-pair success under no memory, the scrambled order placebo, a coherent memory
-about an unrelated activity, and the true memory; all four conditions and both
-executors were run in the same time window. Right: paired effects with 95\%
-stratified task-bootstrap intervals; the grey band is $[-0.05,+0.05]$. Both controls
-keep the true memory's items, task tags, retrieval order, and 645-token footprint.}
-\label{fig:rerun}
-\vspace{-8pt}
-\end{figure}
-
-\methodlabel{A same-window rerun with a second control.} We therefore added a
-coherent, equal-length, task-irrelevant control: 33 well-formed imperative
-sentences about vegetable gardening, each with the same task tag and word count as
-the corresponding insight, no ALFWorld vocabulary, footprint matched to 645 tokens
-under both tokenizers by the placebo's procedure, and injected at the same indices
-(Appendix~\ref{app:rerun}). Because the per-episode logs of the first gate were lost
-and the hosted alias is mutable, we reran all four conditions for both executors in
-one window, under a pre-registered analysis and decision rule; the re-downloaded
-ALFWorld data map the same 60 task ids to a different sample of games, so the rerun
-is a fresh test rather than a repeat of the first gate.
-
-The rerun locates the content increment in task relevance
-(Figure~\ref{fig:rerun}). The true memory exceeds the scrambled placebo on both
-executors ($S_G=+0.106$, $S_Q=+0.083$; both intervals exclude zero) and exceeds the
-coherent control on \gptm ($+0.106$, interval excludes zero), less clearly on \qwenm
-($+0.050$). The two controls behave alike: coherent minus scrambled is $0.000$ for
-\gptm and $+0.033$ for \qwenm, both intervals including zero
-(Table~\ref{tab:rerun} in Appendix~\ref{app:rerun} lists every interval). The frozen rule therefore attributes the content
-increment to task relevance, not to coherence. The memory again helps \gptm
-($+0.078$, \ci{+0.011}{+0.144}) and not \qwenm ($+0.011$, \ci{-0.056}{+0.078}), but
-the placebo effect of the first gate does not reproduce. On the new games the
-scrambled block slightly lowers \gptm success ($-0.028$, \ci{-0.094}{+0.039}), and
-it lowers \qwenm success by $0.072$ (\ci{-0.139}{0.000}).
-
-\begin{observationbox}
-Both executors take a content benefit from the skill memory, and it comes from what
-the memory says about the task rather than from reading any coherent block. What
-differs between them is the cost of the block itself: \qwenm tends to lose with any
-added payload, and its content benefit roughly cancels that loss, which leaves its
-net gain near zero. The executor gap in the memory's effect is smaller on this
-sample ($-0.067$, \ci{-0.161}{+0.022}) than on the 134 tasks, and the first gate's
-placebo effect did not reproduce on new games; the stack interaction is therefore
-better read as a difference in context cost than as a difference in how the
-executors use the skills.
-\end{observationbox}
-
-\noindent\rqtag{RQ4}\hspace{0.45em}\textbf{Where does transfer succeed or fail across tasks?}\par\nopagebreak
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_transport.pdf}
-\vspace{-14pt}
-\caption{Task-level transfer. Left: the 134 ALFWorld tasks by the sign of their
-equal-pair memory effect under each stack. Right: \gptm gain by task type in the
-nominal-seed matrix.}
-\label{fig:transport}
-\vspace{-8pt}
-\end{figure}
-
-Transfer is heterogeneous (Figure~\ref{fig:transport}). Only 9 tasks improve under
-both stacks and 6 decline under both. Forty-five improve under \gptm but are
-neutral (31) or harmed (14) under \qwenm, and 17 show the converse. Thirteen of the
-14 tasks that help \gptm and hurt \qwenm have \qwenm no-memory success of at least
-two thirds, against a mean of $0.407$ among tasks that help both, which is
-compatible with a ceiling-plus-interference account but does not establish it.
-Task types differ as well: \gptm gains range from $+0.255$ on \texttt{puttwo} and
-$+0.246$ on \texttt{heat} to $-0.111$ on \texttt{cool}, and the types with the
-weakest \gptm baseline gain the most. Cross-fitted difficulty, which classifies
-each observation using only the other two no-memory observations of the same task,
-shows \gptm gains declining from $+0.261$ on hard tasks to $+0.157$ on mixed and
-$+0.048$ on easy ones, while \qwenm shows no monotone pattern
-(Appendix~\ref{app:taxonomy}; Appendix~\ref{app:cases} walks through one case per task type).
-
-\noindent\rqtag{RQ5}\hspace{0.45em}\textbf{Is more experience context better, and does the pattern hold elsewhere?}\par\nopagebreak
-
-\begin{table}[t]
-\centering
-\caption{Realized memory tokens and paired success gains for each memory
-representation and presentation in the exploratory matrix (nominal seeds
-0--2; intervals in Appendix~\ref{app:matrix}). Raw trajectories were not run under
-\qwenm. The highlighted row is the focal \method memory.}
-\label{tab:cost}
-\footnotesize
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.14}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}llrrrr@{}}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}llL{0.29\textwidth}L{0.19\textwidth}L{0.20\textwidth}@{}}
 \toprule
-\rowcolor{tableheadbg}
-\tablehead{Representation} & \tablehead{Presentation} & \tablehead{Memory tokens} &
-\tablehead{\texttt{GPT-4o-mini} $\Delta$} & \tablehead{\texttt{Qwen3-8B} $\Delta$} & \tablehead{Gap} \\
+Study & Environment & Readers & Memories & Conditions \\
 \midrule
-\rowcolor{tableaccentbg}
-\textbf{\textcolor{narrareddeep}{Compact insights}} & \textbf{\textcolor{narrareddeep}{BM25}}
-  & \textbf{\textcolor{narrareddeep}{645}} & \textbf{\textcolor{narrareddeep}{$+0.147$}}
-  & \textbf{\textcolor{narrareddeep}{$-0.020$}} & \textbf{\textcolor{narrareddeep}{$-0.167$}} \\
-Compact insights & dense & 645 & $+0.070$ & $-0.005$ & $-0.075$ \\
-\rowcolor{tablestripebg}
-Raw trajectories & BM25 & 1{,}780 & $+0.072$ & -- & -- \\
-Raw trajectories & dense & 1{,}779 & $+0.105$ & -- & -- \\
-\rowcolor{tablestripebg}
-Markdown procedures & BM25 & 1{,}989 & $+0.047$ & $-0.077$ & $-0.124$ \\
-Markdown procedures & dense & 1{,}970 & $+0.097$ & $-0.062$ & $-0.159$ \\
+Five readers & ALFWorld & GPT-4o-mini, GPT-4.1-mini, Llama-3.1-8B, Qwen3-8B, Qwen3-14B & focal pool & none, memory, gardening \\
+WebShop & WebShop & GPT-4o-mini, GPT-4.1-mini, Qwen3-8B & one pool & none, memory, choral singing \\
+Crossover & ALFWorld & Qwen3-8B, Qwen3-14B, Qwen3-32B & 18 balanced pools & none, memory, gardening \\
+Generic rules & ALFWorld & Qwen3-8B, Qwen3-14B & focal and Qwen-sourced pools & the above, generic rules, astronomy \\
+Pool replication & ALFWorld & Qwen3-8B & four replicate pools and the Qwen-sourced pool & none, memory, gardening \\
 \bottomrule
 \end{tabular}
-\arrayrulecolor{black}
-\vspace{-10pt}
+\caption{The five studies. Every condition of a study ran for each of its readers in one time window,
+with 402 episodes per ALFWorld run and 500 sessions per WebShop run. GPT-4o-mini ran every condition of
+the first two studies twice.}
+\label{tab:studies}
+\end{table*}
+
+\paragraph{Protocols and noise.} For each study we wrote down the predictions, estimands and analysis
+before its runs. In the five-reader study, one addendum (D1--D2) was written after the hosted readers'
+runs had been analysed (Appendix~\ref{app:protocols}). We call these protocol analyses and mark everything
+chosen after seeing data as exploratory. Appendix~\ref{app:protocols} lists every prediction with its
+outcome. The first two studies also included a scrambled copy of the memory, with each item's words
+shuffled until no original adjacent pair remained, as a second control. Its effect changed sign between
+game samples for the same reader, so we report only the gardening control. Repeating a run under
+identical settings changes the outcome of 17--20\% of GPT-4o-mini episodes and 4--13\% of local-reader
+episodes, so we read differences of about 0.02 between single runs as noise.
+
+\section{Results}
+\label{sec:results}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_readers.pdf}
+\caption{Reading cost $I$ (unrelated text minus no memory) and content value $R$ (memory minus
+unrelated text) on 134 unseen ALFWorld games, with 95\% intervals. Left: the focal pool read by five
+readers (single runs). Right: the mean over 18 pools for three Qwen3 readers, with intervals that
+resample pools as well as tasks. Light dots are the content values of the individual pools. The shaded
+band marks $\pm0.04$, the bound predicted for the crossover.}
+\label{fig:readers}
+\end{figure*}
+
+\subsection{No reader pays a measurable reading cost}
+\label{sec:cost}
+
+With the focal pool, the gardening control changes success by 0.000 for GPT-4o-mini and by $-0.017$ to
+$-0.040$ for the other four readers, and every interval includes zero (Figure~\ref{fig:readers}, left).
+We had expected the reading cost to explain why a memory helps some readers and not others, because a
+memory adds several hundred tokens of instructions and models differ in how they handle added context.
+In an addendum written before the local readers' estimates were computed, the five-reader study
+therefore predicted that the reading cost would vary across readers more than the content value. That
+prediction failed. Across the five readers the reading cost spans 0.040 and the content value 0.077.
+The difference between the two spans is itself uncertain, \ci{-0.050}{0.095} (exploratory), and so are
+the differences between readers' reading costs, whose intervals reach 0.10. For GPT-4.1-mini minus
+GPT-4o-mini, for instance, the difference is $-0.040$ \ci{-0.100}{0.020}.
+
+The $\pm0.04$ band was set from the range of these five estimates and then used as a prediction for the
+crossover, so for the five readers above it is a description, not a test. The intervals rule out reading
+costs beyond $\pm0.04$ only for GPT-4o-mini averaged over its two runs, \ci{-0.037}{0.031}, and for
+Qwen3-32B. In the crossover, averaged over pools, the reading cost is $+0.006$ for Qwen3-8B, $+0.020$ for
+Qwen3-14B and $-0.010$ for Qwen3-32B, inside the predicted band, and no single pool's control moves any of
+the three readers by more than 0.037. Across all studies the largest single-pool estimate is $-0.042$.
+On WebShop the choral control changes the score by $+0.018$ for GPT-4o-mini and $-0.016$ for Qwen3-8B
+(Table~\ref{tab:webshop}).
+
+The topic of the unrelated text matters more than we expected. The generic-rule study predicted that
+replacing gardening with amateur astronomy would shift the reading cost by less than 0.03, with an
+interval including zero. The shift was 0.025 \ci{0.007}{0.044}, small but distinguishable from zero, so
+the reading cost is $+0.017$ \ci{-0.010}{0.045} under one topic and $-0.007$ \ci{-0.034}{0.019} under the
+other. Measured against the astronomy control, Qwen3-8B's content value in that study would be about
+$+0.075$ instead of $+0.044$ (exploratory), and absolute content values carry a margin of this size.
+
+\subsection{Two readers gain reliably from the content}
+\label{sec:reader}
+
+Content value is reliably positive for two readers, GPT-4o-mini with the focal pool and Qwen3-8B across
+18 pools. With the focal pool, content values range from $+0.002$ to $+0.080$, and only GPT-4o-mini's
+excludes zero, at $+0.080$ \ci{0.030}{0.129} in the protocol run and $+0.091$ \ci{0.050}{0.133} averaged
+over its two runs. On the 74 games added after the first 60, it is $+0.059$ \ci{-0.009}{0.126}.
+Qwen3-8B follows at $+0.040$, GPT-4.1-mini at $+0.032$, Qwen3-14B at $+0.012$ and Llama-3.1-8B at
+$+0.002$. GPT-4o-mini's content value exceeds Llama-3.1-8B's by 0.077 \ci{0.012}{0.142} and Qwen3-14B's
+by 0.067 \ci{0.012}{0.122}, unadjusted for multiplicity. Against GPT-4.1-mini, the gap in net effect,
+0.087 \ci{0.025}{0.152}, splits about evenly between reading cost (0.040) and content value (0.047),
+neither of them reliable on its own. GPT-4o-mini is also the agent whose trajectories, distilled by
+GPT-4o-mini, make up the focal pool, so its lead may partly be an own-source advantage, which the
+crossover could not resolve (\S\ref{sec:what}).
+
+Over 18 pools (Figure~\ref{fig:readers}, right), the content value is $+0.039$ \ci{0.012}{0.065} for
+Qwen3-8B, $+0.013$ \ci{-0.008}{0.034} for Qwen3-14B and $+0.012$ \ci{-0.008}{0.033} for Qwen3-32B. The
+crossover's protocol predicted that Qwen3-8B would gain reliably more than Qwen3-32B. The difference,
+$+0.026$ \ci{-0.007}{0.060}, does not meet that bar (Holm-adjusted $p=0.52$), so the ordering by size
+remains a trend.
+
+Exploratory: content value was reliable only for two mid-range readers, whose success without memory is
+0.59 and 0.66--0.68; we note this pattern without testing it. Llama-3.1-8B solves a quarter of the games
+without memory and gains nothing. If each GPT-4o-mini episode is classified by how it did on the same game
+in the other two no-memory episodes, its content value is $+0.196$ where it failed both and $+0.006$ where
+it solved both, a difference of $+0.190$ \ci{0.076}{0.309}. Llama-3.1-8B gains nothing even on the
+games it fails.
+
+\subsection{Distilled rules beat generic rules, and pools differ as much as the effects}
+\label{sec:what}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_contrasts.pdf}
+\caption{Protocol contrasts of the generic-rule study (pooled over two pools and two readers), the
+crossover (pooled over pools and three readers) and the pool-replication study (reader Qwen3-8B), each
+with its prediction and outcome. Filled markers have intervals that exclude zero.}
+\label{fig:contrasts}
+\end{figure*}
+
+In the generic-rule study, read by Qwen3-8B and Qwen3-14B, experience rules beat generic rules of the
+same length by $+0.035$ \ci{0.014}{0.057} over two pools and two readers, as predicted, with $+0.058$ for
+Qwen3-8B and $+0.012$ for Qwen3-14B (Figure~\ref{fig:contrasts}). The study also predicted that the
+generic rules would beat the gardening text, which they did not, at $-0.016$ \ci{-0.037}{0.005}. About
+half of the gap is therefore the content value of the experience rules in this study, $+0.019$
+\ci{-0.002}{0.040}, and the rest is the generic rules doing slightly worse than unrelated text. The gap
+is not explained by greater word overlap with the test games: the generic rules share more words with
+them than the distilled pools do, 8.5--9.3\% of their words against 3.9--5.5\%. The two lists also differ
+in their writer. The experience pools were distilled by GPT-4o-mini and the generic rules written by
+Qwen3-32B. On the focal pool, Qwen3-8B's advantage for experience comes entirely from generic rules doing
+worse than gardening, $-0.062$ \ci{-0.104}{-0.020}. Text about the task may cost more to read than text
+about gardening, in which case part of what we call content value is a reading cost that depends on
+content.
+
+The agent that supplied the experience made no difference once coverage was equal. With six
+trajectories per type from each source (one for heat), the content value of pools built from Qwen3-8B's
+successes and from GPT-4o-mini's differs by $-0.002$ \ci{-0.024}{0.019} for the three Qwen3
+readers, as predicted, and Qwen3-32B's pools differ from Qwen3-8B's by $-0.006$ \ci{-0.029}{0.015}.
+Qwen3-32B and Qwen3-8B distillations of the same subsamples differ by $+0.005$ \ci{-0.012}{0.022}, so
+the distilling model made no detectable difference either. Whether a reader gains more from its own
+experience is unresolved, at $+0.015$ \ci{-0.047}{0.075}. These results concern what a trajectory
+contributes for Qwen3 readers. A more successful agent still leaves more trajectories, and the balanced
+design removes that advantage by construction.
+
+For a fixed source, distiller and reader, the crossover's three replicate pools differ by more than task
+sampling explains ($Q=72.2$ on 36 degrees of freedom, $p=0.0003$). The between-pool standard deviation
+of 0.019 is close to the 0.02 we had predicted and comparable to the content values themselves. For
+Qwen3-8B, single pools range from $-0.015$ to $+0.105$. Two distillations of the same subsample agree
+only moderately, with a correlation of 0.42 over 27 pairs, so both the choice of trajectories and the
+distillation contribute. Single-pool content values should be read with this spread in mind, and the
+pooled intervals in this section and in Figure~\ref{fig:readers} resample pools as well as tasks.
+
+The pool-replication study points the same way (Table~\ref{tab:poolrep}). Its three random subsamples
+gave Qwen3-8B content values of $-0.025$, $-0.015$ and $+0.052$, a mean of $+0.004$ \ci{-0.023}{0.032},
+and the pool from the first six trajectories per type gave $+0.032$. The crossover pools with the same
+source, distiller and reader gave $+0.041$ \ci{0.005}{0.077}, though they kept one heat trajectory where
+these kept six. The study had predicted that its pools would carry value and agree with one another.
+Both predictions failed: the first and third subsamples differ by $-0.077$ \ci{-0.132}{-0.020}.
+
+\subsection{On WebShop the distilled rules lower both capable readers' scores}
+\label{sec:webshop}
+
+\begin{table}[!b]
+\centering
+\small
+\setlength{\tabcolsep}{2.6pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lcccrr@{}}
+\toprule
+Reader & none & choral & memory & \multicolumn{1}{c}{$I$} & \multicolumn{1}{c}{$R$} \\
+\midrule
+GPT-4o-mini (1) & 0.294 & 0.312 & 0.154 & $+0.018$ & $-0.158$ \\
+GPT-4o-mini (2) & 0.303 & 0.323 & 0.167 & $+0.020$ & $-0.156$ \\
+Qwen3-8B & 0.329 & 0.313 & 0.198 & $-0.016$ & $-0.116$ \\
+GPT-4.1-mini & 0.029 & 0.028 & 0.027 & $-0.001$ & $-0.002$ \\
+\bottomrule
+\end{tabular}
+\caption{WebShop, 500 test sessions: mean score per condition, reading cost $I$ and content value $R$,
+with GPT-4o-mini's two runs. Every $R$ interval for GPT-4o-mini and Qwen3-8B excludes zero and every $I$
+interval includes it (Appendix~\ref{app:results}). GPT-4.1-mini fails almost every session in every
+condition.}
+\label{tab:webshop}
 \end{table}
 
-More context does not buy more utility (Table~\ref{tab:cost}). The strongest
-\gptm condition injects the fewest tokens, while trajectory and procedural
-memories, roughly three times larger under the same nominal budget, never exceed
-the compact BM25 gain, and Markdown procedures harm \qwenm under both presentations ($-0.077$
-and $-0.062$, both intervals below zero). Because the 33 insights always fit,
-BM25 versus dense ranking changes only their order, yet order alone moves the
-\gptm gain from $+0.147$ to $+0.070$; the executor-by-presentation interaction is
-$-0.092$ (\ci{-0.162}{-0.020}). In a balanced 12-task matched-footprint pilot, no
-memory and all three compressed memories each solve 5/12 tasks, but different
-ones, which points to task reallocation rather than equal-footprint superiority. The memory is also cheap for the stack it helps: \gptm episodes become shorter
-(18.1 against 20.3 steps), so the 645-token block raises total prompt tokens by 16.1\%
-and API cost by 9.6\%, most of it cached (Appendix~\ref{app:per_type}).
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_webshop.pdf}
-\vspace{-14pt}
-\caption{Train-disjoint WebShop comparison with local \qwenm. Left: mean reward and
-exact purchase success without and with a ten-rule experience memory. Right: sign
-of the paired reward change over 100 sessions.}
-\label{fig:webshop}
-\vspace{-8pt}
-\end{figure}
-
-In WebShop, a 20-task gate first confirmed that \qwenm executes validly (100\%
-valid action syntax, search on 20/20 tasks, 13 purchase attempts, mean reward
-$0.288$). We distilled ten ExpeL-style rules from the six positive-reward
-trajectories of train sessions 500--519 and compared no memory with this pool on
-disjoint sessions 0--99. Reward falls from $0.194$ to $0.105$ (paired $-0.090$,
-\ci{-0.165}{-0.016}), with 8 improvements, 20 declines, and 72 ties, and exact
-success moves from $0.09$ to $0.07$ ($-0.020$, \ci{-0.090}{+0.050};
-Figure~\ref{fig:webshop}).
-
-\begin{observationbox}
-Experience memory can reduce performance outright. The WebShop pool was distilled
-from only six positive trajectories and was read by the stack that also showed no
-ALFWorld gain; it has twice as many task losses as wins. This check uses one
-executor and no placebo, so it is a bounded negative-transfer replication rather
-than an estimate of executor moderation in WebShop.
-\end{observationbox}
+On WebShop the content value is negative (Table~\ref{tab:webshop}). The pool lowers GPT-4o-mini's score
+from 0.294 to 0.154 while the choral control leaves it at 0.312, a content value of $-0.158$
+\ci{-0.191}{-0.125}, and a second run gives $-0.156$. For Qwen3-8B it is $-0.116$ \ci{-0.153}{-0.079}.
+The protocol had predicted a positive value for GPT-4o-mini. GPT-4.1-mini fails nearly every session in
+every condition, so its estimates carry no information; in an exploratory reading of its sessions, it
+typically opens one of a product's sub-pages, which have no Buy button, and keeps clicking there until
+the step limit. In an exploratory count of actions, the pool raises GPT-4o-mini's searches per session
+from 2.44 to 5.69, against 2.35 with the control, and Qwen3-8B's from 1.88 to 2.71. Several rules tell
+the agent to search again, such as ``If the desired product is not found, consider re-searching with
+the same criteria'' for fashion, the category of most test sessions. GPT-4o-mini, the reader with the
+largest content value on ALFWorld, has the largest loss here, and its reading cost is near zero in both
+environments.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-\vspace{-5pt}
+The differences between models that we could attribute lie in the skill, in what the memory says.
+Reading a memory of 520 to 790 tokens cost no model we tested a measurable amount, while what the rules
+said was worth $+0.08$ to GPT-4o-mini on a pool from its own runs, about $+0.04$ to Qwen3-8B, nothing
+measurable to the other four readers on ALFWorld, and a loss on WebShop.
 
-We presented \method, a reality check for experience memory in agent harnesses. It
-varies only the executor stack and the memory's content, representation,
-presentation, and footprint, audits what reaches the model, and evaluates the memory
-through paired transport gaps and a pre-registered, payload-matched placebo. The
-three questions it asks build on one another. On ALFWorld a compact skill memory
-raises \gptm success by 12.7 points, on every demonstration pair and with the
-smallest payload we test, so the memory does improve the system it was built with.
-The same memory does not help \qwenm, so the gain is an interaction between memory
-and executor stack rather than a property of the memory alone. And against a scrambled placebo and a
-coherent, task-irrelevant memory of the same footprint, run in one window, the true
-memory's benefit comes from its task-relevant content on both executors; the
-executors differ in what reading an added block costs them, and an earlier placebo
-effect did not reproduce on new games. A with-versus-without comparison answers
-only the first question; the effect of an experience memory has to be understood
-together with the stack that reads it and against content controls. Future work
-should repeat the two-control design on all 134 tasks and with repeated hosted
-runs, manipulate stack components one at a time to find which one sets the context
-cost, extend the controls to regimes where retrieval changes membership, and apply
-the same audit to harnesses that learn their memories online.
+Where a memory did nothing for a model, as for Llama-3.1-8B and Qwen3-14B with the focal pool and
+Qwen3-32B across 18 pools, its content value was near zero and so was its reading cost, so no cost of
+reading was masking a gain. GPT-4o-mini's lead over Llama-3.1-8B and Qwen3-14B lies in content value,
+with no detectable difference in reading cost. On WebShop the distilled rules lowered the scores of the
+two readers that can do the task. For Qwen3-8B and Qwen3-14B, the readers we also tested with generic
+advice, distilled rules beat generic rules of the same length, and the generic rules were worth no more
+than unrelated text; for all three Qwen3 readers, the agent that supplied the experience made no
+difference once coverage was equal. A memory should therefore be judged against a length-matched
+control, which is what places an effect in the content, and over several pools, since two pools built by
+the same pipeline can differ by as much as the effect itself.
 
-\bibliographystyle{plainnat}
+\section*{Limitations}
+
+Our readers are open models of 8B to 32B parameters and two small hosted models, and our memories are
+rule lists of 520 to 790 tokens. Long procedural skills and frontier models may behave differently. Each
+reader is a whole stack of weights, tokenizer, chat template, serving and decoding, so differences
+between readers are differences between stacks and say nothing about the weights alone. Both
+environments are small, with 134 unseen ALFWorld games and a 1,000-product WebShop with synthetic
+instructions.
+
+The decomposition depends on its controls and on the assumption that reading cost does not depend on
+content. Text about the task may cost more to read than text about gardening, which would move part of
+the reading cost into what we call content value; the generic rules doing worse than gardening is
+consistent with this. The unrelated text may also differ from a memory in style and plausibility, two of
+its controls carry placeholder tokens, and the topic of the unrelated text moves the reading cost
+(\S\ref{sec:cost}). The
+generic rules were written by a different model from the experience rules, and forcing them to exact
+lengths added filler to some of them, so a stronger writer might produce more useful generic advice.
+
+In the crossover, heat tasks rest on a single trajectory per pool, and the replicate subsamples overlap
+(GPT-4o-mini's single heat trajectory is in all three of its subsamples), so the between-pool standard
+deviation is a lower bound for independent pools. The hosted readers did not take part, and the
+own-source and reader contrasts are underpowered. The five-reader and WebShop studies use one pool each,
+so given the variation between pools we measured, their content values are single draws, and
+GPT-4o-mini's content value there may include an own-source advantage. We measured how much each reader gains from the content and did not establish why
+readers differ. The hosted models were reached through aliases that their provider can change. The exploratory analyses listed in
+Appendix~\ref{app:protocols} were chosen after the data were seen, and only the four main crossover
+contrasts were adjusted for multiplicity.
+
 \bibliography{references}
 
 \appendix
 
-\section*{Appendix Contents}
-\label{app:contents}
-\begin{tcolorbox}[
-  enhanced,
-  colback=tableheadbg,
-  colframe=tableaccentrule,
-  boxrule=0.5pt,
-  arc=2pt,
-  left=7pt,
-  right=7pt,
-  top=6pt,
-  bottom=6pt
-]
+\section{Protocols and outcomes}
+\label{app:protocols}
+
+Table~\ref{tab:protocols} lists every prediction written down before the runs of the five studies, with
+its outcome. The five-reader study's comparison of spans (D1) and its prediction test (D2) were added in
+an addendum after the hosted readers' runs had been analysed and before any estimate from the local
+readers was computed, so for the hosted readers they are descriptive. One deviation occurred, before any
+episode of the generic-rule study: single-shot rewrites to an exact word count came out three to four
+words short, so they were replaced by a loop that told the writer how many words to add or remove. The
+writer still saw only the task description and its own base rule. In the crossover study, the four
+contrasts named in Table~\ref{tab:crossover} were Holm-adjusted as planned, and all adjusted $p$-values
+are at least 0.52.
+
+\begin{table*}[t]
+\centering
 \small
-\renewcommand{\arraystretch}{1.18}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}C{0.08\linewidth}L{0.70\linewidth}r@{}}
-\textbf{\textcolor{narrareddeep}{\ref{sec:limitations}}}
-  & \hyperref[sec:limitations]{Limitations}
-  & \textcolor{remarkgray}{p.~\pageref{sec:limitations}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:implementation_details}}}
-  & \hyperref[app:implementation_details]{Implementation details}
-  & \textcolor{remarkgray}{p.~\pageref{app:implementation_details}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:prompts}}}
-  & \hyperref[app:prompts]{Prompt settings}
-  & \textcolor{remarkgray}{p.~\pageref{app:prompts}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:memory}}}
-  & \hyperref[app:memory]{Experience memory contents}
-  & \textcolor{remarkgray}{p.~\pageref{app:memory}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:experimental_details}}}
-  & \hyperref[app:experimental_details]{Experimental details}
-  & \textcolor{remarkgray}{p.~\pageref{app:experimental_details}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:per_type}}}
-  & \hyperref[app:per_type]{Per-task-type results and cost}
-  & \textcolor{remarkgray}{p.~\pageref{app:per_type}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:models}}}
-  & \hyperref[app:models]{Models used}
-  & \textcolor{remarkgray}{p.~\pageref{app:models}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:comparison_scope}}}
-  & \hyperref[app:comparison_scope]{Comparison scope}
-  & \textcolor{remarkgray}{p.~\pageref{app:comparison_scope}} \\
-\textbf{\textcolor{narrareddeep}{\ref{sec:related}}}
-  & \hyperref[sec:related]{Related work}
-  & \textcolor{remarkgray}{p.~\pageref{sec:related}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:matrix}}}
-  & \hyperref[app:matrix]{Representation matrix and executor interactions}
-  & \textcolor{remarkgray}{p.~\pageref{app:matrix}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:taxonomy}}}
-  & \hyperref[app:taxonomy]{Task-level transfer diagnostic}
-  & \textcolor{remarkgray}{p.~\pageref{app:taxonomy}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:cases}}}
-  & \hyperref[app:cases]{Case studies}
-  & \textcolor{remarkgray}{p.~\pageref{app:cases}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:seedaxis}}}
-  & \hyperref[app:seedaxis]{Seed-axis audit}
-  & \textcolor{remarkgray}{p.~\pageref{app:seedaxis}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:rerun}}}
-  & \hyperref[app:rerun]{Same-window rerun with a coherent control}
-  & \textcolor{remarkgray}{p.~\pageref{app:rerun}} \\
-\textbf{\textcolor{narrareddeep}{\ref{app:placebo}}}
-  & \hyperref[app:placebo]{Order-placebo construction}
-  & \textcolor{remarkgray}{p.~\pageref{app:placebo}}
-\end{tabular*}
-\end{tcolorbox}
-\vspace{-6pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}L{0.13\textwidth}L{0.53\textwidth}L{0.29\textwidth}@{}}
+\toprule
+Study & Prediction & Outcome \\
+\midrule
+Five readers & P1, A3: net gain for GPT-4o-mini, none detectable for Qwen3-8B & hold \\
+ & Predictions about the scrambled copy (P2--P4 and A1, A2, A4 on the two game batches; C1, C2 exploratory) & P2, P3, C1, C2 fail; A1 fails for GPT-4o-mini ($+0.009$) and holds for Qwen3-8B; P4, A2, A4 hold \\
+ & B1: under 25\% of GPT-4o-mini episodes change between runs, signs stable & holds (17--20\%) \\
+ & D1: the reading cost spans more across readers than the content value & fails (0.040 against 0.077) \\
+ & D2: reading cost plus the others' mean content value predicts net gain better than the others' mean net gain & holds, weakly (error 0.026 against 0.037) \\
+WebShop & W1: positive content value for GPT-4o-mini; W2: reading cost spans more than content value; W3: the unrelated text does no better than the scrambled copy; W4: GPT-4.1-mini gains less than GPT-4o-mini & all fail; content value is negative for GPT-4o-mini and Qwen3-8B \\
+Crossover & A1: no own-source advantage, interval below $+0.05$ & unresolved ($+0.015$ \ci{-0.047}{0.075}) \\
+ & A2: Qwen3-8B gains more than Qwen3-32B & fails ($+0.026$ \ci{-0.007}{0.060}) \\
+ & A3: at balanced counts the Qwen3-8B and GPT-4o-mini sources do not differ & holds ($-0.002$) \\
+ & A4: distiller effect, two-sided & none detected ($+0.005$) \\
+ & A5: pools differ ($p<0.05$) with between-pool SD at least 0.02 & partly ($p=0.0003$, SD 0.019) \\
+ & A6: reading cost within $\pm0.04$ for each reader & holds for all three \\
+Generic rules & B1: experience rules beat generic rules & holds ($+0.035$) \\
+ & B2: generic rules beat unrelated text & fails ($-0.016$) \\
+ & B3: the topic of the unrelated text changes the reading cost by less than 0.03, interval including zero & fails ($-0.025$ \ci{-0.044}{-0.007}) \\
+Pool replication & P1: replicate pools carry content value; P2: their range is below 0.05; P3: no pairwise difference; P4: reading cost within $\pm0.04$ & P1--P3 fail (mean $+0.004$, range 0.077, R1 $-$ R3 $=-0.077$ \ci{-0.132}{-0.020}); P4 holds ($-0.015$) \\
+\bottomrule
+\end{tabular}
+\caption{Predictions written down before the runs of the five studies and their outcomes. Exploratory
+analyses in the paper are the WebShop action counts, the reading of GPT-4.1-mini's WebShop sessions, the
+comparison of readers by success without memory, the split by difficulty and its interval, the interval
+for the difference of spans, and the content value against the astronomy control. The five-reader gaps
+between readers are protocol estimands without predictions and are not adjusted for multiplicity.}
+\label{tab:protocols}
+\end{table*}
 
-\section{Limitations}
-\label{sec:limitations}
+\section{Controls and generic rules}
+\label{app:controls}
 
-This study has several limitations. First, the executor contrast bundles model
-weights, tokenizers, chat templates, serving systems, and generation
-repeatability; it establishes stack-level moderation, not a model-weight
-mechanism. Second, the focal contrast was designated after a seed-axis audit, and
-the representation matrix, task-type, difficulty, and taxonomy analyses are
-exploratory and not adjusted for multiplicity. Third, the study covers two
-executor stacks, one focal 33-item pool, and ALFWorld; it is not a population
-estimate over models or experience artifacts, and the representation reproductions
-omit the optimizers and curators of ExpeL and SkillOS. Fourth, the order placebo
-isolates coherent local order imperfectly: shuffled text may distract differently
-from coherent text, and retained words keep bag-of-words cues; the 60-task gate is
-also lower powered than the 134-task focal contrast and targets an equal-task-type
-effect. The same-window rerun adds a coherent control but covers 60 games, one run
-per condition and seed, and a different sample of games than the first gate,
-because the re-downloaded ALFWorld data enumerate games in a different order; its
-placebo result therefore does not test the first gate's numbers task by task. Fifth, the WebShop check uses one local executor, one train-distilled pool,
-the small environment, and one execution per condition. Finally, the hosted GPT
-alias is mutable and temperature-zero hosted generations are not perfectly
-deterministic, and the public release contains the harness, configurations, pools,
-and analysis code but not per-episode logs, so the figures are drawn from the
-frozen summary statistics.
+\paragraph{Unrelated text.} Each control is built from a bank of template sentences on one topic, with
+every word checked against the text of the test games and the vocabulary of the environment and pools.
+For each item, the builder picks a sentence with the item's word count. A greedy pass then replaces the
+fewest body words with the nonce \texttt{x} until the block's token count equals the memory's under the
+tokenizer of every reader in the study: o200k for the hosted models, and the Llama-3.1 and Qwen3
+tokenizers, the latter byte-identical across Qwen3-8B, Qwen3-14B and Qwen3-32B. Section~\ref{sec:decomposition}
+gives the number of replacements per control. For the crossover, generic-rule and pool-replication
+studies, an audit replayed retrieval on the first observation of all 134 games for every memory and
+control pair and found no difference in order, item set or token count under any tokenizer.
 
-\section{Implementation Details}
-\label{app:implementation_details}
+\paragraph{Generic rules.} Qwen3-32B (thinking off, temperature 0) wrote six rules per task type from
+the prompt below. For the clean type, \texttt{\{goal\}} reads: the goal reads like ``put a clean
+[object] in [receptacle]'' or ``clean some [object] and put it in [receptacle]''.
+\begin{quote}\small
+ALFWorld is a text-based household environment. At the start of an episode the agent is told which
+receptacles it can see in the room (for example cabinets, drawers, countertops, shelves, a fridge, a
+microwave, a sinkbasin, a stoveburner, a garbagecan, a desklamp), each with a number. Objects lie on or
+inside receptacles, and closed receptacles must be opened to see inside. The agent acts with text
+commands: go to [receptacle], open [receptacle], close [receptacle], take [object] from [receptacle],
+put [object] in/on [receptacle], clean [object] with [receptacle], heat [object] with [receptacle], cool
+[object] with [receptacle], use [object], examine [object or receptacle], look, inventory. An episode
+has a limited number of steps.\\[3pt]
+Task type `\{task\_type\}': \{goal\}\\[3pt]
+Write \{n\} concise, GENERAL rules (heuristics) that would help an agent solve this task type. Each
+rule: one imperative line, no specific object numbers or room layouts. Output ONLY a bullet list, each
+line starting with `- '.
+\end{quote}
+The last two sentences copy the distillation prompt (Appendix~\ref{app:setup}). Within each type the
+rules whose word counts were closest to the memory's items were paired with them. Each rule was then
+rewritten to the item's exact word count, keeping its meaning, and the variants were chosen to match the
+memory's token count under both tokenizers, with no nonce replacement needed. In 13--20\% of episodes
+the first action differs between the generic and the experience rules.
 
-This appendix describes how the abstract components of
-Section~\ref{sec:method}, namely the harness configuration, the memory payload,
-the audit, and the placebo, are realized in our reference implementation. None of
-these choices alters the estimands; they specify how the abstract objects are
-instantiated in the experiments of Section~\ref{sec:experiments}.
+\section{Further results}
+\label{app:results}
 
-\paragraph{Harness representation.}
-A configuration $H=(E,M,d)$ is materialized as one YAML file: the executor endpoint
-($E$), the memory kind and pool path ($c$, $r$), the retriever and an optional
-index-aligned ranking reference ($p$), the token budget $B$ and item cap $K$, and the
-demonstration file and seed ($d$). The remaining keys, namely decoding parameters,
-prompt style, admissible-action injection, step limit, and environment, take the
-same values in every configuration of a comparison. Unknown keys are rejected at
-load time so that a configuration cannot silently omit a setting.
+Tables~\ref{tab:five}, \ref{tab:crossover}, \ref{tab:generic} and~\ref{tab:poolrep} give the estimates
+behind Figures~\ref{fig:readers} and~\ref{fig:contrasts}. On WebShop the intervals for GPT-4o-mini
+(run 1) are \ci{-0.012}{0.048} for $I$ and \ci{-0.191}{-0.125} for $R$, and for Qwen3-8B
+\ci{-0.056}{0.024} and \ci{-0.153}{-0.079}. Between the two GPT-4o-mini runs, 13--17\% of sessions change
+score.
 
-\paragraph{Initialization.}
-Every comparison starts from the no-memory configuration ($c=$ none), whose prompt
-contains only the task scaffold and two demonstrations. A memory condition adds one
-block after the scaffold and changes nothing else; the executor client, decoding,
-ReAct loop, and action parsing are shared code paths.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Reader & none & Reading cost $I$ & Content value $R$ & Net effect $T$ \\
+\midrule
+GPT-4o-mini, run 1 & 0.595 & $0.000$ \ci{-0.042}{0.042} & $+0.080$ \ci{0.030}{0.129} & $+0.080$ \ci{0.027}{0.132} \\
+GPT-4o-mini, run 2 & 0.592 & $-0.005$ \ci{-0.050}{0.040} & $+0.102$ \ci{0.050}{0.154} & $+0.097$ \ci{0.047}{0.147} \\
+GPT-4o-mini, mean of runs & 0.593 & $-0.002$ \ci{-0.037}{0.031} & $+0.091$ \ci{0.050}{0.133} & $+0.088$ \ci{0.050}{0.128} \\
+Qwen3-8B & 0.677 & $-0.022$ \ci{-0.072}{0.027} & $+0.040$ \ci{-0.005}{0.085} & $+0.017$ \ci{-0.030}{0.065} \\
+GPT-4.1-mini & 0.721 & $-0.040$ \ci{-0.087}{0.005} & $+0.032$ \ci{-0.017}{0.082} & $-0.007$ \ci{-0.052}{0.037} \\
+Llama-3.1-8B & 0.259 & $-0.030$ \ci{-0.080}{0.017} & $+0.002$ \ci{-0.032}{0.040} & $-0.027$ \ci{-0.072}{0.015} \\
+Qwen3-14B & 0.794 & $-0.017$ \ci{-0.052}{0.015} & $+0.012$ \ci{-0.022}{0.050} & $-0.005$ \ci{-0.042}{0.032} \\
+\bottomrule
+\end{tabular}
+\caption{Five-reader study, focal pool, 134 unseen games. GPT-4o-mini and Qwen3-8B ran in two same-day
+batches.}
+\label{tab:five}
+\end{table*}
 
-\paragraph{Memory construction.}
-The ALFWorld pools are distilled with \gptm from successful trajectories on the
-seen validation split, using at most six trajectories per task type: 33
-natural-language insights (ExpeL-style), raw successful trajectories, and one
-Markdown procedure per successful trajectory (SkillOS-style). The WebShop pool
-holds ten rules distilled by local \qwenm.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Source & Distiller & Qwen3-8B reads & Qwen3-14B reads & Qwen3-32B reads \\
+\midrule
+GPT-4o-mini & Qwen3-32B & $+0.055$ \ci{-0.005}{0.114} & $+0.022$ \ci{-0.006}{0.050} & $+0.010$ \ci{-0.028}{0.047} \\
+GPT-4o-mini & Qwen3-8B & $+0.056$ \ci{0.009}{0.101} & $+0.005$ \ci{-0.033}{0.045} & $+0.002$ \ci{-0.028}{0.032} \\
+Qwen3-8B & Qwen3-32B & $+0.041$ \ci{0.005}{0.077} & $-0.003$ \ci{-0.036}{0.030} & $+0.019$ \ci{-0.022}{0.059} \\
+Qwen3-8B & Qwen3-8B & $+0.035$ \ci{-0.012}{0.084} & $+0.032$ \ci{0.000}{0.064} & $+0.012$ \ci{-0.034}{0.061} \\
+Qwen3-32B & Qwen3-32B & $+0.027$ \ci{-0.022}{0.075} & $+0.020$ \ci{-0.026}{0.070} & $+0.025$ \ci{0.001}{0.051} \\
+Qwen3-32B & Qwen3-8B & $+0.018$ \ci{-0.030}{0.067} & $+0.003$ \ci{-0.032}{0.039} & $+0.005$ \ci{-0.025}{0.036} \\
+\midrule
+\multicolumn{2}{@{}l}{All 18 pools: content value $R$} & $+0.039$ \ci{0.012}{0.065} & $+0.013$ \ci{-0.008}{0.034} & $+0.012$ \ci{-0.008}{0.033} \\
+\multicolumn{2}{@{}l}{All 18 pools: reading cost $I$} & $+0.006$ \ci{-0.029}{0.041} & $+0.020$ \ci{-0.014}{0.055} & $-0.010$ \ci{-0.038}{0.018} \\
+\multicolumn{2}{@{}l}{All 18 pools: net effect $T$} & $+0.045$ \ci{0.009}{0.080} & $+0.033$ \ci{0.000}{0.068} & $+0.002$ \ci{-0.021}{0.027} \\
+\multicolumn{2}{@{}l}{Success without memory} & 0.657 & 0.764 & 0.898 \\
+\bottomrule
+\end{tabular}
+\caption{Crossover study: content value per source and distiller (mean of three replicate pools) for
+each reader, with intervals that resample pools and tasks. Holm-adjusted $p$-values for the four planned
+contrasts (reader Qwen3-8B minus Qwen3-32B, source Qwen3-8B minus GPT-4o-mini, distiller, own source)
+are 0.52, 1, 1 and 1. Two identical runs of one pool differ on 12\%, 4\% and 5\% of episodes for the
+three readers.}
+\label{tab:crossover}
+\end{table*}
 
-\paragraph{Presentation and budget fill.}
-All pool memories share one fill path. Items are ranked, appended greedily until the
-next item would exceed $B$ (or $K$ items when no budget is set), and the
-concatenation is truncated to $B$ tokens keeping its beginning. Only the ranking
-differs across presentations: whitespace-tokenized BM25, dense cosine similarity
-over \texttt{text-embedding-3-small} vectors, or lexical overlap. When a ranking
-reference is supplied, BM25 is fit on the reference pool and the payload items are
-returned at the reference indices, which is how the placebo inherits the true
-memory's order exactly.
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.6pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}llccccrr@{}}
+\toprule
+Reader & Pool & gardening & astronomy & generic & memory & \multicolumn{1}{c}{$E$} & \multicolumn{1}{c}{$G$} \\
+\midrule
+Qwen3-8B & focal & 0.687 & 0.652 & 0.624 & 0.697 & $+0.072$ \ci{0.027}{0.117} & $-0.062$ \ci{-0.104}{-0.020} \\
+Qwen3-8B & Qwen-sourced & 0.642 & 0.614 & 0.674 & 0.719 & $+0.045$ \ci{0.002}{0.087} & $+0.032$ \ci{-0.017}{0.082} \\
+Qwen3-14B & focal & 0.786 & 0.784 & 0.776 & 0.776 & $0.000$ \ci{-0.030}{0.030} & $-0.010$ \ci{-0.047}{0.027} \\
+Qwen3-14B & Qwen-sourced & 0.796 & 0.761 & 0.771 & 0.796 & $+0.025$ \ci{-0.007}{0.057} & $-0.025$ \ci{-0.055}{0.005} \\
+\midrule
+\multicolumn{6}{@{}l}{Pooled over the four cells} & $+0.035$ \ci{0.014}{0.057} & $-0.016$ \ci{-0.037}{0.005} \\
+\bottomrule
+\end{tabular}
+\caption{Generic-rule study: success per condition and the two protocol contrasts, $E$ (memory minus
+generic rules) and $G$ (generic rules minus gardening). Success without memory is 0.657 for Qwen3-8B and
+0.764 for Qwen3-14B. Pooled over the four cells, the content value against gardening is $+0.019$
+\ci{-0.002}{0.040}, the reading cost is $+0.017$ \ci{-0.010}{0.045} under gardening and $-0.007$
+\ci{-0.034}{0.019} under astronomy, and astronomy minus gardening is $-0.025$ \ci{-0.044}{-0.007}.}
+\label{tab:generic}
+\end{table*}
 
-\paragraph{Payload accounting.}
-Realized memory tokens are counted with the executor-appropriate tokenizer
-(\texttt{tiktoken} for \gptm, the native tokenizer for the \qwenm audit) and logged
-per episode, so footprint is reported as realized rather than nominal. The executor
-client also records prompt, completion, and cached tokens for every call and
-forwards \texttt{chat\_template\_kwargs} to disable Qwen3 thinking.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lccll@{}}
+\toprule
+Pool & Rules & Tokens & Content value $R$ & Reading cost $I$ \\
+\midrule
+Qwen-sourced pool (distilled by GPT-4o-mini) & 36 & 706 & $+0.067$ \ci{0.020}{0.114} & $-0.040$ \ci{-0.085}{0.005} \\
+First six trajectories per type & 33 & 756 & $+0.032$ \ci{-0.017}{0.085} & $-0.022$ \ci{-0.067}{0.022} \\
+Random subsample 1 & 36 & 773 & $-0.025$ \ci{-0.067}{0.017} & $+0.015$ \ci{-0.027}{0.055} \\
+Random subsample 2 & 36 & 790 & $-0.015$ \ci{-0.060}{0.027} & $-0.017$ \ci{-0.067}{0.032} \\
+Random subsample 3 & 36 & 752 & $+0.052$ \ci{0.005}{0.100} & $-0.042$ \ci{-0.092}{0.005} \\
+\midrule
+Mean of the three subsamples & & & $+0.004$ \ci{-0.023}{0.032} & $-0.015$ \ci{-0.055}{0.024} \\
+\bottomrule
+\end{tabular}
+\caption{Pool-replication study, reader Qwen3-8B, 134 unseen games; success without memory 0.692. All
+pools except the first were distilled by Qwen3-32B from Qwen3-8B's successes on the seen games, with six
+trajectories per type. Subsamples 1 and 3 differ by $-0.077$ \ci{-0.132}{-0.020}. Two identical runs of
+subsample 1 differ on 13\% of episodes.}
+\label{tab:poolrep}
+\end{table*}
 
-\section{Prompt Settings}
+\section{Setup details}
+\label{app:setup}
+
+\paragraph{Models.} The GPT-4o-mini alias resolved to the snapshot of 2024-07-18, and GPT-4.1-mini was
+called as the snapshot of 2025-04-14. The local models were served with vLLM in bf16 with a context of
+16,384 tokens, at these Hugging Face revisions: Qwen3-8B \texttt{b968826d}, Qwen3-14B \texttt{40c06982},
+Qwen3-32B \texttt{9216db57} (tensor parallelism over two GPUs), and Llama-3.1-8B-Instruct from the
+\texttt{unsloth} mirror, \texttt{4699cc75}. The Qwen3 models ran with \texttt{enable\_thinking=false}.
+All calls used temperature 0 and at most 256 completion tokens.
+
+\paragraph{ALFWorld.} Appendix~\ref{app:prompts} gives the prompts and loop rules, and
+Appendix~\ref{app:memories} the task types and the focal memory. Demonstration pairs are selected by
+seeds 0, 1 and 5. The released code lists the 134 unseen games in task-id order.
+The sources of the crossover ran without memory on the 140 seen games with one demonstration pair; their
+heat successes numbered 1 (GPT-4o-mini), 14 (Qwen3-8B) and 16 (Qwen3-32B). Pools were distilled with
+one call per task type, at temperature 0 and up to 512 tokens, from the prompt below, where
+\texttt{\{trajs\}} holds up to six serialized successful trajectories of the type.
+\begin{quote}\small
+Below are successful agent trajectories for ALFWorld `\{task\_type\}' tasks. Extract 3 to 6 concise,
+GENERAL insights (rules/heuristics) that help solve this task type. Each insight: one imperative line,
+no specific object numbers or room layouts. Output ONLY a bullet list, each line starting with `- '.
+Trajectories: \{trajs\}
+\end{quote}
+
+\paragraph{WebShop.} We use the official code and 1,000-product data \citep{yao2022webshop}. Test
+sessions 0--499 fall into five product categories (fashion 393, garden 57, beauty 23, electronics 19,
+grocery 8), and the bootstrap stratifies by category. The agent writes a Thought line and an Action line
+at each step and sees the valid actions (Appendix~\ref{app:prompts}). The pool was distilled with the ALFWorld prompt, with the
+environment words changed, from the first six successful trajectories per category (five for garden and
+grocery).
+
+\paragraph{Artifacts.} ALFWorld and WebShop are released under the MIT license, Qwen3 under Apache 2.0
+and Llama 3.1 under its community license. Our harness, configurations, pools, controls, per-episode
+outcomes, result files and analysis code are released under the Apache License 2.0 at the repository
+named on the first page.
+
+\section{Agent prompts}
 \label{app:prompts}
 
-This appendix reproduces every prompt used in the study, verbatim from the
-released code. All prompts are shared by every memory condition; a memory
-condition only appends the block headed \texttt{\# Retrieved experience / skills},
-whose items and order are set by the memory's representation and presentation.
-Angle brackets mark slots
-that are filled at run time.
+These are the prompts of every condition, as built by \texttt{skillrc/react.py}. A memory or control
+condition adds only the block headed \texttt{\# Retrieved experience / skills}, which holds the inserted
+items with their type tags, in BM25 order and separated by blank lines. Without memory the block is
+absent. Angle brackets mark text filled in at run time.
 
-\paragraph{ALFWorld agent (ReAct, both executors).}
-Each call sends two messages. The system message holds the instruction, the two
-demonstrations selected for the task type, and the memory block; it is constant
-within an episode, which makes it cacheable. The user message holds the growing
-transcript, the admissible actions, and a trailing prompt character. The example
-below uses the real initial observation of task~0.
-
-\begin{promptbox}{System message (ALFWorld)}
+\begin{promptbox}{ALFWorld, system message}
 Interact with a household to solve a task. Output only the next line: either an action, or a line beginning with 'think:' to reason (a 'think:' line is not an environment action). Here are two examples.
 
-<ReAct demonstration react_<type>_<i>>
+<first ReAct demonstration for the task type>
 
-<ReAct demonstration react_<type>_<j>>
+<second ReAct demonstration for the task type>
 
 Here is the task.
 
 # Retrieved experience / skills
-<33 insights in BM25 order, one per paragraph, 645 tokens in total>
+<memory items>
 \end{promptbox}
 
-\begin{promptbox}{User message (ALFWorld, first turn of task 0)}
--= Welcome to TextWorld, ALFRED! =-
+\begin{promptbox}{ALFWorld, user message}
+<first observation and task, then for each earlier reply a line "> reply" and its observation>
+Valid actions right now: <admissible actions, separated by "; ">
 
-You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.
-
-Your task is to: put a mug in desk.
-Valid actions right now: <admissible commands, separated by '; '>
 >
 \end{promptbox}
 
-\noindent
-The executor's reply is parsed as its first non-empty line with any leading
-\texttt{>} removed. A line beginning with \texttt{think:} is appended to the
-transcript and answered with \texttt{OK.} without consuming an environment step;
-any other line is executed. Because this ALFWorld version uses the verb
-\texttt{move X to Y}, a reply of the form \texttt{put X in/on Y} is rewritten to
-that grammar for every condition. Each subsequent user message is the full
-transcript (\texttt{> action} followed by the observation) plus the current
-admissible actions. An episode ends on success, after 30 environment steps, or
-after 60 executor calls.
+\noindent The demonstrations are the ReAct prompts of \citet{yao2023react} for the task type, two of the
+three chosen by the seed. The model's reply is parsed as its first non-empty line, with a leading
+\texttt{>} removed (\texttt{look} if the reply is empty). A line that begins with \texttt{think:} is added
+to the transcript with the answer \texttt{OK.} and costs no environment step. Any other line is sent to
+the environment, and a line \texttt{put X in Y}, \texttt{put X on Y} or \texttt{put X in/on Y} is first
+rewritten to \texttt{move X to Y}, the form the installed ALFWorld accepts. An episode ends at success,
+after 30 environment steps or after 60 model calls, whichever comes first.
 
-\paragraph{WebShop agent (Thought/Action).}
-WebShop uses the generic Thought/Action scaffold with two worked examples and the
-same memory header. The reply is parsed by its last \texttt{Action:} line.
-
-\begin{promptbox}{System message (WebShop)}
+\begin{promptbox}{WebShop, system message}
 You are an agent solving an interactive text task using the ReAct framework.
 At each step: first write one short line starting with 'Thought:' with your reasoning, then output exactly one line starting with 'Action:' containing a single admissible action. Output nothing after the Action line.
 
@@ -849,998 +741,160 @@ Observation: Red is selected.
 Thought: The item matches, so I should purchase it.
 Action: click[buy now]
 
-<second example: a 32-ounce insulated water bottle, same format>
+Task: Find a 32 ounce insulated water bottle below $25.
+Thought: I should search for the product and key constraint.
+Action: search[32 ounce insulated water bottle]
+Observation: Search results include product ids.
+Thought: I should inspect a plausible result.
+Action: click[b045example]
+Observation: Product page with size options.
+Thought: I need the requested size.
+Action: click[32 oz]
+Observation: 32 oz is selected.
+Thought: The constraints match, so I should purchase it.
+Action: click[buy now]
 
 # Retrieved experience / skills
-<WebShop rules in BM25 order, at most 1,024 tokens>
+<memory items>
 \end{promptbox}
 
-\begin{promptbox}{User message (WebShop)}
-<WebShop observation, including the instruction>
+\begin{promptbox}{WebShop, user message}
+<first observation, which includes the instruction>
 
 # Valid actions right now
-<admissible actions, separated by '; '>
+<admissible actions, separated by "; ">
 
 # Interaction so far
-<previous Action/Observation pairs, or "(none yet)">
+<earlier steps as "Action: ..." and "Observation: ..." lines, or "(none yet)">
 
 What is your next Thought and Action?
 \end{promptbox}
 
-\paragraph{Memory distillation (building the pools).}
-The pools are built offline from training-only trajectories with the following
-prompts. Compact insights use the first prompt once per task type with at most six
-successful trajectories; Markdown procedures use the second prompt once per
-successful trajectory; the WebShop pool uses the third prompt on train sessions
-500--519.
+\noindent The reply is parsed by its last \texttt{Action:} line, or its last non-empty line if it has
+none. A session ends at a purchase or after 15 steps.
 
-\begin{promptbox}{Insight distillation (ExpeL-style, ALFWorld)}
-Below are successful agent trajectories for ALFWorld '<task_type>' tasks.
-Extract 3 to 6 concise, GENERAL insights (rules/heuristics) that help solve this task type. Each insight: one imperative line, no specific object numbers or room layouts. Output ONLY a bullet list, each line starting with '- '.
+\section{Memories and task types}
+\label{app:memories}
 
-Trajectories:
-<up to six successful trajectories of this type, separated by '---'>
-\end{promptbox}
+Table~\ref{tab:types} lists the six ALFWorld task types. Tables~\ref{tab:focal} and~\ref{tab:webpool}
+reproduce the focal and WebShop memories verbatim from the released pool files, in pool order.
 
-\begin{promptbox}{Procedure distillation (SkillOS-style Markdown, ALFWorld)}
-Below is a successful agent trajectory in ALFWorld.
-Distill it into ONE reusable skill in Markdown with exactly:
-'## Skill: <short name>', a 'When to use:' line, and a 'Steps:' numbered list (generalized — describe the procedure, not the specific object numbers). Keep it under 110 words.
-
-Trajectory:
-<one successful trajectory>
-\end{promptbox}
-
-\begin{promptbox}{Rule distillation (WebShop)}
-You are distilling reusable procedural insights for the WebShop text environment.
-The examples below come only from training sessions disjoint from evaluation.
-Extract 6 to 10 concise general rules that improve product search, attribute checking,
-option selection, and purchase decisions. Do not mention product IDs, session IDs, or
-specific products. Output only bullet lines beginning with '- '.
-
-Training experiences:
-<positive-reward trajectories from train sessions 500-519>
-\end{promptbox}
-
-\paragraph{Decoding.}
-All executor calls use temperature 0 and at most 256 completion tokens. \qwenm is
-served by vLLM with \texttt{chat\_template\_kwargs = \{"enable\_thinking": false\}};
-\gptm uses the provider defaults otherwise. Distillation calls use the same
-decoding with at most 512 completion tokens.
-
-\section{Experience Memory Contents}
-\label{app:memory}
-
-Table~\ref{tab:pool} lists the complete focal experience memory, the 33 ExpeL-style
-insights distilled with the prompt above. Every item carries a task-type tag, and
-all 33 items (645 tokens) are injected on every task, so BM25 decides only their
-order. The order placebo keeps each item's tag, index, and word count; the first
-\texttt{[clean]} item, for example, becomes \texttt{[clean] the the item cleaning its
-starting requirements x and target Identify before}
-(Appendix~\ref{app:placebo}).
-
-\begin{table}[t]
+\begin{table}[h]
 \centering
-\caption{The 33-item experience memory used in every ALFWorld memory condition, in
-pool order. Counts per type: \texttt{clean} 5, \texttt{cool} 6, \texttt{examine} 6,
-\texttt{heat} 5, \texttt{put} 6, \texttt{puttwo} 5.}
-\label{tab:pool}
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lL{0.50\columnwidth}rr@{}}
+\toprule
+Type & Goal & Games & Rules \\
+\midrule
+\texttt{clean} & clean an object, then put it in a receptacle & 31 & 5 \\
+\texttt{cool} & cool an object, then put it in a receptacle & 21 & 6 \\
+\texttt{examine} & look at an object under the desk lamp & 18 & 6 \\
+\texttt{heat} & heat an object, then put it in a receptacle & 23 & 5 \\
+\texttt{put} & put an object in a receptacle & 24 & 6 \\
+\texttt{puttwo} & put two objects of one kind in a receptacle & 17 & 5 \\
+\midrule
+All & & 134 & 33 \\
+\bottomrule
+\end{tabular}
+\caption{ALFWorld task types, with the number of the 134 unseen games of each type and the number of
+rules of that type in the focal memory.}
+\label{tab:types}
+\end{table}
+
+\begin{table*}[p]
+\centering
 \scriptsize
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.08}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}r l L{0.80\textwidth}@{}}
+\begin{tabular}{@{}rlL{0.82\textwidth}@{}}
 \toprule
-\rowcolor{tableheadbg}
-\tablehead{\#} & \tablehead{Type} & \tablehead{Insight} \\
+\# & Type & Rule \\
 \midrule
-\rowcolor{tablestripebg}
-0 & \texttt{clean} & Identify the target item and its cleaning requirements before starting the task. \\
-1 & \texttt{clean} & Prioritize checking locations where the target item is likely to be found, such as countertops, cabinets, and drawers. \\
-\rowcolor{tablestripebg}
-2 & \texttt{clean} & Always clean the item using the designated cleaning area before placing it in the final location. \\
-3 & \texttt{clean} & Confirm the cleanliness of the item if necessary before moving it to the final destination. \\
-\rowcolor{tablestripebg}
-4 & \texttt{clean} & Ensure to follow the sequence of actions: find, clean, and then place the item correctly. \\
-5 & \texttt{cool} & Start by identifying likely locations for the target item based on its type. \\
-\rowcolor{tablestripebg}
-6 & \texttt{cool} & Always check the fridge first for items that need to be cooled. \\
-7 & \texttt{cool} & If the desired item is not found, systematically explore other potential locations. \\
-\rowcolor{tablestripebg}
-8 & \texttt{cool} & After obtaining the item, ensure to cool it before proceeding to the final placement. \\
-9 & \texttt{cool} & Confirm the availability of the final destination before moving the item there. \\
-\rowcolor{tablestripebg}
-10 & \texttt{cool} & Maintain a clear sequence of actions: find, cool, and place the item. \\
-11 & \texttt{examine} & Identify the required items and prioritize searching in likely locations based on their common placements. \\
-\rowcolor{tablestripebg}
-12 & \texttt{examine} & Check multiple potential locations systematically if the first search does not yield results. \\
-13 & \texttt{examine} & Use the most probable locations for the second required item after obtaining the first. \\
-\rowcolor{tablestripebg}
-14 & \texttt{examine} & Always confirm the presence of an item before attempting to use it. \\
-15 & \texttt{examine} & If an item is not found in one location, move to the next logical location without skipping options. \\
-\rowcolor{tablestripebg}
-16 & \texttt{examine} & Ensure to use the item in the correct context to achieve the task's goal. \\
-17 & \texttt{heat} & Identify the target item and its required state before proceeding with the task. \\
-\rowcolor{tablestripebg}
-18 & \texttt{heat} & Prioritize checking locations where the target item is likely to be found. \\
-19 & \texttt{heat} & Use appropriate appliances or tools to modify the item as needed before completing the task. \\
-\rowcolor{tablestripebg}
-20 & \texttt{heat} & Ensure to open or interact with containers before placing or retrieving items. \\
-21 & \texttt{heat} & Maintain a clear sequence of actions to avoid unnecessary backtracking. \\
-\rowcolor{tablestripebg}
-22 & \texttt{put} & Start by checking locations where the target object is likely to be found, such as tables, countertops, or drawers. \\
-23 & \texttt{put} & If the initial location does not contain the target object, systematically explore other nearby locations. \\
-\rowcolor{tablestripebg}
-24 & \texttt{put} & Always check closed containers (drawers, cabinets) before assuming the object is not present. \\
-25 & \texttt{put} & Once the target object is found, plan the route to the designated location for placing it. \\
-\rowcolor{tablestripebg}
-26 & \texttt{put} & Ensure to confirm the target object is in your possession before attempting to place it. \\
-27 & \texttt{put} & When placing the object, verify that the destination is clear and appropriate for the item. \\
-\rowcolor{tablestripebg}
-28 & \texttt{puttwo} & Start by identifying the most likely locations for the target items based on their type. \\
-29 & \texttt{puttwo} & Check each location systematically, ensuring to open closed containers before searching inside. \\
-\rowcolor{tablestripebg}
-30 & \texttt{puttwo} & Once an item is found, immediately plan the next steps to retrieve and place it in the designated location. \\
-31 & \texttt{puttwo} & If the first search does not yield results, revisit previously checked locations, as items may be present in multiple instances. \\
-\rowcolor{tablestripebg}
-32 & \texttt{puttwo} & Keep track of items already found and placed to avoid unnecessary repetition in searches. \\
+1 & \texttt{clean} & Identify the target item and its cleaning requirements before starting the task. \\
+2 & \texttt{clean} & Prioritize checking locations where the target item is likely to be found, such as countertops, cabinets, and drawers. \\
+3 & \texttt{clean} & Always clean the item using the designated cleaning area before placing it in the final location. \\
+4 & \texttt{clean} & Confirm the cleanliness of the item if necessary before moving it to the final destination. \\
+5 & \texttt{clean} & Ensure to follow the sequence of actions: find, clean, and then place the item correctly. \\
+6 & \texttt{cool} & Start by identifying likely locations for the target item based on its type. \\
+7 & \texttt{cool} & Always check the fridge first for items that need to be cooled. \\
+8 & \texttt{cool} & If the desired item is not found, systematically explore other potential locations. \\
+9 & \texttt{cool} & After obtaining the item, ensure to cool it before proceeding to the final placement. \\
+10 & \texttt{cool} & Confirm the availability of the final destination before moving the item there. \\
+11 & \texttt{cool} & Maintain a clear sequence of actions: find, cool, and place the item. \\
+12 & \texttt{examine} & Identify the required items and prioritize searching in likely locations based on their common placements. \\
+13 & \texttt{examine} & Check multiple potential locations systematically if the first search does not yield results. \\
+14 & \texttt{examine} & Use the most probable locations for the second required item after obtaining the first. \\
+15 & \texttt{examine} & Always confirm the presence of an item before attempting to use it. \\
+16 & \texttt{examine} & If an item is not found in one location, move to the next logical location without skipping options. \\
+17 & \texttt{examine} & Ensure to use the item in the correct context to achieve the task's goal. \\
+18 & \texttt{heat} & Identify the target item and its required state before proceeding with the task. \\
+19 & \texttt{heat} & Prioritize checking locations where the target item is likely to be found. \\
+20 & \texttt{heat} & Use appropriate appliances or tools to modify the item as needed before completing the task. \\
+21 & \texttt{heat} & Ensure to open or interact with containers before placing or retrieving items. \\
+22 & \texttt{heat} & Maintain a clear sequence of actions to avoid unnecessary backtracking. \\
+23 & \texttt{put} & Start by checking locations where the target object is likely to be found, such as tables, countertops, or drawers. \\
+24 & \texttt{put} & If the initial location does not contain the target object, systematically explore other nearby locations. \\
+25 & \texttt{put} & Always check closed containers (drawers, cabinets) before assuming the object is not present. \\
+26 & \texttt{put} & Once the target object is found, plan the route to the designated location for placing it. \\
+27 & \texttt{put} & Ensure to confirm the target object is in your possession before attempting to place it. \\
+28 & \texttt{put} & When placing the object, verify that the destination is clear and appropriate for the item. \\
+29 & \texttt{puttwo} & Start by identifying the most likely locations for the target items based on their type. \\
+30 & \texttt{puttwo} & Check each location systematically, ensuring to open closed containers before searching inside. \\
+31 & \texttt{puttwo} & Once an item is found, immediately plan the next steps to retrieve and place it in the designated location. \\
+32 & \texttt{puttwo} & If the first search does not yield results, revisit previously checked locations, as items may be present in multiple instances. \\
+33 & \texttt{puttwo} & Keep track of items already found and placed to avoid unnecessary repetition in searches. \\
 \bottomrule
 \end{tabular}
-\arrayrulecolor{black}
-\vspace{-8pt}
-\end{table}
+\caption{The focal memory (\texttt{data/pools/expel\_insights.jsonl}): 33 rules, 645 tokens, which
+GPT-4o-mini distilled from its own successful trajectories on the seen games. A memory condition with
+this pool inserts all 33 rules, and BM25 sets only their order.}
+\label{tab:focal}
+\end{table*}
 
-\section{Experimental Details}
-\label{app:experimental_details}
-
-\paragraph{Benchmarks.}
-ALFWorld \citep{shridhar2021alfworld} is evaluated on its 134-task unseen split,
-covering \texttt{clean}, \texttt{cool}, \texttt{examine}, \texttt{heat},
-\texttt{put}, and \texttt{puttwo}, with binary success within 30 steps. WebShop
-\citep{yao2022webshop} is evaluated in its small environment with 1{,}000 products
-(official commit \texttt{64fa2a5c15c7}) and a 15-step limit; environment reward is
-the primary outcome and exact purchase success is secondary.
-
-\paragraph{Baselines.}
-The baseline for every stack is the no-memory harness $W_0$. Exploratory memory
-conditions are raw successful trajectories and SkillOS-style Markdown procedures
-under the same insertion point and nominal budget; these are representation
-reproductions under one harness, not reimplementations of the source systems'
-optimizers or curators. For content attribution, the baseline is the
-payload-matched order placebo of Section~\ref{sec:placebo}.
-
-\paragraph{Models and protocol.}
-Nominal seeds 0, 1, and 2 select demonstration pairs 02, 12, and 12; seed 5 was run
-to supply pair 01 (Appendix~\ref{app:seedaxis}). The focal contrast weights pairs
-01, 02, and 12 equally and averages the two executions of pair 12. The placebo gate
-reuses the matching no-memory and true-memory episodes and runs only the placebo
-under both stacks with $B=645$.
-
-\paragraph{Hyperparameters and splits.}
-Table~\ref{tab:hparams} lists the settings held fixed across conditions. ALFWorld
-intervals resample the 134 task clusters 10{,}000 times; the placebo gate resamples
-ten tasks with replacement within each task type (20{,}000 draws, seed 20260713);
-WebShop uses 20{,}000 paired task-bootstrap draws, and its gate, split, primary
-outcome, and stopping rule were frozen before the 100-session comparison.
-
-\begin{table}[t]
+\begin{table*}[p]
 \centering
-\caption{Hyperparameters held fixed across conditions.}
-\label{tab:hparams}
-\footnotesize
-\setlength{\tabcolsep}{8pt}
-\renewcommand{\arraystretch}{1.14}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}ll@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{Parameter} & \tablehead{Value} \\
-\midrule
-\rowcolor{tablestripebg}
-Temperature & 0 \\
-Completion cap per turn & 256 tokens \\
-\rowcolor{tablestripebg}
-Demonstrations per prompt & 2 of 3 per task type \\
-Step limit (ALFWorld / WebShop) & 30 / 15 \\
-\rowcolor{tablestripebg}
-Memory budget $B$ (ALFWorld / WebShop / placebo gate) & 2{,}048 / 1{,}024 / 645 \\
-Item cap $K$ & 20 \\
-\rowcolor{tablestripebg}
-\qwenm max model length & 16{,}384 \\
-Bootstrap draws (ALFWorld / gate / WebShop) & 10{,}000 / 20{,}000 / 20{,}000 \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-10pt}
-\end{table}
-
-\section{Per-Task-Type Results and Cost}
-\label{app:per_type}
-
-Tables~\ref{tab:pertype} and~\ref{tab:costfull} report the per-type success and the
-full token and cost accounting of the four runs behind the focal comparison in the
-nominal-seed matrix (402 episodes each: 134 tasks $\times$ seeds 0--2). The run
-summaries are released with the code.
-
-\begin{table}[t]
-\centering
-\caption{ALFWorld success by task type without memory, with the 645-token
-experience memory (compact insights + BM25), and the difference, for both executor
-stacks (nominal seeds 0--2). \textcolor{liftpositive}{Green}: gain;
-\textcolor{liftnegative}{red}: loss.}
-\label{tab:pertype}
-\footnotesize
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.12}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}lr ccc ccc@{}}
-\toprule
-\rowcolor{tableheadbg}
-& & \multicolumn{3}{c}{\tablehead{\texttt{GPT-4o-mini}}} & \multicolumn{3}{c}{\tablehead{\texttt{Qwen3-8B}}} \\
-\rowcolor{tableheadbg}
-\tablehead{Task type} & \tablehead{Episodes} & \tablehead{None} & \tablehead{Memory} & \tablehead{$\Delta$} & \tablehead{None} & \tablehead{Memory} & \tablehead{$\Delta$} \\
-\midrule
-\rowcolor{tablestripebg}
-\texttt{clean} & 93 & 0.452 & 0.667 & \textcolor{liftpositive}{$+0.215$} & 0.656 & 0.613 & \textcolor{liftnegative}{$-0.043$} \\
-\texttt{cool} & 63 & 0.857 & 0.746 & \textcolor{liftnegative}{$-0.111$} & 0.857 & 0.857 & $0.000$ \\
-\rowcolor{tablestripebg}
-\texttt{examine} & 54 & 0.648 & 0.833 & \textcolor{liftpositive}{$+0.185$} & 0.611 & 0.574 & \textcolor{liftnegative}{$-0.037$} \\
-\texttt{heat} & 69 & 0.130 & 0.377 & \textcolor{liftpositive}{$+0.246$} & 0.739 & 0.754 & \textcolor{liftpositive}{$+0.014$} \\
-\rowcolor{tablestripebg}
-\texttt{put} & 72 & 0.833 & 0.917 & \textcolor{liftpositive}{$+0.083$} & 0.736 & 0.694 & \textcolor{liftnegative}{$-0.042$} \\
-\texttt{puttwo} & 51 & 0.333 & 0.588 & \textcolor{liftpositive}{$+0.255$} & 0.431 & 0.431 & $0.000$ \\
-\midrule
-\rowcolor{tableaccentbg}
-\textbf{All} & 402 & 0.540 & 0.687 & \textcolor{liftpositive}{$+0.147$} & 0.682 & 0.662 & \textcolor{liftnegative}{$-0.020$} \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-8pt}
-\end{table}
-
-\begin{table}[t]
-\centering
-\caption{Token and cost accounting for the same four runs (402 episodes each).
-Token counts are in millions and summed over all calls. \qwenm is served locally,
-so its dollar cost is zero and the runtime did not report cached tokens.}
-\label{tab:costfull}
-\footnotesize
+\scriptsize
 \setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.14}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}llrrrrrr@{}}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}rlL{0.80\textwidth}@{}}
 \toprule
-\rowcolor{tableheadbg}
-\tablehead{Executor} & \tablehead{Memory} & \tablehead{Calls} & \tablehead{Steps/ep.} & \tablehead{Prompt (M)} & \tablehead{Cached (M)} & \tablehead{Output (M)} & \tablehead{Cost (\$)} \\
+\# & Category & Rule \\
 \midrule
-\logo{openai}~\texttt{GPT-4o-mini} & none & 10{,}059 & 20.3 & 22.63 & 17.90 & 0.163 & 2.15 \\
-\rowcolor{tableaccentbg}
-\logo{openai}~\texttt{GPT-4o-mini} & 645 tokens & 9{,}115 & 18.1 & 26.26 & 22.31 & 0.151 & 2.36 \\
-\logo{qwen-color}~\texttt{Qwen3-8B} & none & 12{,}380 & 11.1 & 32.43 & -- & 0.506 & 0.00 \\
-\rowcolor{tableaccentbg}
-\logo{qwen-color}~\texttt{Qwen3-8B} & 645 tokens & 12{,}262 & 10.3 & 40.68 & -- & 0.491 & 0.00 \\
+1 & \texttt{beauty} & Always include specific attributes and price limits in your search queries. \\
+2 & \texttt{beauty} & Use concise and relevant keywords to improve search accuracy. \\
+3 & \texttt{beauty} & Click on products that match your criteria to verify details before purchasing. \\
+4 & \texttt{beauty} & Utilize pagination to explore multiple pages of search results if necessary. \\
+5 & \texttt{beauty} & Confirm product specifications and features before finalizing the purchase. \\
+6 & \texttt{beauty} & Ensure the product meets all specified requirements to avoid returns. \\
+7 & \texttt{electronics} & Use specific keywords that describe the product features and requirements. \\
+8 & \texttt{electronics} & Include price constraints in the search query to filter results effectively. \\
+9 & \texttt{electronics} & Click on the first relevant product to streamline the purchasing process. \\
+10 & \texttt{electronics} & Ensure to check product details for compliance with specified features before buying. \\
+11 & \texttt{electronics} & Utilize pagination to explore more options if initial results are unsatisfactory. \\
+12 & \texttt{electronics} & Confirm product attributes such as color and style during the selection process. \\
+13 & \texttt{fashion} & Use specific keywords related to the product features when searching. \\
+14 & \texttt{fashion} & Click on the relevant filters for size and color after the initial search. \\
+15 & \texttt{fashion} & Always check the price range to ensure it meets the budget criteria. \\
+16 & \texttt{fashion} & If the desired product is not found, consider re-searching with the same criteria. \\
+17 & \texttt{fashion} & Prioritize clicking on the product that matches all specified attributes. \\
+18 & \texttt{fashion} & Complete the purchase by confirming the selected options before finalizing. \\
+19 & \texttt{garden} & Always include specific attributes like color, size, and price in your search queries to narrow down results effectively. \\
+20 & \texttt{garden} & Utilize filters for size and color after initial search results to refine options further. \\
+21 & \texttt{garden} & If the first search does not yield satisfactory results, repeat the search with the same parameters to ensure consistency. \\
+22 & \texttt{garden} & Click on relevant product options to verify details before making a purchase decision. \\
+23 & \texttt{garden} & Prioritize products that meet all specified criteria to avoid unnecessary browsing. \\
+24 & \texttt{garden} & Use clear and concise language in instructions to enhance search accuracy and efficiency. \\
+25 & \texttt{grocery} & Use specific dietary and product attributes in your search queries to narrow down results effectively. \\
+26 & \texttt{grocery} & Always include price constraints in your search to filter out options that exceed your budget. \\
+27 & \texttt{grocery} & If initial search results do not yield desired products, refine your search terms and try again. \\
+28 & \texttt{grocery} & Utilize product attributes like flavor and size to ensure the items meet your specific requirements. \\
+29 & \texttt{grocery} & Click through search results methodically, checking for the correct product attributes before making a purchase. \\
+30 & \texttt{grocery} & If you encounter irrelevant results, return to the search and adjust your keywords for better accuracy. \\
 \bottomrule
 \end{tabular}
-\arrayrulecolor{black}
-\vspace{-8pt}
-\end{table}
-
-\noindent
-With memory, \gptm episodes are shorter (18.1 against 20.3 steps) and make 9.4\%
-fewer calls, so although every call carries 645 more tokens, total prompt tokens rise
-by only 16.1\% and dollar cost by 9.6\% (\$2.36 against \$2.15 per 402 episodes).
-Because the memory sits in the stable system message, 85.0\% of \gptm prompt tokens
-are cached with memory against 79.1\% without it. For \qwenm the memory shortens
-episodes only slightly (10.3 against 11.1 steps) and raises prompt tokens by 25.4\%.
-Per type, the \gptm gains are largest where its no-memory success is lowest
-(\texttt{heat}, \texttt{puttwo}, \texttt{clean}), and the only \gptm loss is on its
-strongest type (\texttt{cool}); \qwenm changes by at most $0.043$ on any type.
-
-\section{Models Used}
-\label{app:models}
-
-Table~\ref{tab:models} lists the models used in this paper. \gptm and \qwenm are
-the two executor stacks of the transfer study; \gptm also distills the ALFWorld
-pools, \qwenm distills the WebShop pool, and \texttt{text-embedding-3-small} is used
-only for dense ranking. ``Access'' distinguishes models served only behind an API
-from models whose weights are publicly released. The focal BM25 result does not
-depend on the embedding service.
-
-\begin{table}[t]
-\centering
-\caption{Models used in this paper. \qwenm is served with vLLM 0.24.0 from Hugging
-Face snapshot \texttt{b968826d9c46} with \texttt{enable\_thinking=false}; the
-\gptm alias was queried in July 2026 and has no pinned snapshot.}
-\label{tab:models}
-\footnotesize
-\setlength{\tabcolsep}{8pt}
-\renewcommand{\arraystretch}{1.20}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}llll@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{Model} & \tablehead{Provider} & \tablehead{Access} & \tablehead{Role} \\
-\midrule
-\rowcolor{tablestripebg}
-\logo{openai}~\texttt{GPT-4o-mini}              & OpenAI   & Proprietary (API) & executor; ALFWorld distillation \\
-\logo{qwen-color}~\texttt{Qwen3-8B}             & Alibaba  & Open weights      & executor; WebShop distillation \\
-\rowcolor{tablestripebg}
-\logo{openai}~\texttt{text-embedding-3-small}   & OpenAI   & Proprietary (API) & dense ranking only \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-15pt}
-\end{table}
-
-\section{Comparison Scope}
-\label{app:comparison_scope}
-
-\method is an evaluation harness for experience memory, not a new memory method or
-harness optimizer, so it is not an empirical competitor to the systems discussed in
-Appendix~\ref{sec:related}. Its comparisons are within-harness: every contrast changes
-one factor of Table~\ref{tab:dimensions} on identical tasks, so the paper makes no
-claim about the absolute performance of any released system. The executor contrast compares two \emph{stacks}, and we do not claim
-that the difference is caused by model weights. The placebo is an experimental
-control with an oracle ranking reference, not a deployable retrieval scheme, and
-the representation matrix is asymmetric and exploratory rather than a ranking of
-representations.
-
-\section{Related Work}
-\label{sec:related}
-
-\subsection{Experience-Driven Harness Optimization}
-\label{sec:related_harness}
-
-Automatic improvement of LLM systems has targeted prompts
-\citep{fernando2023promptbreeder}, declarative pipelines \citep{khattab2023dspy},
-and agentic workflows \citep{zhang2024aflow}. Meta-Harness searches over harness
-code end to end \citep{lee2026metaharness}, and \memoharness decomposes the harness
-into six editable dimensions, accumulates per-case entries and global patterns in
-a dual-layer experience bank, and adapts the learned harness to each test case
-\citep{huang2026memoharness}. Agents that write experience into memory include
-Reflexion \citep{shinn2023reflexion} and ExpeL \citep{zhao2023expel}, built on
-reasoning-and-acting scaffolds such as ReAct \citep{yao2023react}. These systems
-build or optimize the harness. \method instead isolates one of its components, the
-experience memory, and asks whether the gain that component produces survives a
-change of executor and a content control.
-
-\subsection{Skill Libraries, Curation, and Retrieval}
-\label{sec:related_skills}
-
-SkillOpt treats a skill document as editable state accepted under held-out
-validation \citep{yang2026skillopt}, SkillOS learns experience-driven skill
-curation with reinforcement learning around a frozen executor
-\citep{ouyang2026skillos}, and SelfEvoSkill revises skills from paired execution
-audits without external outcome supervision \citep{gao2026selfevoskill}. SkillRet
-benchmarks retrieval from large public skill libraries \citep{kang2026skillret},
-task-decomposition-guided reranking adapts skill retrieval to execution state
-\citep{chen2026reranker}, and experience reuse has been studied as continual
-learning that moves into memory \citep{hu2026memory}. These systems build or select
-the memory; we study whether a fixed memory transfers and why.
-
-\subsection{Skill-Centered Evaluation}
-\label{sec:related_eval}
-
-SkillsBench finds broad average gains from curated skills with negative deltas on
-some tasks \citep{li2026skillsbench}. A scalable framework evaluates agentic skills
-across many agent--model configurations \citep{shaposhnikov2026framework}, and
-procedural-memory management has been studied across tasks, roles, and model
-backbones \citep{belikova2026procedural}. Realistic skill retrieval erodes gains
-\citep{liu2026wildskills}, and SWE-Skills-Bench reports limited gains, mismatch
-harms, and token overhead in software engineering \citep{han2026sweskills}. Related
-frameworks unify memory, skills, and rules as points on a compression spectrum
-\citep{zhang2026compression} and assess skills on utility, cost, and safety
-\citep{yu2026skillaudit}. Our narrower target is identification under a fixed
-artifact: a paired executor interaction combined with a payload-matched placebo.
-
-\subsection{Prompt Sensitivity and Distraction}
-\label{sec:related_prompt}
-
-Meaning-preserving formatting changes can swing accuracy substantially
-\citep{sclar2023quantifying}, and irrelevant context degrades reasoning
-\citep{shi2023distracted}. The placebo result of RQ3 is an agentic instance of this
-phenomenon: a lexically matched but incoherent block moves two executor stacks in
-opposite directions.
-
-\section{Representation Matrix and Executor Interactions}
-\label{app:matrix}
-
-Table~\ref{tab:matrix} reports the full exploratory matrix behind
-Table~\ref{tab:cost}, with task-cluster intervals and the executor-by-memory
-difference-in-differences. Three of the four executor-by-memory contrasts exclude
-zero, and the presentation contrast for compact insights shows that order alone
-interacts with the executor. Integrity checks on the raw episode files confirmed
-402/402 episodes per run, aligned task and seed keys, zero errors, and exact
-agreement between raw and stored success rates.
-
-\begin{table}[t]
-\centering
-\caption{Exploratory representation matrix over nominal seeds 0--2 against each
-stack's matching no-memory harness, followed by executor contrasts
-(\qwenm minus \gptm). Intervals are task-clustered and unadjusted for multiplicity.
-\textcolor{liftpositive}{Green}: positive effect; \textcolor{liftnegative}{red}:
-negative effect.}
-\label{tab:matrix}
-\footnotesize
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.12}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}lllrcr@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{Stack} & \tablehead{Memory} & \tablehead{Presentation} & \tablehead{Paired $\Delta$} & \tablehead{95\% CI} & \tablehead{Tokens} \\
-\midrule
-\rowcolor{tablestripebg}
-\texttt{GPT-4o-mini} & compact insight & BM25  & \textcolor{liftpositive}{$+0.1468$} & \ci{+0.0846}{+0.2090} & 645 \\
-\texttt{GPT-4o-mini} & compact insight & dense & \textcolor{liftpositive}{$+0.0697$} & \ci{+0.0174}{+0.1244} & 645 \\
-\rowcolor{tablestripebg}
-\texttt{GPT-4o-mini} & raw trajectory  & BM25  & \textcolor{liftpositive}{$+0.0721$} & \ci{+0.0050}{+0.1418} & 1{,}779.7 \\
-\texttt{GPT-4o-mini} & raw trajectory  & dense & \textcolor{liftpositive}{$+0.1045$} & \ci{+0.0323}{+0.1766} & 1{,}779.0 \\
-\rowcolor{tablestripebg}
-\texttt{GPT-4o-mini} & Markdown        & BM25  & \textcolor{liftpositive}{$+0.0473$} & \ci{-0.0025}{+0.0995} & 1{,}988.8 \\
-\texttt{GPT-4o-mini} & Markdown        & dense & \textcolor{liftpositive}{$+0.0970$} & \ci{+0.0398}{+0.1542} & 1{,}969.8 \\
-\rowcolor{tablestripebg}
-\texttt{Qwen3-8B}    & compact insight & BM25  & \textcolor{liftnegative}{$-0.0199$} & \ci{-0.0721}{+0.0299} & 645 \\
-\texttt{Qwen3-8B}    & compact insight & dense & \textcolor{liftnegative}{$-0.0050$} & \ci{-0.0597}{+0.0473} & 645 \\
-\rowcolor{tablestripebg}
-\texttt{Qwen3-8B}    & Markdown        & BM25  & \textcolor{liftnegative}{$-0.0771$} & \ci{-0.1343}{-0.0174} & 1{,}988.8 \\
-\texttt{Qwen3-8B}    & Markdown        & dense & \textcolor{liftnegative}{$-0.0622$} & \ci{-0.1244}{-0.0025} & 1{,}969.8 \\
-\midrule
-\rowcolor{tableaccentbg}
-\multicolumn{3}{@{}l}{Executor $\times$ insight + BM25} & \textcolor{liftnegative}{$-0.1667$} & \ci{-0.2512}{-0.0871} & \\
-\multicolumn{3}{@{}l}{Executor $\times$ insight + dense} & \textcolor{liftnegative}{$-0.0746$} & \ci{-0.1567}{+0.0025} & \\
-\rowcolor{tableaccentbg}
-\multicolumn{3}{@{}l}{Executor $\times$ Markdown + BM25} & \textcolor{liftnegative}{$-0.1244$} & \ci{-0.1990}{-0.0498} & \\
-\multicolumn{3}{@{}l}{Executor $\times$ Markdown + dense} & \textcolor{liftnegative}{$-0.1592$} & \ci{-0.2438}{-0.0746} & \\
-\rowcolor{tableaccentbg}
-\multicolumn{3}{@{}l}{Executor $\times$ presentation (insight, triple difference)} & \textcolor{liftnegative}{$-0.0920$} & \ci{-0.1617}{-0.0199} & \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-10pt}
-\end{table}
-
-\section{Task-Level Transfer Diagnostic}
-\label{app:taxonomy}
-
-A single transport gap tells us \emph{whether} the memory transfers on average; it
-does not tell us \emph{which} tasks carry the gap. Table~\ref{tab:taxonomy}
-classifies each of the 134 ALFWorld tasks by the sign of its equal-pair memory
-effect under each stack and reports the mean effects and the mean \qwenm no-memory
-success in each cell. Tasks that help \gptm and hurt \qwenm have the highest \qwenm
-baseline ($0.833$), and tasks that help both have the lowest ($0.407$), the pattern
-summarized in RQ4. Representative cases include task 55 (\texttt{put}; \gptm
-$+0.833$, \qwenm $+0.333$) among tasks that help both, and task 133 (\texttt{heat};
-\gptm $+0.833$, \qwenm $-0.333$, \qwenm baseline $1.0$) among tasks that help \gptm
-and hurt \qwenm. These labels prioritize cases for trajectory review; they do not
-identify mechanisms.
-
-\begin{table}[t]
-\centering
-\caption{Task-level transfer diagnostic over 134 ALFWorld tasks (compact insights +
-BM25, equal prompt pairs). Each row is a cell of Figure~\ref{fig:transport}.
-\textcolor{liftpositive}{Green}: positive mean effect; \textcolor{liftnegative}{red}:
-negative mean effect.}
-\label{tab:taxonomy}
-\footnotesize
-\setlength{\tabcolsep}{8pt}
-\renewcommand{\arraystretch}{1.10}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{\texttt{GPT-4o-mini} / \texttt{Qwen3-8B}} & \tablehead{Tasks} & \tablehead{GPT $\Delta$} & \tablehead{Qwen $\Delta$} & \tablehead{Qwen baseline} \\
-\midrule
-\rowcolor{tablestripebg}
-help / help       & 9  & \textcolor{liftpositive}{$+0.444$} & \textcolor{liftpositive}{$+0.370$} & 0.407 \\
-help / neutral    & 31 & \textcolor{liftpositive}{$+0.452$} & $0.000$  & 0.699 \\
-\rowcolor{tablestripebg}
-help / hurt       & 14 & \textcolor{liftpositive}{$+0.429$} & \textcolor{liftnegative}{$-0.357$} & 0.833 \\
-neutral / help    & 12 & $0.000$  & \textcolor{liftpositive}{$+0.306$} & 0.417 \\
-\rowcolor{tablestripebg}
-neutral / neutral & 35 & $0.000$  & $0.000$  & 0.867 \\
-neutral / hurt    & 11 & $0.000$  & \textcolor{liftnegative}{$-0.364$} & 0.636 \\
-\rowcolor{tablestripebg}
-hurt / help       & 5  & \textcolor{liftnegative}{$-0.267$} & \textcolor{liftpositive}{$+0.333$} & 0.333 \\
-hurt / neutral    & 11 & \textcolor{liftnegative}{$-0.333$} & $0.000$  & 0.879 \\
-\rowcolor{tablestripebg}
-hurt / hurt       & 6  & \textcolor{liftnegative}{$-0.333$} & \textcolor{liftnegative}{$-0.417$} & 0.611 \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-10pt}
-\end{table}
-
-\section{Case Studies}
-\label{app:cases}
-
-This appendix walks through what each kind of task asks the agent to do, what the
-experience memory offers for it, and what happened with and without the memory.
-Table~\ref{tab:families} first summarizes the six ALFWorld task families. Cases~1--3
-then follow three individual tasks end to end; they are the only tasks whose goal,
-room, and per-episode outcomes were retained in the run logs. Cases~4--6 cover the
-remaining families at the level of the family and its representative tasks, and
-Case~7 covers WebShop.
-
-\methodlabel{Sources.}
-Goals and room descriptions are the environment's own text from our run logs. The
-\emph{expert solution} is the walkthrough stored with each ALFWorld game file, read
-directly from the benchmark data without running any model; the expert knows where
-every object is, so its length is a lower bound for an agent that must search.
-Episode records come from \gptm on seed 0 (demonstration pair 02). Task-level effects
-are the equal-pair effects of Table~\ref{tab:taxonomy}: success is averaged over
-demonstration pairs 01, 02, and 12, so $-0.333$ means that one of three pairs went
-from success to failure. ``Rule rank'' is the position, among the 33 injected items,
-of the first item tagged with the task's own type.
-
-\methodlabel{What the figures show.}
-ALFWorld gives the agent text only, but every ALFWorld game is generated from an ALFRED
-trial recorded in the AI2-THOR 3D simulator, and the 134 unseen tasks take place in just
-four rooms: a kitchen (77 tasks), a bedroom (27), a bathroom (19), and a living room
-(11). To show the environment behind the text, panel (a) of each ALFWorld figure renders
-the trial's room with AI2-THOR 2.1.0, the version ALFWorld uses, after restoring the
-trial's object positions and states. The left image is a first-person view chosen to show
-the places the expert solution visits; the right image is the room from above, with a
-cone marking where the left view was taken. Labels use the names that appear in the
-agent's observation, such as \texttt{shelf}, \texttt{desk}, and \texttt{garbagecan}.
-Colored labels mark where the object starts (orange), the appliance applied to it
-(purple), and the destination (green), and the arrow on the map follows the expert's
-route. Each goal exists as three trials in the same room that differ in where objects are
-placed. For Cases~1--3 we render a trial whose goal text matches the run log; for
-Cases~4--6, whose goals were not retained, we render an example task of the family drawn
-from the same 134 unseen tasks. Rendering runs no model. The WebShop figure shows
-screenshots of the official WebShop web application serving the benchmark's
-1{,}000-product catalogue. Its instruction is the one recorded for evaluation session~0;
-the search and clicks are ours, chosen to show a complete purchase, and the result ranking
-comes from a BM25 stand-in for the benchmark's Lucene index.
-
-\begin{table}[t]
-\centering
-\caption{The six ALFWorld task families of the 134 unseen tasks. The expert procedure
-is the most common walkthrough pattern; expert steps are the mean and range of the
-benchmark walkthrough lengths. Success rates are from Table~\ref{tab:pertype}.}
-\label{tab:families}
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.18}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}l r L{0.36\textwidth} c c c@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{Family} & \tablehead{Tasks} & \tablehead{What the goal requires (expert procedure)} & \tablehead{Expert steps} & \tablehead{\texttt{GPT-4o-mini}} & \tablehead{\texttt{Qwen3-8B}} \\
-\midrule
-\rowcolor{tablestripebg}
-\texttt{put} & 24 & find an object, take it, go to the target receptacle, place it & 4.6 (4--6) & $0.833\rightarrow0.917$ & $0.736\rightarrow0.694$ \\
-\texttt{clean} & 31 & find, take, go to the sink basin, \emph{clean}, go to the target, place & 6.3 (4--7) & $0.452\rightarrow0.667$ & $0.656\rightarrow0.613$ \\
-\rowcolor{tablestripebg}
-\texttt{heat} & 23 & find, take, go to the microwave, \emph{heat}, go to the target, place & 6.0 (4--7) & $0.130\rightarrow0.377$ & $0.739\rightarrow0.754$ \\
-\texttt{cool} & 21 & find, take, go to the fridge, \emph{cool}, go to the target, place & 6.1 (4--7) & $0.857\rightarrow0.746$ & $0.857\rightarrow0.857$ \\
-\rowcolor{tablestripebg}
-\texttt{examine} & 18 & find an object, take it, go to a desk lamp, \emph{use} the lamp & 3.8 (3--4) & $0.648\rightarrow0.833$ & $0.611\rightarrow0.574$ \\
-\texttt{puttwo} & 17 & find and place one instance, then find and place a second & 8.6 (8--9) & $0.333\rightarrow0.588$ & $0.431\rightarrow0.431$ \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-8pt}
-\end{table}
-
-\begin{casebox}[dimA]{Case 1 \textperiodcentered{} \texttt{put} \textperiodcentered{} Task 0: ``put a mug in desk''}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_task0}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{Task 0. (a) The bedroom of this task, rendered from one of the two benchmark trials whose goal text matches the run log. The mug starts on a shelf of the desk hutch and must be moved to the other desk; the expert needs four steps. (b) \gptm on seed 0 solves the task in both conditions, in 19 steps without memory and 6 with it.}
-\label{fig:case_task0}
-\vspace{4pt}
-
-\textbf{The task.} The agent starts in a bedroom and reads: \emph{``You are in the middle
-of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6,
-a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a
-laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a
-shelf 1. Your task is to: put a mug in desk.''} The room has 18 places to look, and the
-agent does not know where the mug is.
-
-\textbf{What it takes.} In the benchmark data this goal exists as three trials in the
-same room, and in all three the mug starts on a shelf. The expert solution is four
-steps: \texttt{go to shelf}, \texttt{take mug from shelf}, \texttt{go to desk},
-\texttt{move mug to desk}. A searching agent needs extra steps to find the right shelf.
-
-\textbf{What the memory offers.} Two \texttt{[put]} demonstrations are in the prompt
-in both conditions. With memory, the agent also reads all 33 insights; the first
-\texttt{[put]} rule appears third. The six \texttt{[put]} rules (items 22--27) describe
-a search-then-place routine, for example ``If the initial location does not contain the
-target object, systematically explore other nearby locations'' and ``Ensure to confirm
-the target object is in your possession before attempting to place it''. Notably, the
-rule naming likely places lists ``tables, countertops, or drawers'', not shelves.
-
-\textbf{What happened.} \gptm (seed 0) solves the task in both conditions: in 19 steps
-with 40{,}783 prompt tokens without memory, and in 6 steps, two above the expert, with
-17{,}850 prompt tokens with memory. Over the three demonstration pairs, \gptm's success
-on this task is the same with and without memory (effect $0.000$). \qwenm solves it on
-every pair without memory and fails one pair with memory ($-0.333$).
-
-\textbf{Analysis.} The memory makes \gptm's successful search much more direct on this
-task, from more than four times the expert length to near it, but because the task was
-already solved, the success rate does not register the improvement. Without the step
-trace we cannot tell which rule, if any, shortened the search. For \qwenm, which was at
-ceiling on this task, the added block could only cost success, and it did on one pair.
-Success-rate deltas therefore miss efficiency gains, and for a stack already at
-ceiling they can only record losses.
-\end{casebox}
-
-\begin{casebox}[dimF]{Case 2 \textperiodcentered{} \texttt{heat} \textperiodcentered{} Task 1: ``heat some egg and put it in garbagecan''}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_task1}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{Task 1. (a) The kitchen, rendered from a trial in which the egg starts on a countertop (two of the three trials of this goal; in the third it starts in the garbage can). The egg must be heated in the microwave and then put in the garbage can. (b) \gptm on seed 0 reaches the 30-step limit in both conditions.}
-\label{fig:case_task1}
-\vspace{4pt}
-
-\textbf{The task.} The agent starts in a kitchen: \emph{``\ldots you see a cabinet 6,
-a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a
-countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a
-fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1,
-a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.
-Your task is to: heat some egg and put it in garbagecan.''} There are 25 places to look.
-
-\textbf{What it takes.} The egg starts on a countertop in two of the three trials of
-this goal and inside the garbage can in the third. The expert solution is six steps:
-go to the egg, take it, \texttt{go to microwave}, \texttt{heat egg with microwave},
-\texttt{go to garbagecan}, \texttt{move egg to garbagecan}.
-
-\textbf{What the memory offers.} Here the first \texttt{[heat]} rule is the
-\emph{first} item of the memory block, so the matching procedure is as salient as it
-can be. The five \texttt{[heat]} rules (items 17--21) include ``Use appropriate
-appliances or tools to modify the item as needed before completing the task'' and
-``Ensure to open or interact with containers before placing or retrieving items''.
-
-\textbf{What happened.} \gptm (seed 0) fails in both conditions, stopping at the
-30-step limit, five times the expert length. The memory raises the episode's prompt
-tokens from 81{,}372 to 108{,}358. Over the three pairs, \gptm's success on this task is
-unchanged ($0.000$), while \qwenm, which solved it on one pair without memory, loses
-that pair ($-0.333$).
-
-\textbf{Analysis.} \texttt{heat} is \gptm's weakest family ($0.130$ without memory)
-and the one where the memory helps it most after \texttt{puttwo} ($+0.246$), so this
-task is a counterexample inside a strong family gain: the most relevant rule comes
-first and the agent still fails, at a 33\% higher token cost. The rules state the
-generic procedure (find, use the appliance, place) but nothing about where an egg is,
-which is what the agent must discover. Task 133, another \texttt{heat} task with its
-first rule also at rank~1, shows the family's other face: \gptm $+0.833$, \qwenm
-$-0.333$ from a \qwenm no-memory success of $1.000$.
-\end{casebox}
-
-\begin{casebox}[dimD]{Case 3 \textperiodcentered{} \texttt{puttwo} \textperiodcentered{} Task 2: ``put two pillow in sofa''}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_task2}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{Task 2. (a) The living room, rendered from one of the two trials whose goal text matches the run log. Both pillows start on the armchair and must be moved to the sofa, so the expert repeats one four-step routine. (b) \gptm on seed 0 reaches the 30-step limit in both conditions.}
-\label{fig:case_task2}
-\vspace{4pt}
-
-\textbf{The task.} The agent starts in a living room with 27 places to look:
-\emph{``\ldots you see a armchair 1, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1,
-a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1,
-a safe 1, a shelf 12, \ldots, a shelf 1, a sidetable 1, and a sofa 1. Your task is to:
-put two pillow in sofa.''}
-
-\textbf{What it takes.} In all three trials of this goal both pillows start on the
-armchair. The expert solution is eight steps, the same four-step routine performed
-twice: \texttt{go to armchair}, \texttt{take pillow from armchair}, \texttt{go to sofa},
-\texttt{move pillow to sofa}.
-
-\textbf{What the memory offers.} The five \texttt{[puttwo]} rules (items 28--32) speak
-directly to the difficulty of the family, which is keeping track of the second instance:
-``Once an item is found, immediately plan the next steps to retrieve and place it'',
-``If the first search does not yield results, revisit previously checked locations, as
-items may be present in multiple instances'', and ``Keep track of items already found
-and placed to avoid unnecessary repetition in searches''. The first \texttt{[puttwo]}
-rule is ranked 4th for the family's representative tasks.
-
-\textbf{What happened.} \gptm (seed 0) fails in both conditions at the 30-step limit,
-nearly four times the expert length, and the memory raises prompt tokens from
-89{,}011 to 109{,}495. This task is not among the representative cases of
-Table~\ref{tab:taxonomy}, so its equal-pair effects are not reported.
-
-\textbf{Analysis.} Even with rules that name the exact difficulty and an expert path
-that needs only one location, \gptm does not finish this task within the budget on
-seed 0. Across the family, however, the memory lifts \gptm more than any other family
-($0.333\rightarrow0.588$) while leaving \qwenm exactly unchanged
-($0.431\rightarrow0.431$); two representative tasks move in opposite directions for
-the two stacks (task 103: \gptm $+1.000$, \qwenm $0.000$; task 118: \gptm $-0.333$,
-\qwenm $+0.333$). The transport gap is therefore visible inside a single family.
-\end{casebox}
-
-\noindent
-The goals of the remaining representative tasks were not retained in the run logs, so
-Cases~4--6 describe each family through the benchmark data and identify its
-representative tasks by ID. Their figures show an example task of the family instead.
-
-\begin{casebox}[dimC]{Case 4 \textperiodcentered{} \texttt{clean} \textperiodcentered{} family of 31 tasks; representative task 30}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_clean}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{The \texttt{clean} family. (a) An example \texttt{clean} task from the benchmark, in the bathroom: the soap bar starts on the toilet, must be cleaned at the sink basin, and goes on the countertop. It is not task 30, whose goal was not retained. (b) Memory effect on three representative tasks for each executor, averaged over the three demonstration pairs.}
-\label{fig:case_clean}
-\vspace{4pt}
-
-\textbf{The tasks.} The agent must clean an object and place it somewhere, in kitchens
-and bathrooms. The most frequent objects in the 31 unseen \texttt{clean} tasks are
-soap bars, cloths, plates, eggs, and mugs; the most frequent destinations are
-countertops and cabinets.
-
-\textbf{What it takes.} Six steps on average (4--7): find the object, take it,
-\texttt{go to sinkbasin}, \texttt{clean <object> with sinkbasin}, go to the destination,
-and place it.
-
-\textbf{What the memory offers.} The five \texttt{[clean]} rules (items 0--4), including
-``Always clean the item using the designated cleaning area before placing it in the
-final location'' and ``Ensure to follow the sequence of actions: find, clean, and then
-place the item correctly''. The first \texttt{[clean]} rule is ranked 4th for task 30.
-
-\textbf{What happened.} Family: \gptm $0.452\rightarrow0.667$, \qwenm
-$0.656\rightarrow0.613$. Task 30: \gptm $+0.667$ (two of three pairs gained), \qwenm
-$-0.333$ from a no-memory success of $0.333$ (its only solved pair is lost). Two other
-\texttt{clean} tasks: task 57 (\gptm $0.000$, \qwenm $+0.333$) and task 50 (\gptm
-$0.000$, \qwenm $-0.667$).
-
-\textbf{Analysis.} The rules spell out the very step this family adds, and \gptm, which
-starts below 50\%, gains $0.215$. Task 30 shows the transport gap on a task where
-\qwenm is \emph{not} at ceiling, so headroom alone does not explain it, and across three
-\texttt{clean} tasks the same block helps \qwenm once and hurts it twice. Under the
-order placebo, the same five \texttt{[clean]} items appear in the same positions as word
-salad (Table~\ref{tab:placebo}), and the placebo alone already raises \gptm and lowers
-\qwenm on average (RQ3).
-\end{casebox}
-
-\begin{casebox}[qwenmint]{Case 5 \textperiodcentered{} \texttt{cool} \textperiodcentered{} family of 21 tasks; representative task 5}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_cool}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{The \texttt{cool} family. (a) An example \texttt{cool} task, in the kitchen: the mug starts on a countertop, must be cooled in the fridge, and goes into a cabinet. (b) Memory effect on four representative tasks.}
-\label{fig:case_cool}
-\vspace{4pt}
-
-\textbf{The tasks.} The agent must cool an object in the fridge and place it somewhere,
-typically in a kitchen. Frequent objects are mugs, lettuce, pans, bread, and potatoes;
-frequent destinations are countertops and the microwave.
-
-\textbf{What it takes.} Six steps on average (4--7): find the object, take it,
-\texttt{go to fridge}, \texttt{cool <object> with fridge}, go to the destination, and
-place it.
-
-\textbf{What the memory offers.} Six \texttt{[cool]} rules (items 5--10), such as ``Always
-check the fridge first for items that need to be cooled'' and ``Maintain a clear sequence
-of actions: find, cool, and place the item''. The first \texttt{[cool]} rule is ranked 2nd
-for task 5.
-
-\textbf{What happened.} Family: \gptm $0.857\rightarrow0.746$, the only family in which
-\gptm loses; \qwenm $0.857\rightarrow0.857$. Task 5: \gptm $-0.500$ and \qwenm $-0.333$,
-with \qwenm solving it on every pair without memory; it is one of the six tasks harmed
-under both stacks. Other \texttt{cool} tasks: tasks 16 and 19 (\gptm $-0.333$, \qwenm
-$0.000$) and task 39 (\gptm $0.000$, \qwenm $+0.333$).
-
-\textbf{Analysis.} \texttt{cool} is \gptm's strongest family without memory, and it is
-where the memory hurts \gptm. The rules restate a procedure both executors already
-follow, and one of them (``Always check the fridge first'') points the search at the
-fridge, where the object must be cooled but is not necessarily found; the retained data
-cannot show whether this redirected the search. Harm concentrates where the no-memory
-harness is already strong, for either executor.
-\end{casebox}
-
-\begin{casebox}[dimE]{Case 6 \textperiodcentered{} \texttt{examine} \textperiodcentered{} family of 18 tasks; representative task 7}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_examine}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{The \texttt{examine} family. (a) An example \texttt{examine} task, in the bedroom: the book lies on the bed, and the agent must carry it to the desk and turn on the desk lamp while holding it. (b) Memory effect on three representative tasks.}
-\label{fig:case_examine}
-\vspace{4pt}
-
-\textbf{The tasks.} The agent must look at an object under a desk lamp, in bedrooms. Frequent objects are mugs, pencils, bowls, CDs, and books.
-
-\textbf{What it takes.} The shortest family, 3.8 steps on average (3--4): find the object,
-take it, \texttt{go to} the desk lamp, and \texttt{use desklamp}. The difficulty is
-finding the object and recognizing that ``examine'' means turning on the lamp while
-holding it.
-
-\textbf{What the memory offers.} Six \texttt{[examine]} rules (items 11--16), including
-``Use the most probable locations for the second required item after obtaining the
-first'' and ``Ensure to use the item in the correct context to achieve the task's goal''.
-For task 7 the first \texttt{[examine]} rule is ranked only 7th.
-
-\textbf{What happened.} Family: \gptm $0.648\rightarrow0.833$, \qwenm
-$0.611\rightarrow0.574$. Task 7: \gptm $+0.667$ and \qwenm $+0.333$ from a \qwenm
-no-memory success of $0.333$, one of only nine tasks that improve under both stacks.
-Task 45, of the same family, shows the reversal instead (\gptm $+0.667$, \qwenm
-$-0.667$, from a \qwenm no-memory success of $0.667$), and task 89 harms \gptm
-($-0.500$).
-
-\textbf{Analysis.} Joint improvement happens on a task where both executors start low,
-even though the matching rule is far down the block. With a higher \qwenm baseline, the
-same family produces the reversal. Baseline competence, not rule position, best
-separates the two outcomes in these cases.
-\end{casebox}
-
-\begin{casebox}[salmon]{Case 7 \textperiodcentered{} WebShop \textperiodcentered{} 100 train-disjoint sessions}
-\begin{center}
-\resizebox{\linewidth}{!}{\input{figures/case_webshop}}
-\end{center}
-\vspace{-4pt}
-\captionof{figure}{WebShop. (a) One session in the official web app: the start page with the request, the results of a search, the product page where the size is chosen, and the score page after the purchase. The query and clicks are ours; the reward of 1.0 shows what a full match looks like. (b) Mean reward and the sign of the paired reward change over 100 sessions.}
-\label{fig:case_webshop}
-\vspace{4pt}
-
-\textbf{The tasks.} Each WebShop session gives a natural-language request for a product
-with required attributes, options, and a price limit, in a simulated store of 1{,}000
-products. The agent searches, opens product pages, selects options, and buys; the
-environment reward measures how well the purchased product matches the request, and
-exact success requires a full match. Episodes are limited to 15 steps.
-
-\textbf{What the memory offers.} Ten rules about search, attribute checking, option
-selection, and purchase, distilled by \qwenm with the prompt of
-Appendix~\ref{app:prompts} from the six positive-reward trajectories of train sessions
-500--519, and presented by BM25 with $B=1{,}024$.
-
-\textbf{What happened.} A 20-session gate confirmed valid execution (100\% valid action
-syntax, search on 20/20, 13 purchase attempts, mean reward $0.288$). On sessions 0--99,
-reward falls from $0.194$ to $0.105$ (paired $-0.090$, \ci{-0.165}{-0.016}) and exact
-success from $0.09$ to $0.07$; 8 sessions improve, 20 decline, and 72 are unchanged.
-
-\textbf{Analysis.} The experience behind the memory is thin, six successful
-trajectories, and the executor reading it is the one that showed no ALFWorld gain. The
-rules lower reward on twice as many sessions as they raise it. This case has one
-executor and no placebo, so it shows negative transfer but cannot separate content from
-context.
-\end{casebox}
-
-\section{Seed-Axis Audit}
-\label{app:seedaxis}
-
-The scaffold selects two of three demonstrations per task type with a seeded
-shuffle. Nominal seeds 0, 1, and 2 map to pairs 02, 12, and 12, so seeds 1 and 2
-repeat one prompt condition and pair 01 was missing from the original matrix. Seeds
-1 and 2 disagree on 20.9\% of \gptm no-memory task outcomes but on only 1.5\% of
-\qwenm outcomes despite identical prompts, which reflects residual hosted
-nondeterminism. Weighting the two observed pairs equally gives a \gptm gain of
-$+0.134$ (\ci{+0.069}{+0.200}), a \qwenm change of $-0.035$ (\ci{-0.082}{+0.011}),
-and a gap of $-0.170$ (\ci{-0.252}{-0.088}). After seed 5 supplied pair 01, the
-complete three-pair estimates are those reported in RQ1 and RQ2. Repeated
-executions of one prompt are averaged within pair and never treated as independent
-seeds.
-
-\section{Same-Window Rerun with a Coherent, Task-Irrelevant Control}
-\label{app:rerun}
-
-\methodlabel{Why and when.} The first placebo gate (\S\ref{sec:results}, RQ3) could
-not separate ``no task content'' from ``incoherent text''. On 2026-10-10 we added a
-coherent control and, because the per-episode logs of the first gate were lost and
-the hosted model alias is mutable, reran all four conditions (no memory, scrambled
-placebo, coherent irrelevant control, true memory) for both executors in one time
-window. The design, estimands, bootstrap and decision rule were written down before
-any new episode ran (released with the code as \texttt{PREREG\_rerun\_2026-10-10.md}).
-The hosted alias resolved to \texttt{gpt-4o-mini-2024-07-18}.
-
-\methodlabel{The control.} Each of the 33 items keeps the insight's task tag and word
-count, and its body is a well-formed imperative sentence about vegetable gardening
-that contains no ALFWorld object, receptacle, appliance, or task verb. The placebo's
-deterministic procedure then replaces body words with the nonce \texttt{x} until the
-payload measures exactly 645 tokens under the \gptm tokenizer and
-645 under the \qwenm tokenizer (30 of 472 body words replaced). It is
-served through the same index-aligned reference ranking as the placebo, so item
-identity, order, and footprint are identical across the three payloads; every
-episode logged a footprint of 645 tokens. Table~\ref{tab:rerun_examples} shows two
-items.
-
-\begin{table}[t]
-\centering
-\caption{Two items of the true memory and the corresponding items of the two controls.}
-\label{tab:rerun_examples}
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.25}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}L{0.32\textwidth}L{0.30\textwidth}L{0.30\textwidth}@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{True insight} & \tablehead{Scrambled placebo (body)} & \tablehead{Coherent, irrelevant control (body)} \\
-\midrule
-\texttt{[clean]} Always clean the item using the designated cleaning area before placing it in the final location. & item final area it the Always the before designated clean in x using placing cleaning the & Always pull weeds while they are small so they never set seed across the whole garden. \\
-\texttt{[cool]} Always check the fridge first for items that need to be cooled. & for Always items fridge x check to the be need that first & x off the lower leaves of tomato plants to improve air flow. \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\end{table}
-
-\methodlabel{Tasks.} The rerun uses the 60 task ids of the frozen gate and seeds
-0, 1, and 5 (the three distinct demonstration pairs). The re-downloaded ALFWorld
-data enumerate the unseen games in a different order than the deleted 2026-07 copy,
-so the same ids now point to a different sample of games (11 \texttt{clean}, 9
-\texttt{put}, 10 of each other type). All eight runs share this mapping, which we
-verified on the task text of every episode before the analysis; the bootstrap
-stratifies by the observed types. This deviation was recorded as an addendum to the
-pre-registration before the analysis was run.
-
-\begin{table}[t]
-\centering
-\caption{Same-window rerun on 60 games: equal-pair success (top) and paired
-contrasts with 95\% stratified task-bootstrap intervals (bottom; 20{,}000 draws).}
-\label{tab:rerun}
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.15}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}lrlrlrl@{}}
-\toprule
-\rowcolor{tableheadbg}
- & \multicolumn{2}{c}{\tablehead{\texttt{GPT-4o-mini}}} & \multicolumn{2}{c}{\tablehead{\texttt{Qwen3-8B}}} & \multicolumn{2}{c}{\tablehead{Gap (Qwen $-$ GPT)}} \\
-\midrule
-no memory & 0.589 & & 0.706 & & & \\
-scrambled placebo & 0.561 & & 0.633 & & & \\
-coherent irrelevant & 0.561 & & 0.667 & & & \\
-true memory & 0.667 & & 0.717 & & & \\
-\midrule
-true $-$ none & $+0.078$ & \ci{+0.011}{+0.144} & $+0.011$ & \ci{-0.056}{+0.078} & $-0.067$ & \ci{-0.161}{+0.022} \\
-scrambled $-$ none & $-0.028$ & \ci{-0.094}{+0.039} & $-0.072$ & \ci{-0.139}{-0.000} & $-0.044$ & \ci{-0.150}{+0.061} \\
-irrelevant $-$ none & $-0.028$ & \ci{-0.089}{+0.033} & $-0.039$ & \ci{-0.128}{+0.045} & $-0.011$ & \ci{-0.106}{+0.089} \\
-true $-$ scrambled & $+0.106$ & \ci{+0.028}{+0.183} & $+0.083$ & \ci{+0.022}{+0.144} & $-0.022$ & \ci{-0.133}{+0.083} \\
-true $-$ irrelevant & $+0.106$ & \ci{+0.039}{+0.172} & $+0.050$ & \ci{-0.022}{+0.128} & $-0.056$ & \ci{-0.150}{+0.039} \\
-irrelevant $-$ scrambled & $-0.000$ & \ci{-0.072}{+0.072} & $+0.033$ & \ci{-0.028}{+0.094} & $+0.033$ & \ci{-0.061}{+0.133} \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\end{table}
-
-\methodlabel{Decision rule.} The frozen rule had four outcomes: (1) the controls agree
-($|C_E|\le0.05$ for both executors) and the true memory beats the coherent control on
-\gptm, so the content increment is task relevance; (2) the true memory and the
-coherent control agree, so any coherent block suffices; (3) coherence and relevance
-both contribute; (4) inconclusive. The data meet rule (1). Relative to the first
-gate, the true-memory effect on \gptm is smaller ($+0.078$ against $+0.136$) and the
-placebo effect on \gptm changes sign ($-0.028$ against $+0.089$); with different
-games, one run per condition, and hosted generations that are not perfectly
-repeatable, we report this as non-reproduction of the first gate's placebo effect
-rather than as a replication test of its numbers.
-
-\section{Order-Placebo Construction}
-\label{app:placebo}
-
-The placebo is built in three deterministic steps: (i) shuffle the body words of
-each item, re-drawing until no original adjacent body bigram remains; (ii) greedily
-replace words with the nonce \texttt{x} until the payload measures exactly 645
-tokens under both the \gptm and \qwenm tokenizers (28 of 472 words); (iii) serve the
-payload through the ranking-reference path so that BM25 scores are computed on the
-original text. The released builder regenerates the placebo exactly (645 tokens
-before and 673 after shuffling, 28 substitutions, 94.07\% of body words retained,
-645/645 tokens under both tokenizers), and the runtime audit confirmed identical
-order on 134/134 queries and all 33 items present. Table~\ref{tab:placebo} shows two
-items.
-
-\begin{table}[t]
-\centering
-\caption{Examples of the order placebo. Task tags, item indices, word counts,
-retrieval order, and total footprint are preserved.}
-\label{tab:placebo}
-\footnotesize
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.25}
-\arrayrulecolor{tableline}
-\begin{tabular}{@{}L{0.46\textwidth}L{0.46\textwidth}@{}}
-\toprule
-\rowcolor{tableheadbg}
-\tablehead{True insight} & \tablehead{Index-aligned order placebo} \\
-\midrule
-\rowcolor{tablestripebg}
-\texttt{[clean]} Identify the target item and its cleaning requirements before starting the task.
-& \texttt{[clean]} the the item cleaning its starting requirements x and target Identify before \\
-\texttt{[clean]} Always clean the item using the designated cleaning area before placing it in the final location.
-& \texttt{[clean]} item final area it the Always the before designated clean in x using placing cleaning the \\
-\bottomrule
-\end{tabular}
-\arrayrulecolor{black}
-\vspace{-10pt}
-\end{table}
+\caption{The WebShop memory (\texttt{data/pools/webshop1010\_insights.jsonl}): 30 rules, 524 tokens,
+which GPT-4o-mini distilled from its own successful training sessions. All 30 are inserted.}
+\label{tab:webpool}
+\end{table*}

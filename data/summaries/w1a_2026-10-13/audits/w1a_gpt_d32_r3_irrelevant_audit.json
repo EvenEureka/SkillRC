@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/w1a_gpt_d32_r3_insights.jsonl",
+  "control": "data/pools/w1a_gpt_d32_r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20269870,
+  "n_items": 33,
+  "body_words": 441,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 660,
+      "before": 660,
+      "control": 660
+    },
+    "qwen3_8b": {
+      "target": 664,
+      "before": 664,
+      "control": 664
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0978,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_gpt_d32_r3_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_gpt_d32_r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    91,
+    146,
+    16,
+    82,
+    26,
+    125,
+    17,
+    35,
+    50,
+    1,
+    5,
+    63,
+    44,
+    57,
+    12,
+    94,
+    22,
+    165,
+    83,
+    42,
+    2,
+    19,
+    23,
+    113,
+    150,
+    7,
+    85,
+    118,
+    173,
+    84,
+    96,
+    56,
+    66
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Search for the object in likely locations such as countertops, drawers, cabinets, or near sinks/basins.",
+      "control": "[clean] Keep a bare ring about a stride wide so grass does not compete for moisture."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin or similar cleaning location.",
+      "control": "[clean] Collect seed heads in labelled envelopes once the capsules rattle."
+    },
+    {
+      "original": "[clean] Always verify the object is clean before placing it in the target location.",
+      "control": "[clean] Sharpen the pruning shears each spring so every cut heals smoothly and evenly."
+    },
+    {
+      "original": "[clean] Open containers (drawers, cabinets) before attempting to place or retrieve items.",
+      "control": "[clean] If seedlings stretch on a bright ledge, sow the next batch."
+    }
+  ]
+}

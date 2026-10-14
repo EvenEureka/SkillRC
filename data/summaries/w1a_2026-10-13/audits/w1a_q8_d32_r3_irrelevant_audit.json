@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/w1a_q8_d32_r3_insights.jsonl",
+  "control": "data/pools/w1a_q8_d32_r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20269148,
+  "n_items": 36,
+  "body_words": 522,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 777,
+      "before": 777,
+      "control": 777
+    },
+    "qwen3_8b": {
+      "target": 781,
+      "before": 781,
+      "control": 781
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.125,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q8_d32_r3_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q8_d32_r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    173,
+    20,
+    63,
+    57,
+    114,
+    165,
+    113,
+    4,
+    151,
+    176,
+    182,
+    28,
+    37,
+    34,
+    146,
+    168,
+    91,
+    83,
+    1,
+    90,
+    84,
+    78,
+    2,
+    55,
+    174,
+    45,
+    158,
+    96,
+    164,
+    68,
+    180,
+    159,
+    82,
+    92,
+    56,
+    14
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Start by identifying the object to clean and the steps needed: find, clean with sinkbasin, then place in target location.",
+      "control": "[clean] Apply liquid feed once the first trusses of flowers set, but stop feeding so the plants ripen their remaining fruit."
+    },
+    {
+      "original": "[clean] Check likely locations systematically, starting with common storage or usage areas like fridge, diningtable, countertop, or sinkbasin.",
+      "control": "[clean] Sow carrots directly into fine, stone-free soil, because transplanting usually disturbs the taproot and produces forked roots."
+    },
+    {
+      "original": "[clean] Open or inspect closed objects (e.g., cabinets, drawers, fridge) if the target object is not immediately visible.",
+      "control": "[clean] Mark where bulbs are buried so they are not dug up by mistake later in the year."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin as soon as it is retrieved.",
+      "control": "[clean] Plant onion sets with the tips just showing above the soil surface."
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "pool": "data/pools/src1011_gpt_insights.jsonl",
+  "control": "data/pools/w1a_gptref_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20267324,
+  "n_items": 34,
+  "body_words": 491,
+  "distinct_templates": 34,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 3,
+  "retained_body_fraction": 0.9939,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 661,
+      "before": 662,
+      "control": 661
+    },
+    "qwen3_8b": {
+      "target": 662,
+      "before": 665,
+      "control": 662
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0514,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/src1011_gpt_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_gptref_irrelevant.jsonl"
+  },
+  "templates_used": [
+    3,
+    45,
+    53,
+    6,
+    14,
+    38,
+    71,
+    91,
+    94,
+    72,
+    7,
+    5,
+    34,
+    18,
+    2,
+    35,
+    4,
+    23,
+    76,
+    84,
+    1,
+    85,
+    42,
+    50,
+    15,
+    41,
+    83,
+    175,
+    63,
+    165,
+    95,
+    90,
+    12,
+    73
+  ],
+  "replacements": [
+    {
+      "doc_index": 1,
+      "word_index": 6,
+      "original_word": "up,"
+    },
+    {
+      "doc_index": 4,
+      "word_index": 6,
+      "original_word": "healthiest"
+    },
+    {
+      "doc_index": 30,
+      "word_index": 1,
+      "original_word": "Sow"
+    }
+  ],
+  "examples": [
+    {
+      "original": "[clean] Identify the item you need to clean and locate it in the environment.",
+      "control": "[clean] Rotate crops every season so that no family grows in the same patch."
+    },
+    {
+      "original": "[clean] Use the sinkbasin to clean the item before attempting to place it elsewhere.",
+      "control": "[clean] Plant garlic cloves pointed end x roughly a span apart in loose soil."
+    },
+    {
+      "original": "[clean] Check multiple locations for the item, including countertops, drawers, and cabinets.",
+      "control": "[clean] Leave fallen leaves as shelter for beetles and other helpful insects."
+    },
+    {
+      "original": "[clean] If placing the item in a specific location fails, try moving it to a different location.",
+      "control": "[clean] If the leaves turn yellow, test the soil before adding any more fertilizer to the patch."
+    }
+  ]
+}

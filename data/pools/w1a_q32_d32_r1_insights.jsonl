@@ -1,0 +1,35 @@
+{"text": "[clean] Search for the object in likely locations such as countertops, cabinets, drawers, or sink basins based on the object type.", "task_type": "clean"}
+{"text": "[clean] Clean the object using the sinkbasin before placing it in the target location.", "task_type": "clean"}
+{"text": "[clean] Always check if a container (e.g., drawer, cabinet) is closed before attempting to access its contents.", "task_type": "clean"}
+{"text": "[clean] Prioritize checking the most probable locations first to minimize unnecessary movements.", "task_type": "clean"}
+{"text": "[clean] After cleaning, return to a valid target location to complete the placement.", "task_type": "clean"}
+{"text": "[clean] If an object is not found in expected places, systematically check all relevant storage areas.", "task_type": "clean"}
+{"text": "[cool] Search for the target object in likely locations such as countertops, dining tables, cabinets, drawers, and shelves, starting with the most probable spots.", "task_type": "cool"}
+{"text": "[cool] Open containers (e.g., cabinets, fridge) before checking their contents.", "task_type": "cool"}
+{"text": "[cool] Cool the object using the fridge after it has been picked up.", "task_type": "cool"}
+{"text": "[cool] Always confirm the object is in hand before attempting to cool it.", "task_type": "cool"}
+{"text": "[cool] Place the cooled object in the specified destination (e.g., countertop, dining table, cabinet) after cooling.", "task_type": "cool"}
+{"text": "[cool] If the target object is not found in initial locations, systematically check all relevant storage areas.", "task_type": "cool"}
+{"text": "[examine] Search for the target object in likely locations such as drawers, desks, shelves, or sidetables.", "task_type": "examine"}
+{"text": "[examine] Prioritize checking locations based on object type and common placement logic.", "task_type": "examine"}
+{"text": "[examine] If the desklamp is found, turn it on before attempting to examine the object.", "task_type": "examine"}
+{"text": "[examine] Take the target object before using the desklamp for examination.", "task_type": "examine"}
+{"text": "[examine] Use direct interaction commands like \"use desklamp\" to activate it.", "task_type": "examine"}
+{"text": "[examine] Examine the object under the light of the desklamp after both are acquired and the lamp is on.", "task_type": "examine"}
+{"text": "[heat] Search for the plate on common storage locations like countertops, cabinets, or diningtables.", "task_type": "heat"}
+{"text": "[heat] Heat the plate using the microwave as a primary method.", "task_type": "heat"}
+{"text": "[heat] Always move the heated plate to the specified diningtable.", "task_type": "heat"}
+{"text": "[heat] Prioritize accessible objects and avoid unnecessary detours.", "task_type": "heat"}
+{"text": "[heat] Confirm the task is complete by placing the correct object in the target location.", "task_type": "heat"}
+{"text": "[put] Check likely storage locations first, such as drawers, cabinets, and sidetables, when searching for an object.", "task_type": "put"}
+{"text": "[put] If the object is not in storage, check common surface locations like tables, sofas, or armchairs.", "task_type": "put"}
+{"text": "[put] Open closed containers before inspecting their contents.", "task_type": "put"}
+{"text": "[put] Prioritize checking furniture associated with the object’s typical use or placement.", "task_type": "put"}
+{"text": "[put] Once the object is found and taken, return to the target location and place it directly.", "task_type": "put"}
+{"text": "[put] Systematically move through possible locations in a logical order to avoid repetition.", "task_type": "put"}
+{"text": "[puttwo] Search likely object locations first, such as cabinets, drawers, countertops, shelves, or dedicated holders.", "task_type": "puttwo"}
+{"text": "[puttwo] Take the first object, then immediately proceed to place it in the target location before searching for the second.", "task_type": "puttwo"}
+{"text": "[puttwo] After placing the first object, return to the original location or nearby areas to find the second object.", "task_type": "puttwo"}
+{"text": "[puttwo] If the second object is not found in the initial area, systematically check other likely locations.", "task_type": "puttwo"}
+{"text": "[puttwo] Always confirm the object is in your inventory before attempting to place it in the target location.", "task_type": "puttwo"}
+{"text": "[puttwo] Place both objects in the same target location to complete the task efficiently.", "task_type": "puttwo"}

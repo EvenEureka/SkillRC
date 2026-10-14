@@ -71,8 +71,8 @@ class SelfEvolvingMemory(_PoolMemory):
                          model=model, retriever=retriever, embed_model=embed_model)
         self.curator = curator
         self.gate_threshold = gate_threshold
-        # precomputed_gate: fixed firewall from an offline debiased-credit file
-        # (scripts/credit_analysis.py output). Drops skills with debiased credit < cut.
+        # precomputed_gate: fixed firewall from an offline debiased-credit file.
+        # Drops skills with debiased credit < cut. Not used in the reported studies.
         self.credit_gate_cut = credit_gate_cut
         self._precomp = None
         self._precomp_by_cluster = None

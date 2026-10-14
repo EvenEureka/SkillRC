@@ -1,0 +1,33 @@
+{"text": "[clean] Check the object carefully to verify its exact location and current condition.", "task_type": "clean"}
+{"text": "[clean] If the object is inside a closed receptacle, you must open it before proceeding with the current task.", "task_type": "clean"}
+{"text": "[clean] To verify the task is complete, carefully examine the object or look at the receptacle closely.", "task_type": "clean"}
+{"text": "[clean] Find a sinkbasin or other cleaning receptacle and use it to clean the object thoroughly.", "task_type": "clean"}
+{"text": "[clean] After cleaning, if the object is not in hand, take it from where it is.", "task_type": "clean"}
+{"text": "[cool] Move to a receptacle used for cooling, like a fridge or a sink.", "task_type": "cool"}
+{"text": "[cool] Place the object in the correct container to cool it down effectively.", "task_type": "cool"}
+{"text": "[cool] Open all closed containers to carefully inspect what they actually contain inside.", "task_type": "cool"}
+{"text": "[cool] Navigate to the container in the area where the item is most probably located.", "task_type": "cool"}
+{"text": "[cool] Place the cooled item inside the destination container after it has cooled.", "task_type": "cool"}
+{"text": "[cool] Once found, take the object from its current location and carry it.", "task_type": "cool"}
+{"text": "[examine] Use examine on the object while you are positioned under the light of the desklamp.", "task_type": "examine"}
+{"text": "[examine] Open any closed receptacles that could contain or obscure the object in question.", "task_type": "examine"}
+{"text": "[examine] Take the object if it is placed inside a receptacle to examine it directly.", "task_type": "examine"}
+{"text": "[examine] Use the desklamp to light the area before looking at the object.", "task_type": "examine"}
+{"text": "[examine] If the object is not visible, you should check all likely receptacles or containers in the room methodically.", "task_type": "examine"}
+{"text": "[examine] Visit the container or place where the object is likely to be located in.", "task_type": "examine"}
+{"text": "[heat] Approach a heat source like a microwave or stove and interact with it.", "task_type": "heat"}
+{"text": "[heat] Place the warmed item carefully into the proper destination container storage location.", "task_type": "heat"}
+{"text": "[heat] Navigate to the receptacle that holds the object which requires being heated and is ready.", "task_type": "heat"}
+{"text": "[heat] Open the receptacle to access the object if it is currently closed.", "task_type": "heat"}
+{"text": "[heat] Use the heating appliance to heat the object as required.", "task_type": "heat"}
+{"text": "[put] Open the target receptacle if it is closed and requires opening before placing any object inside of it then.", "task_type": "put"}
+{"text": "[put] Place the item in or on the destination container as instructed by the given task.", "task_type": "put"}
+{"text": "[put] Take the object from wherever it is currently located in the given environment.", "task_type": "put"}
+{"text": "[put] Navigate to the correct destination container where the item must be placed correctly, securely, and properly.", "task_type": "put"}
+{"text": "[put] Go to the receptacle that holds the object you are supposed to put in first.", "task_type": "put"}
+{"text": "[put] Open any closed receptacle when the object is inside it and needs to be accessed.", "task_type": "put"}
+{"text": "[puttwo] Pick up the second object and carefully place it into the correct destination container now.", "task_type": "puttwo"}
+{"text": "[puttwo] Open any closed containers that may possibly hold the desired object inside.", "task_type": "puttwo"}
+{"text": "[puttwo] Avoid moving objects between receptacles unless it is necessary to effectively access the target location to complete the task.", "task_type": "puttwo"}
+{"text": "[puttwo] Take the first instance of the object you find and place it into the designated target receptacle as instructed clearly.", "task_type": "puttwo"}
+{"text": "[puttwo] Keep looking until you find another object of the same type in the area.", "task_type": "puttwo"}

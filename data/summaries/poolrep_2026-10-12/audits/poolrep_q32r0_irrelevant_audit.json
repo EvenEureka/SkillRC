@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/poolrep_q32r0_insights.jsonl",
+  "control": "data/pools/poolrep_q32r0_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/poolrep_gardening_bank.txt",
+  "seed": 20263862,
+  "n_items": 33,
+  "body_words": 511,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 756,
+      "before": 756,
+      "control": 756
+    },
+    "qwen3_8b": {
+      "target": 764,
+      "before": 764,
+      "control": 764
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1296,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/poolrep_q32r0_insights.jsonl",
+    "payload_corpus": "data/pools/poolrep_q32r0_irrelevant.jsonl"
+  },
+  "templates_used": [
+    5,
+    102,
+    143,
+    72,
+    62,
+    100,
+    26,
+    111,
+    4,
+    58,
+    41,
+    135,
+    2,
+    87,
+    85,
+    96,
+    28,
+    23,
+    83,
+    91,
+    15,
+    6,
+    90,
+    63,
+    76,
+    92,
+    78,
+    89,
+    120,
+    122,
+    106,
+    80,
+    88
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Start by identifying the object to clean and the required cleaning location (usually sinkbasin).",
+      "control": "[clean] Pinch off the lower leaves of vines to improve air flow between the stems."
+    },
+    {
+      "original": "[clean] Check likely locations for the object in order of common usage (e.g., fridge, diningtable, countertop, sinkbasin, cabinets, drawers).",
+      "control": "[clean] Mix perlite or vermiculite into seed compost (roughly one part in four) to improve drainage for fine-rooted seedlings."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin before placing it in the target location.",
+      "control": "[clean] Keep a garden diary (sowing dates, rainfall, first frosts, yields) for every season."
+    },
+    {
+      "original": "[clean] Always verify the object is clean before attempting to place it in the final destination.",
+      "control": "[clean] Edge the lawn neatly each month so grass does not creep into the flower borders."
+    }
+  ]
+}

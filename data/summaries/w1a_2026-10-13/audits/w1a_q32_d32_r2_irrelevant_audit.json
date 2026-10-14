@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/w1a_q32_d32_r2_insights.jsonl",
+  "control": "data/pools/w1a_q32_d32_r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20262724,
+  "n_items": 36,
+  "body_words": 494,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 740,
+      "before": 740,
+      "control": 740
+    },
+    "qwen3_8b": {
+      "target": 745,
+      "before": 745,
+      "control": 745
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1291,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q32_d32_r2_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q32_d32_r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    77,
+    109,
+    1,
+    85,
+    61,
+    174,
+    4,
+    24,
+    8,
+    57,
+    3,
+    26,
+    76,
+    83,
+    14,
+    117,
+    12,
+    5,
+    6,
+    113,
+    18,
+    22,
+    173,
+    99,
+    176,
+    56,
+    62,
+    84,
+    50,
+    78,
+    150,
+    121,
+    165,
+    48,
+    15,
+    71
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Search for the object in likely locations such as countertops, cabinets, drawers, dining tables, or sink basins.",
+      "control": "[clean] Before a long dry spell, soak the ground deeply rather than sprinkling it daily with a hose."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin before fulfilling the task.",
+      "control": "[clean] Add mycorrhizal granules to planting holes to help roots establish."
+    },
+    {
+      "original": "[clean] Always check if a container (e.g., fridge, drawer, countertop) is open before placing an item inside.",
+      "control": "[clean] Mulch newly planted rows with fresh straw to hold moisture in the soil through dry spells."
+    },
+    {
+      "original": "[clean] Prioritize opening and inspecting objects in order of likelihood based on the task and object type.",
+      "control": "[clean] Grow tall climbing crops on the north side so that nothing ever shades the shorter rows."
+    }
+  ]
+}

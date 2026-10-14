@@ -1,0 +1,605 @@
+{
+  "cross_reader_config_problems": [],
+  "pairs": {
+    "GPT_D32_R1": {
+      "n_items": 33,
+      "token_budget_o200k": 709,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        709
+      ],
+      "o200k_payload": [
+        709
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        711
+      ],
+      "qwen3_payload": [
+        711
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPT_D32_R2": {
+      "n_items": 33,
+      "token_budget_o200k": 681,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        681
+      ],
+      "o200k_payload": [
+        681
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        684
+      ],
+      "qwen3_payload": [
+        684
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPT_D32_R3": {
+      "n_items": 33,
+      "token_budget_o200k": 660,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        660
+      ],
+      "o200k_payload": [
+        660
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        664
+      ],
+      "qwen3_payload": [
+        664
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPT_D8_R1": {
+      "n_items": 34,
+      "token_budget_o200k": 710,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        34
+      ],
+      "o200k_true": [
+        710
+      ],
+      "o200k_payload": [
+        710
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        713
+      ],
+      "qwen3_payload": [
+        713
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPT_D8_R2": {
+      "n_items": 33,
+      "token_budget_o200k": 661,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        661
+      ],
+      "o200k_payload": [
+        661
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        663
+      ],
+      "qwen3_payload": [
+        663
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPT_D8_R3": {
+      "n_items": 35,
+      "token_budget_o200k": 676,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        35
+      ],
+      "o200k_true": [
+        676
+      ],
+      "o200k_payload": [
+        676
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        679
+      ],
+      "qwen3_payload": [
+        679
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D32_R1": {
+      "n_items": 36,
+      "token_budget_o200k": 753,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        753
+      ],
+      "o200k_payload": [
+        753
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        755
+      ],
+      "qwen3_payload": [
+        755
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D32_R2": {
+      "n_items": 36,
+      "token_budget_o200k": 763,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        763
+      ],
+      "o200k_payload": [
+        763
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        768
+      ],
+      "qwen3_payload": [
+        768
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D32_R3": {
+      "n_items": 36,
+      "token_budget_o200k": 777,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        777
+      ],
+      "o200k_payload": [
+        777
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        781
+      ],
+      "qwen3_payload": [
+        781
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D8_R1": {
+      "n_items": 31,
+      "token_budget_o200k": 664,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        31
+      ],
+      "o200k_true": [
+        664
+      ],
+      "o200k_payload": [
+        664
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        666
+      ],
+      "qwen3_payload": [
+        666
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D8_R2": {
+      "n_items": 31,
+      "token_budget_o200k": 679,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        31
+      ],
+      "o200k_true": [
+        679
+      ],
+      "o200k_payload": [
+        679
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        680
+      ],
+      "qwen3_payload": [
+        680
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q8_D8_R3": {
+      "n_items": 31,
+      "token_budget_o200k": 666,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        31
+      ],
+      "o200k_true": [
+        666
+      ],
+      "o200k_payload": [
+        666
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        667
+      ],
+      "qwen3_payload": [
+        667
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D32_R1": {
+      "n_items": 35,
+      "token_budget_o200k": 708,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        35
+      ],
+      "o200k_true": [
+        708
+      ],
+      "o200k_payload": [
+        708
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        712
+      ],
+      "qwen3_payload": [
+        712
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D32_R2": {
+      "n_items": 36,
+      "token_budget_o200k": 740,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        740
+      ],
+      "o200k_payload": [
+        740
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        745
+      ],
+      "qwen3_payload": [
+        745
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D32_R3": {
+      "n_items": 35,
+      "token_budget_o200k": 728,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        35
+      ],
+      "o200k_true": [
+        728
+      ],
+      "o200k_payload": [
+        728
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        730
+      ],
+      "qwen3_payload": [
+        730
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D8_R1": {
+      "n_items": 34,
+      "token_budget_o200k": 742,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        34
+      ],
+      "o200k_true": [
+        742
+      ],
+      "o200k_payload": [
+        742
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        742
+      ],
+      "qwen3_payload": [
+        742
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D8_R2": {
+      "n_items": 32,
+      "token_budget_o200k": 685,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        32
+      ],
+      "o200k_true": [
+        685
+      ],
+      "o200k_payload": [
+        685
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        687
+      ],
+      "qwen3_payload": [
+        687
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "Q32_D8_R3": {
+      "n_items": 33,
+      "token_budget_o200k": 701,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        701
+      ],
+      "o200k_payload": [
+        701
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        703
+      ],
+      "qwen3_payload": [
+        703
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GPTREF": {
+      "n_items": 34,
+      "token_budget_o200k": 661,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        34
+      ],
+      "o200k_true": [
+        661
+      ],
+      "o200k_payload": [
+        661
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        662
+      ],
+      "qwen3_payload": [
+        662
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GREF": {
+      "n_items": 36,
+      "token_budget_o200k": 706,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        706
+      ],
+      "o200k_payload": [
+        706
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        706
+      ],
+      "qwen3_payload": [
+        706
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "FOCAL_IRR": {
+      "n_items": 33,
+      "token_budget_o200k": 645,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        645
+      ],
+      "o200k_payload": [
+        645
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        645
+      ],
+      "qwen3_payload": [
+        645
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "FOCAL_GENERIC": {
+      "n_items": 33,
+      "token_budget_o200k": 645,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        645
+      ],
+      "o200k_payload": [
+        645
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        645
+      ],
+      "qwen3_payload": [
+        645
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "FOCAL_IRR2": {
+      "n_items": 33,
+      "token_budget_o200k": 645,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        33
+      ],
+      "o200k_true": [
+        645
+      ],
+      "o200k_payload": [
+        645
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        645
+      ],
+      "qwen3_payload": [
+        645
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GREF_GENERIC": {
+      "n_items": 36,
+      "token_budget_o200k": 706,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        706
+      ],
+      "o200k_payload": [
+        706
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        706
+      ],
+      "qwen3_payload": [
+        706
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    },
+    "GREF_IRR2": {
+      "n_items": 36,
+      "token_budget_o200k": 706,
+      "payload_ranks_by_true_pool": true,
+      "items_injected_per_game": [
+        36
+      ],
+      "o200k_true": [
+        706
+      ],
+      "o200k_payload": [
+        706
+      ],
+      "o200k_mismatch_games": 0,
+      "qwen3_true": [
+        706
+      ],
+      "qwen3_payload": [
+        706
+      ],
+      "qwen3_mismatch_games": 0,
+      "order_mismatch_games": 0,
+      "games": 134
+    }
+  }
+}

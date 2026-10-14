@@ -1,0 +1,92 @@
+{
+  "pool": "data/pools/w1a_q8_d8_r3_insights.jsonl",
+  "control": "data/pools/w1a_q8_d8_r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20265216,
+  "n_items": 31,
+  "body_words": 480,
+  "distinct_templates": 31,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 666,
+      "before": 666,
+      "control": 666
+    },
+    "qwen3_8b": {
+      "target": 667,
+      "before": 667,
+      "control": 667
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.079,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q8_d8_r3_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q8_d8_r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    97,
+    2,
+    85,
+    177,
+    181,
+    72,
+    92,
+    108,
+    82,
+    91,
+    53,
+    14,
+    90,
+    174,
+    42,
+    165,
+    8,
+    149,
+    58,
+    75,
+    6,
+    3,
+    175,
+    37,
+    50,
+    26,
+    84,
+    7,
+    62,
+    168,
+    74
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common storage locations like fridge, cabinets, drawers, and countertops first when searching for an object.",
+      "control": "[clean] Pinch out the growing tips of broad beans once the first pods set to deter blackfly."
+    },
+    {
+      "original": "[clean] Use sinkbasin to clean objects before placing them in their final destination.",
+      "control": "[clean] Pull weeds while they are still small so they never set seed."
+    },
+    {
+      "original": "[clean] If an object is not found in the initial locations, systematically check other likely places such as dining tables, sink basins, or shelves.",
+      "control": "[clean] Grow tall crops on the north side and low leafy crops on the south side so that nothing ever shades the shorter rows."
+    },
+    {
+      "original": "[clean] Always verify the destination location before placing the cleaned object to ensure it is the correct spot.",
+      "control": "[clean] Wait until the soil crumbles in your hand before digging, because working wet clay destroys its structure."
+    }
+  ]
+}

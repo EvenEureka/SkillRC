@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Build the final matched-order-control semantic placebo for Paper O."""
+"""Build the order placebo (scrambled copy) of the focal ALFWorld pool: each item's words are shuffled until no
+original adjacent pair remains, then matched to the pool's token footprint."""
 from __future__ import annotations
 
 import argparse

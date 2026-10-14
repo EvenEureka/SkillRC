@@ -1,0 +1,160 @@
+# Gardening sentence templates for the irrelevant controls.
+# One imperative sentence per line. Words in [square brackets] form an optional unit; any subset of the units of a
+# line can be dropped and the sentence stays grammatical. A template realises every word count from its core length
+# (all units dropped) to its full length that a subset of units can reach. scripts/analysis/build_irrelevant_control_poolrep.py
+# checks every word against the ALFWorld vocabulary and the 134 test games' text before use.
+Sow [fine] seeds [thinly] along drills so [that] the seedlings never crowd [one another].
+Mulch [newly] planted rows with [fresh] straw to hold moisture [in the soil] [through dry spells].
+Pull weeds [by hand] while they are [still] small so they never set seed [across the garden].
+Rotate crops [every season] so [that] no family grows in the same patch [year after year].
+Start [squash] seeds indoors about six weeks before the last [expected] frost [of spring].
+Pinch off the lower leaves of [young] vines to improve [the] air flow [between the stems].
+If the leaves turn yellow, test the soil before adding [any] more fertilizer [to the patch].
+Stake tall flowers before storms arrive so [that] the stems do not snap [in strong wind].
+Keep a [simple] log of sowing dates, rainfall, and [the] first blooms [for each variety].
+Choose [hardy] perennials suited to the local climate and group them by [their] moisture needs.
+Thin [crowded] seedlings to the strongest one per module once [true] leaves appear.
+Harvest [leafy] herbs in the morning after the dew dries [but before midday].
+[Always] label each row with the variety name and [the] sowing date [in permanent ink].
+If a seedling wilts at noon but recovers by evening, give it [some] shade [instead of extra moisture].
+Save seed only from [the healthiest] plants so the next season starts [out] strong [and true to type].
+Prune fruit trees in late winter while the branches are [still] [completely] bare [of leaves].
+Sharpen the pruning shears each spring so [that] every cut heals [smoothly and evenly].
+Read a rain gauge [each morning] to decide when to irrigate[, instead of following a fixed schedule].
+Turn the compost pile [every fortnight] so it keeps breaking down [evenly] [through the summer].
+Plant [bright] marigolds along the [garden] borders to deter aphids [naturally].
+Sow carrots directly into fine, stone-free soil, because transplanting [usually] disturbs the taproot [and produces forked roots].
+If frost threatens after planting, cover [the young] seedlings overnight with [a thin] [garden] fleece.
+Irrigate [deeply] at the base of each plant rather than over the leaves.
+Once the pods swell, pick peas every other day to keep the vines producing [fresh pods].
+Let the soil dry slightly between irrigations so [that] the roots grow deep [and strong].
+When transplanting [young] seedlings, handle them by the leaves, never by the [thin, fragile] stem.
+Start by testing the soil pH and amending it [carefully] before sowing the first seeds [of spring].
+Inspect the undersides of leaves weekly, since pests [and aphids] usually hide there first.
+Once the garlic tops fall over, lift the bulbs [carefully] and cure them in a dry, [airy,] shaded spot [for weeks].
+If the first sowing fails to sprout, resow a fresh batch [a fortnight later][, since damp spring soil often delays germination].
+Keep notes on which varieties thrived so [that] next year's planting plan improves [steadily].
+Space [sprawling] squash plants generously, because crowded vines invite mildew [in humid weather].
+Soak bean seeds overnight [in a jar] before sowing to speed up germination [noticeably].
+Hill up soil against leek stems [every few weeks] to blanch them [for a sweeter flavor].
+Net the [currant] berry bushes before the fruit ripens, or the birds will strip them [within days].
+Cut back [spent] flower stalks so [that] the plant directs energy into new growth.
+Divide crowded clumps of [hardy] perennials every few years [in early autumn] to restore their vigor.
+Apply a thin layer of [well-rotted] compost [each spring] rather than digging it deeply into the soil.
+Grow [climbing] nitrogen-fixing beans [in the same patch] before hungry crops such as squash and corn.
+Leave [a strip of] wildflowers along the edge [of the plot] to attract pollinators [and predatory insects].
+Harden off [indoor-raised] seedlings [gradually] for a week before transplanting them outdoors [in sheltered spots].
+Collect rain in [large] barrels during wet months so [that] the garden has a reserve [in summer].
+Train climbing beans up tall [sturdy] poles to save ground space [and improve airflow].
+Dig in green manure [crops] a few weeks before sowing [the main crop].
+Shield [young] brassicas from strong afternoon sun [during midsummer] [with mesh netting].
+Plant garlic cloves pointed end up, [roughly] a span apart [in loose soil].
+Keep grass paths [between rows] mown short so slugs have fewer spots to hide.
+Scatter [coarse] grit [or ash] near young hostas to deter slugs [and snails].
+Cover bare soil over winter with a [fast-growing] cover crop such as clover or rye [to prevent erosion].
+Sow wildflower seed in autumn so it can settle [over winter] [before germinating in spring].
+Remove suckers [below the graft] from the base of [grafted] rose bushes as soon as they appear.
+Prick out seedlings into deeper [individual] trays once they can be lifted [safely].
+Feed fruiting vines with [liquid] potash every fortnight once the first flowers set [and swell].
+Leave fallen leaves [under hedges] as shelter for beetles [and other helpful insects].
+Sow fast radishes between slow parsnips to mark the rows [and share the ground].
+Never dig [heavy] wet clay, because treading on it ruins the soil structure [for months].
+Tie in new raspberry canes [loosely] as they grow so [that] wind does not break them.
+Plant onion sets [firmly] with the tips just showing [above the soil surface].
+Add [coarse] grit to heavy soil to improve drainage [for alpine plants and bulbs].
+Sprinkle a fine layer of sand over [freshly] sown seeds to stop moss [forming].
+Grow a hedge of native shrubs [along the windward side] to shelter [tender] crops.
+Lift dahlia tubers [carefully] after the first frost and store them [in crates of sand] until spring.
+Plant a few [tall] sunflowers at the north end so [that] they do not shade shorter crops.
+Mark where bulbs are buried so they are not dug up [by mistake] [later in the year].
+Cut asparagus spears [carefully] at ground level once they reach a finger's length [in late spring].
+Let a few [culinary] herbs flower, since hoverflies feed on them [and then hunt aphids].
+Rake the soil to a fine tilth before sowing [small] seeds [such as carrots or parsnips].
+Mow the meadow strip only once a year [in late summer], after the wildflowers have dropped their seed.
+Protect [young] brassicas from caterpillars with [fine] mesh [stretched over hoops].
+Snap off rhubarb stalks [at the base] rather than cutting them[, so the crown heals].
+Grow strawberries through [woven] mulch fabric to suppress weeds [and keep fruit off the soil].
+Bud [garden] roses in midsummer when the bark lifts [easily] from the rootstock.
+Edge the lawn [neatly] each month so grass does not creep into the [flower] borders.
+Feed the soil rather than the plants, by adding [rotted] organic matter every autumn [without fail].
+When sowing beans, set a few extra at the end of each row [to fill any gaps later].
+Cut [fragrant] sweet peas every few days, because the more you pick, the more they flower [all summer].
+Avoid planting the same crop family in [a given] patch more than once every three years.
+Before a [long] dry spell, soak the ground deeply rather than sprinkling it daily [with a hose].
+Pick courgettes [often] while they are small and tender[, as large ones lose flavor].
+Sow a pinch of seed [in each module] and thin to the strongest [seedling] [after a week].
+In early spring, before the buds break, prune [currant and gooseberry] bushes into a goblet shape [so that air moves freely through the branches] [and the fruit ripens evenly].
+When a late frost is forecast, drape fleece over [the] blossoms [of early fruit trees] [before dusk] and remove it [again] [the next morning] [once the sun is up].
+If seedlings stretch [and topple] [on a bright ledge], sow the next batch [more thinly] [and give them stronger daylight] [from the very first day].
+Build a compost heap [at least a meter wide] so that it decomposes [rapidly] [and evenly] [throughout the year].
+Plan the [vegetable] garden in a notebook [each winter] [and mark which family grows in each plot] [so that nothing is forgotten when spring arrives].
+Grow tall [climbing] crops on the north side [of the plot] [and low leafy crops on the south side] so that nothing [ever] shades the shorter rows.
+After clearing each [early] crop, sow a quick green manure [such as mustard or phacelia] [to protect the bare soil] [until the next planting].
+Keep [newly] sown rows [evenly] moist [with gentle drips] until the seedlings emerge[, because a single dry day can kill germinating seeds] [in shallow drills].
+Sow hardy annuals directly where they are to flower [in autumn or early spring] [and thin them to about a span apart when they are large enough].
+Before buying new shrubs, study how much sun [and shelter] each corner of the garden receives [over a full day] [in midsummer and midwinter].
+If aphids cluster on [the] shoot tips, rub them off [gently] [between finger and thumb] [before the colony spreads to other plants].
+Keep a bare ring [of mulch] [about a stride wide] [beneath young fruit trees] so grass does not compete for moisture [and nutrients].
+Choose [disease-resistant] varieties for crops that suffered blight [in earlier seasons][, and record how each variety performed].
+Plant [early] bulbs [in drifts] beneath deciduous shrubs, where they flower before the canopy fills [with leaves].
+Ventilate the greenhouse [on sunny mornings] so [that] humid air does not encourage mould [on seedlings] [and young cuttings].
+Sow [quick] salad leaves [every fortnight] in short rows so that a [steady] supply follows [through the season] [without gluts].
+Prune [summer-fruiting] raspberry canes to the ground after they fruit[, and tie in the new canes] [for next year].
+Pinch out the growing tips of broad beans [once the first pods set] to deter blackfly [and hasten cropping].
+# Denser templates (parenthetical examples, measurements, cultivar names), added 2026-10-12 because the Qwen3-32B pools
+# carry about 1.25 o200k tokens per word against 1.19 for the sentences above.
+Grow nitrogen-fixing legumes (e.g., clover, vetch, field beans)[ before heavy feeders such as squash][ in the following season].
+Add slow-release organic fertilizer (blood, fish and bone)[ to hungry crops][ at planting time][ and again in midsummer].
+Keep soil pH[ (measured with a soil kit)] between 6.0 and 7.0 for most vegetables[, but lower it to 4.5–5.5 for blueberries and rhododendrons].
+Space brassicas (cabbage, kale, broccoli) 45–60 cm apart[ in staggered rows][ to reduce clubroot and mildew].
+Mix perlite or vermiculite into seed compost (roughly one part in four)[ to improve drainage][ for fine-rooted seedlings].
+Interplant marigolds, nasturtiums, and calendula[ among the vegetables] to lure aphids away[ from the main crops][ and attract hoverflies].
+Prune hydrangeas (mophead and lacecap types)[ in early spring], cutting[ each stem] back to the first healthy pair of buds.
+Feed fruiting crops (courgettes, aubergines, cucumbers) with high-potash liquid feed[ every 10–14 days][ once the first fruits set].
+Cover brassica seedlings with fine insect-proof mesh (0.8 mm or smaller)[ straight after transplanting][ to exclude cabbage white butterflies and flea beetles].
+Sow hardy annuals (cornflowers, nigella, poppies) directly outdoors[ in September or March][ and thin them to 15–20 cm].
+Lift and divide overcrowded perennials (asters, heleniums, phlox)[ every three to four years][ in autumn or early spring].
+Add mycorrhizal granules to planting holes[ for trees, shrubs, and roses] to help roots establish[ in poor soil].
+Deadhead repeat-flowering roses (floribundas, hybrid teas)[ weekly] to prolong flowering[ into late autumn].
+Plant spring bulbs (tulips, daffodils, alliums) at three times their own depth[ in well-drained soil][ during October or November].
+Store seed in airtight jars with silica gel[ at 5–10 °C][ to keep germination rates high for several years].
+Grow long-keeping winter squash (e.g., 'Crown Prince', 'Uchiki Kuri')[ for storage][ through the winter months].
+Mulch acid-loving shrubs (camellias, azaleas, pieris) with composted pine needles[ or bark chippings][ each spring].
+Apply a balanced granular fertilizer (N-P-K 7-7-7)[ at 70 g per square metre] before sowing[ the main crops].
+Stop harvesting asparagus[ and rhubarb] by midsummer so the crowns can rebuild their reserves[ for the following year].
+Grow climbing beans, sweet peas, and cucumbers up wigwams of 2.4 m[ sturdy] hazel poles[ to save ground space].
+Sow green manures (phacelia, mustard, crimson clover)[ on bare ground] after the last harvest[, then dig them in before they flower].
+Trim yew and privet hedges[ twice a year] (late spring and late summer)[ to keep them dense].
+Sow carrots, parsnips, and beetroot thinly[ in drills 1–2 cm deep][ from March to June].
+Overwinter frost-tender plants (dahlias, cannas, pelargoniums)[ in a frost-free shed][ at about 5–8 °C].
+Rotate the four main groups (legumes, brassicas, roots, alliums)[ around the plot][ every year] to break pest and disease cycles.
+Propagate lavender, rosemary, and sage from semi-ripe cuttings (10–15 cm long)[ in late summer][ in a shaded propagator].
+Apply nematodes (Phasmarhabditis hermaphrodita)[ to moist soil][ in spring or autumn] to control slugs[ without pellets].
+Encourage predators (ladybirds, lacewings, ground beetles) with log piles[, nettle patches,] and[ unmown] grass margins.
+Harvest courgettes at 10–15 cm[, before the seeds harden,][ to keep the plants cropping until autumn].
+Plant bare-root shrubs and hedging (hawthorn, blackthorn, hazel)[ between November and March][ while they are dormant].
+Test drainage by digging a 30 cm hole[ in several spots] and timing how long the hole needs to drain.
+Sow half-hardy annuals (cosmos, zinnias, tagetes) under cover[ in April][ and plant out after the last frost].
+Cut back late-flowering clematis (Group 3, e.g., 'Jackmanii') to 30 cm[ in February][ above a strong pair of buds].
+Keep comfrey (Bocking 14)[ in a corner of the plot] and steep its leaves[ for four weeks] to make a potash-rich liquid feed.
+Space strawberries 35–45 cm apart[ in rows 75 cm wide], renewing[ the] plants every three to four years.
+Prune plums and cherries[ only] in summer (June to August) to reduce the risk of silver leaf[ and canker].
+Grow salad leaves (rocket, mizuna, mustard greens)[ in shallow trays] for repeated cut-and-come-again harvests[ over six weeks].
+Keep the soil around blueberries[ always] acidic (pH 4.5–5.5)[ with ericaceous compost and collected rain].
+Sow broad beans (e.g., 'Aquadulce Claudia')[ in November] for an early crop[, and protect them with fleece in hard frosts].
+Install a 1,000-litre rain butt[ on each downpipe][ to collect runoff for dry spells].
+Train cordon fruit[ at a 45° angle] along wires spaced 60 cm apart[ to maximise cropping in small gardens].
+Apply sulphate of potash (0-0-50)[ around fruit bushes][ in late winter] to improve flowering and fruit set.
+Sow quick-maturing radishes (e.g., 'French Breakfast')[ every fortnight] between slower rows[ of parsnips or leeks].
+Thin[ carefully] direct-sown beetroot to 10 cm apart[, eating the thinnings as baby leaves in salads].
+Grow early peas (e.g., 'Meteor', 'Kelvedon Wonder')[ under fleece][ from late February] for a May harvest.
+Keep a garden diary (sowing dates, rainfall, first frosts, yields)[ for every season][ to refine next year's plan].
+Plant leeks[ in late June] 15 cm apart in dibbed holes 15–20 cm deep[ to blanch the stems].
+Grow herbs (thyme, oregano, sage)[ in gritty, free-draining soil][ in full sun] for the strongest flavour.
+Collect seed heads[ of poppies, nigella, and aquilegia][ in labelled envelopes] once the capsules rattle.
+Cut lavender back by one-third[ after flowering] (late August), never[ cutting] into old, bare wood.
+Before sowing, rake in a general fertilizer (e.g., fish, blood and bone at 70 g/m²)[, then level the surface with the back of the rake][ so that seed drills stay straight].
+Grow a succession of crops (spring onions, radishes, salad leaves, dwarf beans)[ in the same strip][ from April to September][, sowing a short row every fortnight].
+Protect fruit buds from bullfinches[ and frost] with 2 cm netting (or horticultural fleece)[ from February to April][, removing it once the blossom has set].
+Improve heavy clay with coarse grit (3–6 mm) and composted bark[, digging it into the top 25 cm][ in autumn][ before winter frosts break up the clods].
+Grow cut flowers (sweet peas, cosmos, dahlias, zinnias)[ in dedicated rows][ away from the borders][, cutting stems early in the morning for the longest life indoors].

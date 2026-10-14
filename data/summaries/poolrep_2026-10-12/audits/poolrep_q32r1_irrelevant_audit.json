@@ -1,0 +1,113 @@
+{
+  "pool": "data/pools/poolrep_q32r1_insights.jsonl",
+  "control": "data/pools/poolrep_q32r1_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/poolrep_gardening_bank.txt",
+  "seed": 20264869,
+  "n_items": 36,
+  "body_words": 526,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 3,
+  "retained_body_fraction": 0.9943,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 773,
+      "before": 774,
+      "control": 773
+    },
+    "qwen3_8b": {
+      "target": 775,
+      "before": 778,
+      "control": 775
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1087,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/poolrep_q32r1_insights.jsonl",
+    "payload_corpus": "data/pools/poolrep_q32r1_irrelevant.jsonl"
+  },
+  "templates_used": [
+    15,
+    142,
+    39,
+    75,
+    57,
+    79,
+    13,
+    55,
+    35,
+    104,
+    89,
+    74,
+    84,
+    150,
+    128,
+    3,
+    62,
+    20,
+    90,
+    120,
+    68,
+    47,
+    42,
+    143,
+    14,
+    4,
+    12,
+    65,
+    2,
+    18,
+    5,
+    110,
+    37,
+    92,
+    83,
+    85
+  ],
+  "replacements": [
+    {
+      "doc_index": 0,
+      "word_index": 1,
+      "original_word": "Prune"
+    },
+    {
+      "doc_index": 5,
+      "word_index": 1,
+      "original_word": "Sow"
+    },
+    {
+      "doc_index": 17,
+      "word_index": 1,
+      "original_word": "Sow"
+    }
+  ],
+  "examples": [
+    {
+      "original": "[clean] Start by identifying the object to clean and its likely locations based on common sense.",
+      "control": "[clean] x fruit trees in late winter while the branches are still completely bare of leaves."
+    },
+    {
+      "original": "[clean] Always check the sinkbasin first for cleaning, as it is the standard location for this action.",
+      "control": "[clean] Grow early peas (e.g., 'Meteor', 'Kelvedon Wonder') under fleece from late February for a May harvest."
+    },
+    {
+      "original": "[clean] If the object is not in the initial location, systematically check other likely storage or usage areas.",
+      "control": "[clean] Leave a strip of wildflowers along the edge of the plot to attract pollinators and predatory insects."
+    },
+    {
+      "original": "[clean] After cleaning, return to a suitable surface or container specified in the task to place the object.",
+      "control": "[clean] Cut sweet peas every few days, because the more you pick, the more they flower all summer."
+    }
+  ]
+}

@@ -4,423 +4,148 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SkillRC</title>
-<meta name="description" content="SkillRC: a controlled experience-memory harness that asks three questions of an agent skill memory: does it improve the system, does the gain transfer across executor stacks, and how much of it comes from the experience content.">
+<meta name="description" content="When a distilled experience memory helps one model and not another, is it what the memory says or how the model reads it? SkillRC splits the effect into a reading cost and a content value.">
 <meta property="og:title" content="SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses">
-<meta property="og:description" content="A 645-token skill memory raises GPT-4o-mini by 12.7 points on ALFWorld but not Qwen3-8B; against a scrambled and a coherent irrelevant control, the benefit comes from task-relevant content, and the stacks differ in what an added block costs.">
-<meta property="og:image" content="static/img/fig_rerun.png">
+<meta property="og:description" content="When an experience memory helps one model and not another, the differences we could attribute are in what the rules say. No model pays a measurable cost for reading them; their content is worth something to two of six readers and costs on WebShop.">
+<meta property="og:image" content="https://eveneureka.github.io/SkillRC/static/img/fig_readers.png">
 <style>
   :root {
     color-scheme: light;
     --bg: #fdfcfc;
     --surface: #ffffff;
     --card: #f4eeef;
-    --card-rule: #d9b6bc;
     --rule: #e6dfe1;
     --text: #1a1718;
     --text-2: #4f4a4c;
     --text-3: #7f7a7c;
     --accent: #5b0a18;
-    --accent-2: #7a1022;
-    --link: #2e86ab;
-    --obs: #6b4c9a;
-    --insight: #e67e22;
+    --link: #2e7fa3;
     --code-bg: #f7f3f4;
-    --serif: "Linux Libertine O", "Linux Libertine", "Libertinus Serif", "Iowan Old Style", Palatino, Georgia, serif;
-    --sans: "Linux Biolinum O", "Libertinus Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --serif: "Libertinus Serif", "Linux Libertine O", "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --bg: #161314; --surface: #1f1b1c; --card: #2a2022; --card-rule: #5a3a41; --rule: #3a3234;
+      --bg: #161314; --surface: #1f1b1c; --card: #2a2022; --rule: #3a3234;
       --text: #f3eeef; --text-2: #c9c1c3; --text-3: #9d9497;
-      --accent: #e8a1ad; --accent-2: #f0b6c0; --link: #7cc3df; --obs: #b9a3e0; --insight: #f0a65a;
-      --code-bg: #262022;
+      --accent: #e8a1ad; --link: #7cc3df; --code-bg: #262022;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #161314; --surface: #1f1b1c; --card: #2a2022; --card-rule: #5a3a41; --rule: #3a3234;
+    --bg: #161314; --surface: #1f1b1c; --card: #2a2022; --rule: #3a3234;
     --text: #f3eeef; --text-2: #c9c1c3; --text-3: #9d9497;
-    --accent: #e8a1ad; --accent-2: #f0b6c0; --link: #7cc3df; --obs: #b9a3e0; --insight: #f0a65a;
-    --code-bg: #262022;
+    --accent: #e8a1ad; --link: #7cc3df; --code-bg: #262022;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.6; }
-  main { max-width: 900px; margin: 0 auto; padding: 0 16px 64px; }
+  main { max-width: 820px; margin: 0 auto; padding: 0 16px 64px; }
   a { color: var(--link); }
-  header.hero { text-align: center; padding: 56px 0 26px; }
-  h1 { font-weight: 700; font-size: clamp(27px, 4.4vw, 40px); line-height: 1.2; margin: 0 auto 16px; max-width: 800px; color: var(--accent); text-wrap: balance; }
-  h1 .sc { font-variant: small-caps; letter-spacing: .02em; }
-  .authors { margin: 0 0 2px; }
-  .affil { color: var(--text-3); font-style: italic; font-size: 16px; margin: 0 0 6px; }
-  .status { color: var(--text-3); font-style: italic; font-size: 15px; margin: 0 0 20px; }
+  header { text-align: center; padding: 48px 0 20px; }
+  h1 { font-size: clamp(26px, 4.6vw, 38px); line-height: 1.2; margin: 0 auto 6px; color: var(--accent); text-wrap: balance; }
+  .subtitle { font-size: clamp(18px, 3vw, 22px); color: var(--text-2); margin: 0 0 18px; text-wrap: balance; }
+  .byline { margin: 0; }
+  .status { color: var(--text-3); font-style: italic; font-size: 15px; margin: 2px 0 20px; }
   .links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; font-family: var(--sans); }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 999px; background: var(--accent); color: #fff; text-decoration: none; font-size: 15px; font-weight: 600; border: 1px solid var(--accent); }
-  .btn.ghost { background: transparent; color: var(--accent); border-color: var(--card-rule); }
-  .btn:hover { opacity: .9; }
-  .btn svg { width: 16px; height: 16px; }
-  .abstract { background: var(--card); padding: 18px 22px; margin: 6px 0 34px; }
-  .abstract h2 { margin: 0 0 8px; border: 0; padding: 0; font-size: 21px; }
-  .abstract p { margin: 0; font-size: 16.5px; }
-  h2 { font-variant: small-caps; letter-spacing: .02em; font-weight: 700; font-size: 26px; color: var(--accent); margin: 48px 0 10px; }
-  h3 { font-style: italic; font-weight: 700; font-size: 19px; color: var(--accent); margin: 26px 0 6px; }
+  .btn { display: inline-block; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 600; }
+  .btn.primary { background: var(--accent); color: var(--bg); }
+  h2 { font-size: 24px; color: var(--accent); margin: 40px 0 10px; }
   p { margin: 0 0 14px; }
-  .muted { color: var(--text-2); }
-  .rq { display: inline-block; font-family: var(--sans); font-weight: 700; font-size: 13px; color: var(--accent); background: var(--card); border: 1px solid var(--card-rule); border-radius: 3px; padding: 1px 6px; margin-right: 8px; vertical-align: 2px; }
-  .callout { border-left: 3px solid var(--obs); padding: 4px 0 4px 16px; margin: 14px 0 20px; }
-  .callout b { color: var(--obs); font-family: var(--sans); }
-  .callout.insight { border-left-color: var(--insight); }
-  .callout.insight b { color: var(--insight); }
-  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 18px; }
-  .step { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--accent-2); border-radius: 4px; padding: 12px 14px 10px; font-size: 16px; line-height: 1.5; }
-  .step .n { font-family: var(--sans); font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 4px; }
-  .step b { color: var(--accent); }
-  .step .m { display: block; margin-top: 8px; font-family: var(--sans); font-size: 13.5px; color: var(--text-3); }
-  figure { margin: 22px 0 24px; }
-  .plate { background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 12px; }
+  figure { margin: 24px 0 8px; }
+  figure .frame { background: #ffffff; border: 1px solid var(--rule); border-radius: 8px; padding: 10px; }
   figure img { display: block; width: 100%; height: auto; }
-  figcaption { font-size: 15.5px; color: var(--text-2); margin-top: 8px; line-height: 1.5; }
-  figcaption b { color: var(--text); }
-  .row2 { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 14px; align-items: end; }
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0 8px; font-family: var(--sans); }
-  .stat { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--accent-2); border-radius: 4px; padding: 12px 12px 10px; }
-  .stat .v { font-family: var(--serif); font-size: 29px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--accent); }
-  .stat .l { font-size: 13.5px; color: var(--text-2); margin-top: 6px; line-height: 1.35; }
-  .stat .ci { font-size: 12.5px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 4px; }
-  table { width: 100%; border-collapse: collapse; font-size: 15.5px; margin: 14px 0 6px; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  thead tr { background: var(--card); }
-  th { color: var(--accent); font-weight: 700; }
-  tbody tr:nth-child(odd) { background: color-mix(in srgb, var(--card) 45%, transparent); }
-  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .dim { display: inline-block; font-family: var(--sans); font-size: 12px; font-weight: 700; color: #fff; border-radius: 3px; padding: 1px 6px; margin-right: 6px; }
-  .edited { color: var(--accent); font-weight: 700; font-family: var(--sans); font-size: 14px; }
-  .fixed { color: var(--text-3); font-family: var(--sans); font-size: 14px; }
-  pre code { display: block; clear: both; }
-  pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; margin: 12px 0 18px; }
-  .copy { float: right; margin: -4px -6px 6px 8px; font: 600 12px var(--sans); background: transparent; color: var(--text-2); border: 1px solid var(--rule); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; font-family: var(--sans); }
-  .tabs button { font: 600 14px var(--sans); color: var(--text-2); background: var(--surface); border: 1px solid var(--rule);
-                 border-radius: 999px; padding: 5px 12px; cursor: pointer; }
-  .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .tabs button .room { font-weight: 400; opacity: .8; }
-  .js .case[hidden] { display: none; }
-  .case h3 { margin-top: 14px; }
-  footer { text-align: center; color: var(--text-3); font-size: 15px; margin-top: 52px; padding-top: 16px; border-top: 1px solid var(--rule); }
-  .theme-toggle { position: fixed; top: 12px; right: 12px; background: var(--surface); color: var(--text-2); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; font: 600 13px var(--sans); cursor: pointer; }
-  @media (max-width: 720px) {
-    body { font-size: 17px; }
-    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .steps { grid-template-columns: minmax(0, 1fr); }
-    .row2 { grid-template-columns: minmax(0, 1fr); }
-    .plate { padding: 6px; }
-    th:nth-child(2), td:nth-child(2) { white-space: nowrap; }
-  }
+  figcaption { font-size: 15px; color: var(--text-2); margin-top: 8px; line-height: 1.5; }
+  .answer { border-left: 3px solid var(--accent); padding-left: 12px; }
+  .tap { display: none; }
+  @media (max-width: 520px) { .tap { display: inline; } }
+  ol.findings { padding-left: 1.3em; margin: 0; }
+  ol.findings li { margin: 0 0 14px; }
+  ol.findings strong { color: var(--text); }
+  .note { font-size: 16px; color: var(--text-2); }
+  pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.45; }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--text-3); text-align: center; }
+  @media (max-width: 520px) { body { font-size: 17px; } header { padding-top: 32px; } }
 </style>
 </head>
 <body>
-<button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle color theme">Theme</button>
 <main>
-  <header class="hero">
-    <h1><span class="sc">SkillRC</span>: Is It the Skill or the Stack?<br>Auditing Experience Memory in Agent Harnesses</h1>
-    <p class="authors">Yiwen Lu</p>
-    <p class="affil">University of Notre Dame &middot; <a href="mailto:ylu37@nd.edu">ylu37@nd.edu</a></p>
-    <p class="status">Manuscript &middot; October 2026</p>
-    <div class="links">
-      <a class="btn" href="static/skillrc_paper.pdf">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-        Paper
-      </a>
-      <a class="btn" id="codeLink" href="https://github.com/EvenEureka/SkillRC">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
-        Code
-      </a>
-      <a class="btn ghost" href="#bibtex">BibTeX</a>
-    </div>
-  </header>
-
-  <section class="abstract">
-    <h2>Abstract</h2>
-    <p>Agent harnesses increasingly learn from experience: past executions are distilled into insights, skills, or
-      playbooks that are injected back into the context of a frozen model. Such memories are usually credited by
-      comparing an agent with the memory to one without it. That comparison answers only the first of three questions:
-      whether the system improves, whether the gain carries over to a different executor, and how much of it comes
-      from what the memory says rather than from adding context. SkillRC, a reality check (RC) for agent skills, asks
-      all three of a fixed agent. It treats the memory as a controlled intervention, estimates its gain on two executor
-      stacks, and compares the true memory with two controls that keep its rules, order, and length: a scrambled placebo
-      and a coherent memory about an unrelated activity. On ALFWorld, a compact skill memory clearly improves GPT-4o-mini
-      on every demonstration pair, with the smallest payload we test, and does not help Qwen3-8B. A pre-registered rerun
-      of every condition in one time window locates the gain in the memory&rsquo;s task-relevant content: the two controls
-      behave alike, and the true memory exceeds the scrambled placebo on both executors. What differs between the
-      executors is the cost of reading an added block, which leaves Qwen3-8B&rsquo;s net gain near zero; an earlier
-      finding that the placebo alone separates the executors did not reproduce on new games.</p>
-  </section>
-
-  <h2>The question</h2>
-  <p>Experience-driven agents convert past executions into insights, skills, or playbooks that re-enter the
-    model&rsquo;s context. The evidence that such a memory helps is usually a with-versus-without comparison on one
-    base model. That comparison answers the first of three questions, and the other two decide what the gain means:</p>
-  <div class="steps">
-    <div class="step"><div class="n">QUESTION 1</div><b>Does adding the memory make the system better?</b> The paired
-      gain on identical tasks, prompts, and memory, for the stack the memory was built with.<span class="m">With-versus-without answers this one.</span></div>
-    <div class="step"><div class="n">QUESTION 2</div><b>Does the same gain transfer to another executor stack?</b> The
-      executor is a stack of weights, tokenizer, chat template, runtime, and decoding, and the same memory may help one
-      stack and not another.<span class="m">Measured by the transport gap between stacks.</span></div>
-    <div class="step"><div class="n">QUESTION 3</div><b>How much of the gain comes from what the memory says?</b> Any
-      added block of text can move a model; two controls with the same rules, order, and length, one scrambled and one
-      coherent but about an unrelated activity, separate content from context.<span class="m">Measured by the increment of the true memory over each control.</span></div>
+<header>
+  <h1>SkillRC: Is It the Skill or the Stack?</h1>
+  <p class="subtitle">Auditing experience memory in agent harnesses</p>
+  <p class="byline">Yiwen Lu &middot; University of Notre Dame &middot; <a href="mailto:ylu37@nd.edu">ylu37@nd.edu</a></p>
+  <p class="status">Manuscript, 2026</p>
+  <div class="links">
+    <a class="btn primary" href="static/skillrc_paper.pdf">Paper (PDF)</a>
+    <a class="btn" href="https://github.com/EvenEureka/SkillRC">Code and data</a>
   </div>
-  <p>SkillRC asks all three of one fixed agent. It varies only the executor stack and the memory&rsquo;s content,
-    representation, presentation, and footprint, keeps the agent loop, decoding, and action parsing identical, audits
-    the items, order, and tokens that reach the model, and freezes the placebo and its decision rule before any outcome
-    is inspected. The focal memory is a pool of 33 ExpeL-style insights (645 tokens) distilled from successful ALFWorld
-    runs; the executors are hosted GPT-4o-mini and locally served Qwen3-8B.</p>
+</header>
 
-  <figure>
-    <div class="plate"><a href="static/img/fig_rerun.png"><img src="static/img/fig_rerun.png" alt="Same-window rerun on 60 ALFWorld games. GPT-4o-mini: no memory 0.589, scrambled placebo 0.561, coherent irrelevant control 0.561, true memory 0.667. Qwen3-8B: 0.706, 0.633, 0.667, 0.717. Paired effects with 95% intervals: true minus scrambled +0.106 (GPT) and +0.083 (Qwen), both excluding zero; irrelevant minus scrambled near zero for both."></a></div>
-    <figcaption><b>No memory &rarr; scrambled &rarr; coherent but irrelevant &rarr; true memory.</b> All four conditions and both
-      executors were rerun in one time window on 60 games, under a pre-registered analysis. The two controls keep the
-      memory&rsquo;s items, tags, order and 645-token footprint and behave alike; the true memory exceeds them, so the
-      benefit comes from what the memory says about the task. Qwen3-8B loses with any added block (0.706 &rarr; 0.633 with
-      the scrambled one), and its content benefit roughly cancels that loss.</figcaption>
-  </figure>
+<h2>The question</h2>
+<p>A common way to let an LLM agent learn from experience is to distill its past runs into a short
+list of rules and put the list in its prompt. The same list can help one model and do nothing for
+another, or harm it. Is that because of what the rules say, the skill, or because of how each model
+reads added text, the stack?</p>
+<p class="answer"><strong>Answer.</strong> The differences we could attribute are in the skill. No model
+pays a measurable cost for reading the memory, while what the rules say is worth +0.08 to GPT-4o-mini, about
++0.04 to Qwen3-8B, nothing measurable to four other models, and a loss on WebShop.</p>
+<p>To separate the two, we built a control that keeps everything about the memory except its content:
+the same items, tags, word counts and order, and the same token count under every model's tokenizer.
+Each rule is replaced by a sentence about gardening, with a few words replaced by a placeholder where
+needed to match token counts. The memory's effect then splits into a <em>reading cost</em> (control
+minus no memory) and a <em>content value</em> (memory minus control).</p>
 
-  <h2>Three findings</h2>
+<figure>
+  <a href="static/img/fig_readers.png"><div class="frame"><img src="static/img/fig_readers.png" alt="Dot plot of reading cost and content value with 95% intervals. Reading cost lies within 0.04 of zero for every reader. Content value is about +0.08 for GPT-4o-mini and +0.04 for Qwen3-8B, and near zero for Llama-3.1-8B, Qwen3-14B and Qwen3-32B."></div></a>
+  <figcaption>Reading cost and content value on 134 unseen ALFWorld games, with 95% intervals. Left: one
+  pool read by five models (single runs). Right: the mean over 18 pools for three Qwen3 models, with
+  intervals that resample pools as well as games; the light dots are single pools. Below each model:
+  its success rate without memory. <span class="tap">Tap the figure to open it at full size.</span></figcaption>
+</figure>
 
-  <h3>1. The memory helps the system it was built with</h3>
-  <p>On the 134 unseen ALFWorld tasks, the 33-insight memory raises GPT-4o-mini success from <b>0.587 to 0.714</b>, a
-    paired gain of +0.127 (95% task-bootstrap interval [+0.072, +0.184]). The gain is present on every demonstration
-    pair (+0.112, +0.097, and +0.172), so it is not produced by one favourable prompt, and it comes from the smallest
-    payload we test: raw trajectories and Markdown procedures realise about three times as many tokens under the same
-    budget and none of them exceeds it. The memory is also cheap for the stack it helps: episodes become shorter (18.1
-    against 20.3 steps), so the 645-token block raises API cost by 9.6%, most of it cached.</p>
-  <figure>
-    <div class="plate row2">
-      <a href="static/img/fig_success.png"><img src="static/img/fig_success.png" alt="ALFWorld success without and with memory: GPT-4o-mini 0.587 to 0.714, Qwen3-8B 0.704 to 0.683."></a>
-      <a href="static/img/fig_pairs.png"><img src="static/img/fig_pairs.png" alt="Paired gain per demonstration pair: GPT positive on all pairs, Qwen near zero or negative; equal-pair mean +0.127 versus −0.021."></a>
-    </div>
-    <figcaption><b>Findings 1 and 2.</b> Success without and with the memory under both stacks, and the paired gain on
-      each demonstration pair with 95% intervals on the mean.</figcaption>
-  </figure>
+<h2>What we found</h2>
+<ol class="findings">
+  <li><strong>No reader pays a measurable reading cost.</strong> Matched unrelated text changes ALFWorld
+  success by at most 0.04 for each of six models, and no model's reading cost is distinguishable from
+  zero. Where a memory does nothing for a model, its content value is near zero too, so no reading cost is
+  masking a gain.</li>
+  <li><strong>Content is worth something to two readers and lowers the score on WebShop.</strong> For Qwen3-8B,
+  averaged over 18 pools, the content value is +0.039 [0.012, 0.065]. GPT-4o-mini also gains reliably
+  from a pool built from its own runs, while four other models gain nothing measurable. On WebShop the
+  distilled rules lower the score: several rules tell the agent to search again, and GPT-4o-mini
+  searches more than twice as often (5.7 against 2.4 times per session).</li>
+  <li><strong>For Qwen3 readers, distilled rules beat generic advice and the source agent made no
+  difference.</strong> For Qwen3-8B and Qwen3-14B,
+  rules distilled from trajectories beat equally long rules written from the task description alone by
+  +0.035 [0.014, 0.057] (the two lists were written by different models; see the paper). Qwen3-32B did
+  not read the generic rules. For all three Qwen3 readers, with the same number of trajectories per task
+  type from each source, it made no difference which agent supplied them.
+  Pools built by the same pipeline differ from one another about as much as the effects, so a memory is
+  best judged over several pools.</li>
+</ol>
 
-  <h3>2. The gain is specific to the executor stack</h3>
-  <p>Under Qwen3-8B the same memory, the same scaffold, and the same tasks give &minus;0.021 ([&minus;0.062, +0.020]),
-    with pairwise effects of +0.008, &minus;0.082, and +0.011. The transport gap between the stacks is
-    <b>&minus;0.148 ([&minus;0.218, &minus;0.080])</b>, so the memory&rsquo;s effect is an interaction between memory
-    and executor, not a property of the memory alone. The second stack starts from higher no-memory success (70.4%
-    against 58.7%), which leaves less headroom, and Finding 3 shows that it also responds to the added block differently.
-    The interval identifies moderation by the whole stack; it does not identify which component, weights, tokenizer,
-    template, or runtime, is responsible.</p>
+<h2>How it was tested</h2>
+<p class="note">Five studies on ALFWorld and WebShop with six readers (GPT-4o-mini, GPT-4.1-mini,
+Llama-3.1-8B, Qwen3-8B, Qwen3-14B, Qwen3-32B) and 24 ALFWorld pools. For each study the predictions and
+the analysis were written down before its runs; the paper lists every prediction with its outcome and
+marks the exploratory analyses. The one planned test of a difference between readers was not
+significant, the intervals of the differences between readers' reading costs reach 0.10, and the topic
+of the unrelated text shifts the reading cost by 0.025. The readers are small and mid-sized models and
+the memories are short rule lists, so the results do not speak to frontier models or long procedural
+skills.</p>
 
-  <h3>3. The benefit comes from task-relevant content; the stacks differ in what an added block costs</h3>
-  <p>A first placebo gate was inconclusive: the scrambled memory alone moved the stacks apart (+0.089 for GPT-4o-mini,
-    &minus;0.108 for Qwen3-8B), and the content increments had intervals that included zero. A scrambled block is not a
-    neutral control, so we added a <b>coherent, equal-length memory about vegetable gardening</b> with the same tags, word
-    counts, order and footprint, and reran every condition for both executors in one window under a pre-registered rule.</p>
-  <p>On the rerun the true memory exceeds the scrambled placebo on <b>both</b> executors (+0.106 for GPT-4o-mini,
-    +0.083 for Qwen3-8B, both intervals above zero) and exceeds the coherent control on GPT-4o-mini (+0.106). The two
-    controls behave alike (differences 0.000 and +0.033), so the frozen rule attributes the content increment to task
-    relevance, not to coherence. What separates the executors is the block itself: Qwen3-8B drops 0.072 with the scrambled
-    payload, so its content benefit leaves a net gain near zero (+0.011), while GPT-4o-mini keeps most of it (+0.078).</p>
-  <div class="callout"><b>What changed, and what did not.</b> The earlier placebo effect on GPT-4o-mini did not reproduce
-    on the rerun (&minus;0.028 instead of +0.089). The rerun uses a different sample of 60 games, because the re-downloaded
-    ALFWorld data map task ids to games in a different order, and hosted generations are not perfectly repeatable, so this
-    is reported as non-reproduction rather than a task-by-task replication test. The memory&rsquo;s gain on GPT-4o-mini and
-    its absence on Qwen3-8B hold on both samples.</div>
-  <div class="callout insight"><b>The next test.</b> Repeating the two-control design on all 134 tasks with repeated hosted
-    runs would put an interval on the stack difference in context cost; manipulating stack components one at a time would
-    say which part of the stack sets that cost.</div>
-
-  <h2>Full results</h2>
-  <h3>Key numbers</h3>
-  <p class="muted">ALFWorld, 134 unseen tasks, 33 ExpeL-style insights (645 tokens), BM25 presentation, three
-    demonstration pairs weighted equally; 95% task-bootstrap intervals. Control numbers from the 60-game same-window rerun.</p>
-  <div class="stats">
-    <div class="stat"><div class="v">+0.127</div><div class="l">GPT-4o-mini gain with memory (0.587 &rarr; 0.714)</div><div class="ci">[+0.072, +0.184]</div></div>
-    <div class="stat"><div class="v">−0.148</div><div class="l">Transport gap (Qwen − GPT)</div><div class="ci">[−0.218, −0.080]</div></div>
-    <div class="stat"><div class="v">+0.106 / +0.083</div><div class="l">True memory vs. scrambled placebo, GPT / Qwen (rerun)</div><div class="ci">[+0.028, +0.183] / [+0.022, +0.144]</div></div>
-    <div class="stat"><div class="v">0.000 / +0.033</div><div class="l">Coherent irrelevant vs. scrambled, GPT / Qwen (rerun)</div><div class="ci">[−0.072, +0.072] / [−0.028, +0.094]</div></div>
-  </div>
-
-  <h3>Harness factors</h3>
-  <p class="muted">Each comparison varies one factor on identical tasks. The agent loop (ReAct, admissible actions,
-    step limit), decoding (temperature 0), and action parsing are shared by every configuration and are not factors.</p>
-  <table>
-    <thead><tr><th>Factor</th><th>Role</th><th>Levels in this study</th></tr></thead>
-    <tbody>
-      <tr><td><span class="dim" style="background:#7a1022">E</span>Executor stack</td><td class="edited">varied</td><td>GPT-4o-mini (hosted API), Qwen3-8B (vLLM, thinking off)</td></tr>
-      <tr><td><span class="dim" style="background:#F0A04B">c</span>Memory content</td><td class="edited">varied</td><td>none, true insights, order placebo, coherent task-irrelevant control</td></tr>
-      <tr><td><span class="dim" style="background:#A066C2">r</span>Representation</td><td class="edited">varied</td><td>33 compact insights, raw trajectories, Markdown procedures</td></tr>
-      <tr><td><span class="dim" style="background:#E2B12F">p</span>Presentation</td><td class="edited">varied</td><td>BM25, dense, reference-ranked placebo (order, not membership)</td></tr>
-      <tr><td><span class="dim" style="background:#4F9BD9">B</span>Footprint</td><td class="fixed">measured, matched</td><td>2,048-token budget; 645 tokens realized by the insights</td></tr>
-      <tr><td><span class="dim" style="background:#bdbdbd">d</span>Demonstration pair</td><td class="fixed">averaged</td><td>pairs 01, 02, 12, weighted equally</td></tr>
-    </tbody>
-  </table>
-  <figure>
-    <div class="plate"><a href="static/img/fig_overview.png"><img src="static/img/fig_overview.png" alt="Two-phase SkillRC overview. Phase A: distill experience into a skill memory, insert it into an otherwise unchanged agent, run two executors with and without the memory, and compare their gains (the transport gap). Phase B: build a placebo with the same rules, order and length but scrambled words, run true versus placebo, split the gain into a context effect and a content effect, and decide by a rule fixed in advance."></a></div>
-    <figcaption><b>The protocol.</b> Phase A asks whether a memory&rsquo;s gain transfers across executors; Phase B
-      asks whether the gain comes from what the memory says, by splitting it into a context effect (no memory to placebo)
-      and a content effect (placebo to true memory).</figcaption>
-  </figure>
-
-  <h3>Where transfer succeeds or fails</h3>
-  <p>Only 9 of the 134 tasks improve under both stacks and 6 decline under both; 45 improve under GPT-4o-mini but are
-    neutral or harmed under Qwen3-8B, and 13 of the 14 tasks that help GPT and hurt Qwen have a Qwen no-memory success of
-    at least two thirds. GPT gains range from +0.255 on <code>puttwo</code> and +0.246 on <code>heat</code> to
-    &minus;0.111 on <code>cool</code>, and the types with the weakest GPT baseline gain the most.</p>
-  <figure>
-    <div class="plate"><a href="static/img/fig_transport.png"><img src="static/img/fig_transport.png" alt="Task-level transport map by sign of effect under each stack, and GPT gain by task type."></a></div>
-    <figcaption><b>Task-level transfer.</b> Tasks by the sign of their paired effect under each stack, and GPT gain by task type.</figcaption>
-  </figure>
-
-  <h3>More context is not better, and the pattern holds elsewhere</h3>
-  <p>Trajectory and procedural memories are about three times larger than the compact insights and never beat them;
-    Markdown procedures harm Qwen3-8B under both presentations. Because the 33 insights always fit, BM25 versus dense
-    ranking changes only their order, yet order alone moves the GPT gain from +0.147 to +0.070. In WebShop, a ten-rule
-    memory distilled from six successful sessions lowers Qwen3-8B reward from 0.194 to 0.105 (8 improvements, 20
-    declines, 72 ties); this check uses one executor and no placebo, so it is a bounded negative-transfer replication.</p>
-  <figure>
-    <div class="plate"><a href="static/img/fig_webshop.png"><img src="static/img/fig_webshop.png" alt="WebShop: reward and exact success without and with memory, and the sign of paired reward change over 100 sessions."></a></div>
-    <figcaption><b>WebShop.</b> Train-disjoint comparison with local Qwen3-8B.</figcaption>
-  </figure>
-
-  <h2>What the tasks look like</h2>
-  <p class="muted">ALFWorld gives the agent text only, but each game comes from an ALFRED trial in the AI2-THOR simulator,
-    and the 134 unseen tasks take place in just four rooms. Each figure renders the trial's room (AI2-THOR 2.1.0, no model
-    run) and labels the places named in the agent's observation: orange is where the object starts, purple the appliance,
-    green the destination, and the map arrow is the expert's route. Cases 4&ndash;6 show an example task of the family.</p>
-  <div class="tabs" role="tablist" aria-label="Case studies">
-    <button type="button" role="tab" id="tab-task0" aria-controls="case-task0" aria-selected="true">Case 1 · put <span class="room">(bedroom)</span></button>
-    <button type="button" role="tab" id="tab-task1" aria-controls="case-task1" aria-selected="false">Case 2 · heat <span class="room">(kitchen)</span></button>
-    <button type="button" role="tab" id="tab-task2" aria-controls="case-task2" aria-selected="false">Case 3 · puttwo <span class="room">(living room)</span></button>
-    <button type="button" role="tab" id="tab-clean" aria-controls="case-clean" aria-selected="false">Case 4 · clean <span class="room">(bathroom)</span></button>
-    <button type="button" role="tab" id="tab-cool" aria-controls="case-cool" aria-selected="false">Case 5 · cool <span class="room">(kitchen)</span></button>
-    <button type="button" role="tab" id="tab-examine" aria-controls="case-examine" aria-selected="false">Case 6 · examine <span class="room">(bedroom)</span></button>
-    <button type="button" role="tab" id="tab-webshop" aria-controls="case-webshop" aria-selected="false">Case 7 · WebShop <span class="room">(web store)</span></button>
-  </div>
-  <section class="case" id="case-task0" role="tabpanel" aria-labelledby="tab-task0">
-    <h3>Task 0: put a mug in desk</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_task0.png"><img src="static/img/case_task0.png" loading="lazy" alt="Task 0, put a mug in desk: rendered bedroom with bed, desks, shelves, drawers, safe, laundry hamper, and garbage can labelled; the mug is on a shelf of the desk hutch and goes to the other desk; GPT-4o-mini solves it in 19 steps without memory and 6 with memory."></a></div>
-      <figcaption>The mug sits on a shelf of the desk hutch and must go to the other desk; the expert needs 4 steps. With memory, GPT-4o-mini still solves the task but in 6 instead of 19 steps, so success rate alone does not show the gain.</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-task1" role="tabpanel" aria-labelledby="tab-task1">
-    <h3>Task 1: heat some egg and put it in garbagecan</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_task1.png"><img src="static/img/case_task1.png" loading="lazy" alt="Task 1, heat some egg and put it in garbagecan: rendered kitchen with the egg on a countertop, the microwave, and the garbage can labelled; expert solution 6 steps; GPT-4o-mini fails at the 30-step limit with and without memory."></a></div>
-      <figcaption>The egg lies on a countertop, must be heated in the microwave, and ends in the garbage can (6 expert steps). The matching rule is the first item of the memory, yet GPT-4o-mini still fails within 30 steps, at a higher token cost.</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-task2" role="tabpanel" aria-labelledby="tab-task2">
-    <h3>Task 2: put two pillow in sofa</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_task2.png"><img src="static/img/case_task2.png" loading="lazy" alt="Task 2, put two pillow in sofa: rendered living room with both pillows on the armchair and the sofa labelled; expert solution 8 steps; GPT-4o-mini fails at 30 steps in both conditions."></a></div>
-      <figcaption>Both pillows sit on the armchair next to the sofa, so the expert repeats one 4-step routine. GPT-4o-mini does not finish in 30 steps either way, although the memory has rules about tracking the second item.</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-clean" role="tabpanel" aria-labelledby="tab-clean">
-    <h3>The clean family (31 tasks)</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_clean.png"><img src="static/img/case_clean.png" loading="lazy" alt="Clean family example: rendered bathroom with the soap bar on the toilet, the sink basin, and the countertop labelled; bars of the memory effect on tasks 30, 57 and 50 for both executors."></a></div>
-      <figcaption>An example task: the soap bar starts on the toilet, is cleaned at the sink basin, and goes on the countertop. The memory lifts GPT-4o-mini from 0.452 to 0.667 on this family while Qwen3-8B moves from 0.656 to 0.613.</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-cool" role="tabpanel" aria-labelledby="tab-cool">
-    <h3>The cool family (21 tasks)</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_cool.png"><img src="static/img/case_cool.png" loading="lazy" alt="Cool family example: rendered kitchen with the mug on a countertop, the fridge, and an upper cabinet labelled; bars of the memory effect on tasks 5, 16, 19 and 39 for both executors."></a></div>
-      <figcaption>An example task: the mug starts on a countertop, is cooled in the fridge, and goes into a cabinet. This is GPT-4o-mini's strongest family without memory, and the only one where the memory hurts it (0.857 to 0.746).</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-examine" role="tabpanel" aria-labelledby="tab-examine">
-    <h3>The examine family (18 tasks)</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_examine.png"><img src="static/img/case_examine.png" loading="lazy" alt="Examine family example: rendered bedroom with the book on the bed and the desk lamp labelled; bars of the memory effect on tasks 7, 45 and 89 for both executors."></a></div>
-      <figcaption>An example task: the book lies on the bed and must be looked at under the desk lamp. Task 7 improves under both executors, while task 45 of the same family helps GPT-4o-mini and hurts Qwen3-8B.</figcaption>
-    </figure>
-  </section>
-  <section class="case" id="case-webshop" role="tabpanel" aria-labelledby="tab-webshop">
-    <h3>WebShop: 100 train-disjoint sessions</h3>
-    <figure>
-      <div class="plate"><a href="static/img/case_webshop.png"><img src="static/img/case_webshop.png" loading="lazy" alt="WebShop screenshots: start page with the request, search results with the requested pillow cover 5th, product page with the 28 by 28 inch size and Buy Now, score page with reward 1.0; with memory Qwen3-8B mean reward drops from 0.194 to 0.105."></a></div>
-      <figcaption>Screenshots of the official web app on session 0: the request, a search, the product page where the size is chosen, and the score page (reward 1.0 for a full match; the query and clicks are ours). A ten-rule memory distilled from six successful sessions lowers Qwen3-8B's mean reward from 0.194 to 0.105.</figcaption>
-    </figure>
-  </section>
-
-  <h2>Get started</h2>
-  <p class="muted">The unit tests run the whole harness on a mock executor and environment, with no API calls and no GPU.</p>
-  <pre><button class="copy" type="button">Copy</button><code>git clone https://github.com/EvenEureka/SkillRC.git && cd SkillRC
-pip install -r requirements.txt
-python tests/test_smoke_mock.py
-
-# rebuild the order placebo and audit its footprint
-PYTHONPATH=. python scripts/analysis/build_order_placebo.py
-
-# ALFWorld with a local Qwen3-8B served by vLLM (thinking off)
-alfworld-download && bash scripts/fetch_alfworld_prompts.sh
-vllm serve Qwen/Qwen3-8B --served-model-name qwen3-8b --port 8000 --max-model-len 16384
-python -m skillrc.runner --config configs/papero_placebo_qwen.yaml --max-tasks 3</code></pre>
-
-  <h2 id="bibtex">BibTeX</h2>
-  <pre><button class="copy" type="button">Copy</button><code>@misc{skillrc2026,
-  title  = {SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
+<h2>Citation</h2>
+<pre>@misc{lu2026skillrc,
+  title  = {{SkillRC}: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
   author = {Lu, Yiwen},
   year   = {2026},
   note   = {Manuscript},
-  url    = {https://eveneureka.github.io/SkillRC/}
-}</code></pre>
+  url    = {https://github.com/EvenEureka/SkillRC}
+}</pre>
 
-  <footer>SkillRC · MIT License · ALFWorld, WebShop, and ReAct demonstrations belong to their authors.</footer>
+<footer>SkillRC &middot; Yiwen Lu &middot; University of Notre Dame</footer>
 </main>
-<script>
-  // Point the Code button (and clone command) at this repository when served from GitHub Pages.
-  (function () {
-    var host = location.hostname, parts = location.pathname.split('/').filter(Boolean);
-    if (/\.github\.io$/.test(host)) {
-      var user = host.split('.')[0];
-      var repo = parts.length ? parts[0] : user + '.github.io';
-      var url = 'https://github.com/' + user + '/' + repo;
-      document.getElementById('codeLink').href = url;
-      document.querySelectorAll('pre code').forEach(function (c) {
-        c.textContent = c.textContent.replace("https://github.com/EvenEureka/SkillRC", url);
-      });
-    }
-  })();
-  (function () {
-    var root = document.documentElement, key = 'skillrc-theme';
-    try { var saved = localStorage.getItem(key); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
-    document.getElementById('themeToggle').addEventListener('click', function () {
-      var dark = root.getAttribute('data-theme') === 'dark' ||
-        (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
-      var next = dark ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem(key, next); } catch (e) {}
-    });
-  })();
-  (function () {
-    document.documentElement.classList.add('js');
-    var tabs = document.querySelectorAll('.tabs [role="tab"]');
-    function show(t) {
-      tabs.forEach(function (b) {
-        var on = b === t;
-        b.setAttribute('aria-selected', on ? 'true' : 'false');
-        document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
-      });
-    }
-    tabs.forEach(function (b) { b.addEventListener('click', function () { show(b); }); });
-    if (tabs.length) show(tabs[0]);
-  })();
-  document.querySelectorAll('button.copy').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var text = b.parentElement.querySelector('code').textContent;
-      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
-        b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1200);
-      }).catch(function () {});
-    });
-  });
-</script>
 </body>
 </html>

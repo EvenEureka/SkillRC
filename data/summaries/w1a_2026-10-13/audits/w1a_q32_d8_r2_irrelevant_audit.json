@@ -1,0 +1,93 @@
+{
+  "pool": "data/pools/w1a_q32_d8_r2_insights.jsonl",
+  "control": "data/pools/w1a_q32_d8_r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20265809,
+  "n_items": 32,
+  "body_words": 478,
+  "distinct_templates": 32,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 685,
+      "before": 685,
+      "control": 685
+    },
+    "qwen3_8b": {
+      "target": 687,
+      "before": 687,
+      "control": 687
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1103,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q32_d8_r2_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q32_d8_r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    147,
+    2,
+    30,
+    12,
+    179,
+    4,
+    136,
+    85,
+    141,
+    1,
+    41,
+    169,
+    55,
+    28,
+    165,
+    26,
+    69,
+    68,
+    57,
+    58,
+    46,
+    91,
+    23,
+    14,
+    3,
+    82,
+    174,
+    5,
+    159,
+    180,
+    75,
+    182
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations like fridge, diningtable, countertop, and sinkbasin first for the object.",
+      "control": "[clean] Cut lavender back by one-third (late August), never cutting into old, bare wood."
+    },
+    {
+      "original": "[clean] If the object is not found, systematically search through drawers, cabinets, and other storage areas.",
+      "control": "[clean] Pull weeds while they are still small so they never set seed across the garden."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin before placing it in the target location.",
+      "control": "[clean] Keep notes on which varieties thrived so next year's planting plan improves steadily."
+    },
+    {
+      "original": "[clean] Always ensure the target location is accessible and open before placing the object.",
+      "control": "[clean] Label each row with the variety name and sowing date in permanent ink."
+    }
+  ]
+}

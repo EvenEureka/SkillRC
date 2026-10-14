@@ -1,0 +1,36 @@
+{"text": "[clean] Test drainage by digging a x cm hole and timing how long the hole needs to drain.", "task_type": "clean"}
+{"text": "[clean] Never dig heavy wet clay, because treading on it ruins the soil structure for months.", "task_type": "clean"}
+{"text": "[clean] If the leaves turn yellow, test the soil before adding more fertilizer to the patch.", "task_type": "clean"}
+{"text": "[clean] Cut lavender back by one-third after flowering (late August), never cutting into old, bare wood.", "task_type": "clean"}
+{"text": "[clean] Mulch planted rows with straw to hold moisture in the soil through dry spells.", "task_type": "clean"}
+{"text": "[clean] Once the pods swell, pick peas every other day to keep the vines producing.", "task_type": "clean"}
+{"text": "[cool] Turn the compost pile so it keeps breaking down evenly.", "task_type": "cool"}
+{"text": "[cool] Scatter grit near young hostas to deter slugs.", "task_type": "cool"}
+{"text": "[cool] Rotate crops so that no family grows in the same patch.", "task_type": "cool"}
+{"text": "[cool] Save seed only from plants so the next season starts out strong.", "task_type": "cool"}
+{"text": "[cool] Ventilate the greenhouse so that humid air does not encourage mould and young cuttings.", "task_type": "cool"}
+{"text": "[cool] Avoid planting the same crop family in patch more than once every three years.", "task_type": "cool"}
+{"text": "[examine] Grow a hedge of native x to shelter tender crops.", "task_type": "examine"}
+{"text": "[examine] Read a rain gauge to decide when to irrigate, instead of following a fixed schedule.", "task_type": "examine"}
+{"text": "[examine] Grow strawberries through x fabric to suppress weeds and keep fruit off the soil.", "task_type": "examine"}
+{"text": "[examine] Plan the vegetable garden in a notebook each winter so that nothing is forgotten when spring arrives.", "task_type": "examine"}
+{"text": "[examine] Plant onion sets firmly with the tips just showing above the soil surface.", "task_type": "examine"}
+{"text": "[examine] Pinch off the lower leaves of vines to improve the air flow.", "task_type": "examine"}
+{"text": "[heat] Build a compost heap at least a meter wide so that it decomposes throughout the year.", "task_type": "heat"}
+{"text": "[heat] Train climbing beans up tall sturdy poles to save ground space and improve airflow.", "task_type": "heat"}
+{"text": "[heat] Let the soil dry slightly between irrigations so the roots grow deep.", "task_type": "heat"}
+{"text": "[heat] Interplant marigolds, nasturtiums, and calendula among the vegetables to lure aphids away.", "task_type": "heat"}
+{"text": "[heat] Pull weeds by hand while they are still small so they never set seed.", "task_type": "heat"}
+{"text": "[heat] Edge the lawn neatly each month so grass does not creep into the flower borders.", "task_type": "heat"}
+{"text": "[put] Cut back spent flower stalks so that the plant directs energy into new growth.", "task_type": "put"}
+{"text": "[put] Start seeds indoors about six weeks before the last expected frost of spring.", "task_type": "put"}
+{"text": "[put] Pinch out the growing tips of broad beans once the first pods set to deter blackfly and hasten cropping.", "task_type": "put"}
+{"text": "[put] Always label each row with the variety name and the sowing date.", "task_type": "put"}
+{"text": "[put] Plant garlic cloves pointed end up, a span apart in loose soil.", "task_type": "put"}
+{"text": "[put] Remove suckers below the graft from the base of rose bushes as soon as they appear.", "task_type": "put"}
+{"text": "[puttwo] Grow tall climbing crops on the north side of the plot so that nothing shades the shorter rows.", "task_type": "puttwo"}
+{"text": "[puttwo] Collect rain in large barrels during wet months so that the garden has a reserve in summer.", "task_type": "puttwo"}
+{"text": "[puttwo] Keep a bare ring about a stride wide beneath young fruit trees so grass does not compete for moisture.", "task_type": "puttwo"}
+{"text": "[puttwo] Prune fruit trees in late winter while the branches are bare.", "task_type": "puttwo"}
+{"text": "[puttwo] If seedlings stretch and topple on a bright ledge, sow the next batch and give them stronger daylight.", "task_type": "puttwo"}
+{"text": "[puttwo] If aphids cluster on the shoot tips, rub them off before the colony spreads to other plants.", "task_type": "puttwo"}

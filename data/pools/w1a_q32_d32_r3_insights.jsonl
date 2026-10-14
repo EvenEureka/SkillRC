@@ -1,0 +1,35 @@
+{"text": "[clean] Start by identifying the object needed for the task and its likely locations based on common sense.", "task_type": "clean"}
+{"text": "[clean] Always clean the object using a sinkbasin before placing it in the target location.", "task_type": "clean"}
+{"text": "[clean] Open containers (e.g., cabinets, drawers, fridge) if they are closed and the object might be inside.", "task_type": "clean"}
+{"text": "[clean] Move systematically through likely locations if the object is not immediately visible.", "task_type": "clean"}
+{"text": "[clean] After cleaning, return to the target location and place the object as instructed.", "task_type": "clean"}
+{"text": "[clean] Prioritize checking the most probable locations first to minimize unnecessary movements.", "task_type": "clean"}
+{"text": "[cool] Search for the object by checking likely locations in order of probability, starting with the most common (e.g., fridge, diningtable, countertop).", "task_type": "cool"}
+{"text": "[cool] Cool the object using the fridge before placing it in the target location.", "task_type": "cool"}
+{"text": "[cool] Always open containers (e.g., cabinets, fridge) before checking or placing items inside.", "task_type": "cool"}
+{"text": "[cool] Move directly to the target location after cooling to complete the task.", "task_type": "cool"}
+{"text": "[cool] If the object is not found in initial checks, systematically explore all possible storage locations.", "task_type": "cool"}
+{"text": "[examine] Search for the target object in likely locations such as desks, shelves, sidetables, drawers, or dressers.", "task_type": "examine"}
+{"text": "[examine] If the desklamp is found with the target object, take the object and use the desklamp directly.", "task_type": "examine"}
+{"text": "[examine] Turn on the desklamp before examining the object to ensure proper illumination.", "task_type": "examine"}
+{"text": "[examine] Open closed containers systematically when searching for hidden objects.", "task_type": "examine"}
+{"text": "[examine] Prioritize locations based on object type (e.g., shelves for CDs, sidetables for lamps or small items).", "task_type": "examine"}
+{"text": "[examine] If using the desklamp on the object fails, try examining the object with the desklamp instead.", "task_type": "examine"}
+{"text": "[heat] Search for the plate on common storage locations like countertops, cabinets, or diningtables.", "task_type": "heat"}
+{"text": "[heat] Heat the plate using the microwave or stoveburner, whichever is accessible.", "task_type": "heat"}
+{"text": "[heat] Always move the heated plate directly to the specified diningtable.", "task_type": "heat"}
+{"text": "[heat] Prioritize using the microwave for heating if available.", "task_type": "heat"}
+{"text": "[heat] Check the current location’s contents before moving to avoid unnecessary travel.", "task_type": "heat"}
+{"text": "[heat] Confirm the task is complete by placing the correct object on the target surface.", "task_type": "heat"}
+{"text": "[put] Search for the object in likely storage locations such as drawers, cabinets, shelves, or sidetables.", "task_type": "put"}
+{"text": "[put] Open containers (e.g., drawers, cabinets) if the object is not immediately visible.", "task_type": "put"}
+{"text": "[put] Move directly to the target location once the object is in hand.", "task_type": "put"}
+{"text": "[put] If the object is not found in expected places, expand the search to nearby or related locations (e.g., countertop, sink, toilet).", "task_type": "put"}
+{"text": "[put] Verify the target location is empty or suitable before placing the object.", "task_type": "put"}
+{"text": "[put] Prioritize checking locations based on object type (e.g., vases on shelves, newspapers on sidetables).", "task_type": "put"}
+{"text": "[puttwo] Check likely storage locations first, such as drawers, cabinets, shelves, and sidetables.", "task_type": "puttwo"}
+{"text": "[puttwo] If the first item is found, systematically search remaining locations for the second item.", "task_type": "puttwo"}
+{"text": "[puttwo] Revisit previously checked locations if the second item is not immediately found.", "task_type": "puttwo"}
+{"text": "[puttwo] Use object-specific intuition to narrow search (e.g., books on beds, credit cards on countertops or sidetables).", "task_type": "puttwo"}
+{"text": "[puttwo] Place each item as soon as it is found to avoid confusion and track progress.", "task_type": "puttwo"}
+{"text": "[puttwo] If an object cannot be taken directly, consider moving it or checking alternative placements.", "task_type": "puttwo"}

@@ -4,5 +4,5 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 curl -fsSL -o configs/alfworld_react_fewshot.json \
-  https://raw.githubusercontent.com/ysymyth/ReAct/master/prompts/alfworld_3prompts.json
+  https://raw.githubusercontent.com/ysymyth/ReAct/19c6bae532250cf57bd7465d7f5a87edf2fda8f6/prompts/alfworld_3prompts.json
 python3 -c "import json;d=json.load(open('configs/alfworld_react_fewshot.json'));print(len([k for k in d if k.startswith('react_')]),'react prompts')"

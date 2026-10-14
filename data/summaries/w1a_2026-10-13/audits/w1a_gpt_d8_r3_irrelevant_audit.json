@@ -1,0 +1,96 @@
+{
+  "pool": "data/pools/w1a_gpt_d8_r3_insights.jsonl",
+  "control": "data/pools/w1a_gpt_d8_r3_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20270535,
+  "n_items": 35,
+  "body_words": 483,
+  "distinct_templates": 35,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 676,
+      "before": 676,
+      "control": 676
+    },
+    "qwen3_8b": {
+      "target": 679,
+      "before": 679,
+      "control": 679
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0934,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_gpt_d8_r3_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_gpt_d8_r3_irrelevant.jsonl"
+  },
+  "templates_used": [
+    56,
+    58,
+    60,
+    2,
+    72,
+    15,
+    16,
+    151,
+    53,
+    18,
+    175,
+    37,
+    41,
+    1,
+    168,
+    83,
+    55,
+    42,
+    3,
+    7,
+    19,
+    45,
+    57,
+    4,
+    12,
+    63,
+    146,
+    14,
+    96,
+    77,
+    165,
+    176,
+    177,
+    50,
+    84
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations like countertops, drawers, cabinets, and sink basins first for the object.",
+      "control": "[clean] Tie in new raspberry canes as they grow so wind does not break them."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin before placing it in the target location.",
+      "control": "[clean] Add grit to heavy soil to improve drainage for alpine plants and bulbs."
+    },
+    {
+      "original": "[clean] Open containers like drawers and cabinets before searching inside.",
+      "control": "[clean] Grow a hedge of native shrubs to shelter crops."
+    },
+    {
+      "original": "[clean] If the object is not found in expected places, check less obvious locations like garbage cans.",
+      "control": "[clean] Pull weeds by hand while they are small so they never set seed across the garden."
+    }
+  ]
+}

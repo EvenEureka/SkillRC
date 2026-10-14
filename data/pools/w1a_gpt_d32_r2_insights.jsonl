@@ -1,0 +1,33 @@
+{"text": "[clean] Search for the object in likely locations such as countertops, drawers, cabinets, or garbagecan before moving to cleaning.", "task_type": "clean"}
+{"text": "[clean] Clean the object using a sinkbasin to ensure it is clean as required by the task.", "task_type": "clean"}
+{"text": "[clean] After cleaning, place the object in the specified destination, opening it if necessary.", "task_type": "clean"}
+{"text": "[clean] If an object is not found in expected locations, systematically check all relevant storage or surface areas.", "task_type": "clean"}
+{"text": "[clean] Examine objects if actions fail, as additional information may be needed to proceed.", "task_type": "clean"}
+{"text": "[clean] Prioritize proximity and accessibility when choosing where to place the object in the final step.", "task_type": "clean"}
+{"text": "[cool] Look for the target object in common locations like dining tables, countertops, cabinets, or the fridge.", "task_type": "cool"}
+{"text": "[cool] Cool the object using the fridge after it has been picked up.", "task_type": "cool"}
+{"text": "[cool] Always check if the fridge is open before attempting to cool an object.", "task_type": "cool"}
+{"text": "[cool] Place the cooled object in the specified destination, starting with the most likely or first available option.", "task_type": "cool"}
+{"text": "[cool] If the object is not initially cool, use the fridge to cool it before completing the task.", "task_type": "cool"}
+{"text": "[cool] Open containers (e.g., cabinets, microwaves) before placing objects inside.", "task_type": "cool"}
+{"text": "[examine] Start by identifying the two key objects required for the task and prioritize finding them in order.", "task_type": "examine"}
+{"text": "[examine] Search for objects in common storage locations like drawers, desks, dressers, shelves, and sidetables.", "task_type": "examine"}
+{"text": "[examine] Open or check each container systematically, starting from the most likely or numerically lowest.", "task_type": "examine"}
+{"text": "[examine] Once the first object is found, shift focus to locating the second object, using the same search strategy.", "task_type": "examine"}
+{"text": "[examine] If the second object is already known from prior exploration, return directly to its location.", "task_type": "examine"}
+{"text": "[examine] Use the desklamp in its location to complete the task, rather than attempting to take it.", "task_type": "examine"}
+{"text": "[heat] Find a mug first by checking common storage areas like countertops or drawers.", "task_type": "heat"}
+{"text": "[heat] Heat the mug using an available heating appliance like a microwave.", "task_type": "heat"}
+{"text": "[heat] Place the heated mug in an accessible cabinet after opening it.", "task_type": "heat"}
+{"text": "[put] Look for the target object in common storage locations like countertops, cabinets, drawers, and shelves.", "task_type": "put"}
+{"text": "[put] Check the toilet or its nearby fixtures if the object is not found elsewhere.", "task_type": "put"}
+{"text": "[put] Open containers (e.g., cabinets, fridge, microwave) if they appear closed and the object is likely inside.", "task_type": "put"}
+{"text": "[put] Move directly to the destination location after obtaining the object.", "task_type": "put"}
+{"text": "[put] Prioritize object types based on typical placement (e.g., food in fridge, toiletries near bathroom fixtures).", "task_type": "put"}
+{"text": "[put] Avoid unnecessary actions if the object is already visible in the current location.", "task_type": "put"}
+{"text": "[puttwo] Check likely storage locations first, such as drawers, shelves, and beds.", "task_type": "puttwo"}
+{"text": "[puttwo] If the first item is found, return to the target location and place it before searching for the second.", "task_type": "puttwo"}
+{"text": "[puttwo] Revisit previously checked locations if multiple items are expected there.", "task_type": "puttwo"}
+{"text": "[puttwo] Open all closed containers systematically to ensure no items are missed.", "task_type": "puttwo"}
+{"text": "[puttwo] Prioritize locations based on object relevance (e.g., books on beds, credit cards in drawers or on desks).", "task_type": "puttwo"}
+{"text": "[puttwo] Always confirm the target location is accessible (e.g., open a safe or drawer) before moving items.", "task_type": "puttwo"}

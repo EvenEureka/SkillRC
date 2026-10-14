@@ -4,8 +4,9 @@ Talks to scripts/webshop_server.py (running in the webshop conda env) over HTTP,
 the harness stays in skillrc (openai/pydantic-v2) and never imports WebShop's old
 pydantic-v1 deps. Start the server first:
   ${WEBSHOP_PY} scripts/webshop_server.py --port 3000
-Plan uses the fixed 100-item subset (sessions 0..99); reward is WebShop's 0..1 score,
-success = score >= 1.0. UNVERIFIED until the server is up (validate at R002).
+Reward is WebShop's 0..1 score, success = score >= 1.0. task_type is the goal's product
+category reported by the server (servers that report none give "webshop_buy"); it is used
+only for stratified analysis and is never shown to the agent.
 """
 from __future__ import annotations
 
@@ -57,7 +58,8 @@ class WebShopEnv(BaseEnv):
         if self.mode == "http":
             r = self._rq.post(self.base_url + "/reset", json={"session": int(task_id)},
                               timeout=self.timeout).json()
-            return Observation(text=r["obs"], task_id=task_id, task_type="webshop_buy",
+            return Observation(text=r["obs"], task_id=task_id,
+                               task_type=r.get("category") or "webshop_buy",
                                admissible_actions=_flatten_actions(r.get("actions")))
         obs = self._env.reset(session=task_id)
         obs = obs[0] if isinstance(obs, tuple) else obs

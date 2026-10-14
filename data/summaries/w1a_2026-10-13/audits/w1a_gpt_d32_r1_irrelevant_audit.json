@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/w1a_gpt_d32_r1_insights.jsonl",
+  "control": "data/pools/w1a_gpt_d32_r1_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20262607,
+  "n_items": 33,
+  "body_words": 485,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 709,
+      "before": 709,
+      "control": 709
+    },
+    "qwen3_8b": {
+      "target": 711,
+      "before": 711,
+      "control": 711
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0951,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_gpt_d32_r1_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_gpt_d32_r1_irrelevant.jsonl"
+  },
+  "templates_used": [
+    83,
+    28,
+    175,
+    1,
+    16,
+    122,
+    90,
+    99,
+    72,
+    63,
+    74,
+    58,
+    85,
+    182,
+    19,
+    8,
+    4,
+    168,
+    24,
+    5,
+    69,
+    180,
+    18,
+    177,
+    75,
+    77,
+    131,
+    12,
+    181,
+    110,
+    94,
+    6,
+    23
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Find the object by checking likely locations such as countertops, cabinets, drawers, or other storage areas.",
+      "control": "[clean] Build a compost heap at least a meter wide so that it decomposes rapidly and evenly."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin, even if it requires moving the object to the sinkbasin first.",
+      "control": "[clean] Once the garlic tops fall over, lift the bulbs and cure them in a dry, shaded spot."
+    },
+    {
+      "original": "[clean] If placing the object directly fails, try moving it to the destination location instead of putting it there.",
+      "control": "[clean] Earth up leeks as they grow, drawing soil gently around them so the stems stay pale and tender."
+    },
+    {
+      "original": "[clean] If the object appears already clean, skip the cleaning step and proceed to the destination.",
+      "control": "[clean] Mulch planted rows with fresh straw to hold moisture in the soil through dry spells."
+    }
+  ]
+}

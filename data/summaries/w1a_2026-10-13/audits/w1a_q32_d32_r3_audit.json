@@ -1,0 +1,128 @@
+{
+  "pool": "w1a_q32_d32_r3",
+  "source": "q32",
+  "source_runs": [
+    "W1A1013_COLLECT_Q32_P01",
+    "W1A1013_COLLECT_Q32_P02",
+    "W1A1013_COLLECT_Q32_P03",
+    "W1A1013_COLLECT_Q32_P04",
+    "W1A1013_COLLECT_Q32_P05",
+    "W1A1013_COLLECT_Q32_P06",
+    "W1A1013_COLLECT_Q32_P07",
+    "W1A1013_COLLECT_Q32_P08",
+    "W1A1013_COLLECT_Q32_P09",
+    "W1A1013_COLLECT_Q32_P10"
+  ],
+  "replicate": 3,
+  "subsample_seed": 20261046,
+  "k_per_type": {
+    "clean": 6,
+    "cool": 6,
+    "examine": 6,
+    "heat": 1,
+    "put": 6,
+    "puttwo": 6
+  },
+  "distiller": {
+    "model": "Qwen/Qwen3-32B",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+    "served_as": "qwen3-32b",
+    "server": "vLLM 0.24, tensor parallel 2, bf16, max-model-len 16384",
+    "enable_thinking": false
+  },
+  "temperature": 0.0,
+  "max_completion_tokens": 512,
+  "types": {
+    "clean": {
+      "games_used": [
+        33,
+        37,
+        62,
+        97,
+        110,
+        139
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3851,
+      "completion_tokens": 111,
+      "response": "- Start by identifying the object needed for the task and its likely locations based on common sense.  \n- Always clean the object using a sinkbasin before placing it in the target location.  \n- Open containers (e.g., cabinets, drawers, fridge) if they are closed and the object might be inside.  \n- Move systematically through likely locations if the object is not immediately visible.  \n- After cleaning, return to the target location and place the object as instructed.  \n- Prioritize checking the most probable locations first to minimize unnecessary movements."
+    },
+    "cool": {
+      "games_used": [
+        20,
+        22,
+        26,
+        45,
+        64,
+        72
+      ],
+      "n_insights": 5,
+      "finish_reason": "stop",
+      "prompt_tokens": 4691,
+      "completion_tokens": 102,
+      "response": "- Search for the object by checking likely locations in order of probability, starting with the most common (e.g., fridge, diningtable, countertop).  \n- Cool the object using the fridge before placing it in the target location.  \n- Always open containers (e.g., cabinets, fridge) before checking or placing items inside.  \n- Move directly to the target location after cooling to complete the task.  \n- If the object is not found in initial checks, systematically explore all possible storage locations."
+    },
+    "examine": {
+      "games_used": [
+        4,
+        23,
+        29,
+        56,
+        61,
+        101
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 2923,
+      "completion_tokens": 130,
+      "response": "- Search for the target object in likely locations such as desks, shelves, sidetables, drawers, or dressers.  \n- If the desklamp is found with the target object, take the object and use the desklamp directly.  \n- Turn on the desklamp before examining the object to ensure proper illumination.  \n- Open closed containers systematically when searching for hidden objects.  \n- Prioritize locations based on object type (e.g., shelves for CDs, sidetables for lamps or small items).  \n- If using the desklamp on the object fails, try examining the object with the desklamp instead."
+    },
+    "heat": {
+      "games_used": [
+        86
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 592,
+      "completion_tokens": 94,
+      "response": "- Search for the plate on common storage locations like countertops, cabinets, or diningtables.  \n- Heat the plate using the microwave or stoveburner, whichever is accessible.  \n- Always move the heated plate directly to the specified diningtable.  \n- Prioritize using the microwave for heating if available.  \n- Check the current location\u2019s contents before moving to avoid unnecessary travel.  \n- Confirm the task is complete by placing the correct object on the target surface."
+    },
+    "put": {
+      "games_used": [
+        54,
+        84,
+        109,
+        111,
+        117,
+        126
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3205,
+      "completion_tokens": 129,
+      "response": "- Search for the object in likely storage locations such as drawers, cabinets, shelves, or sidetables.  \n- Open containers (e.g., drawers, cabinets) if the object is not immediately visible.  \n- Move directly to the target location once the object is in hand.  \n- If the object is not found in expected places, expand the search to nearby or related locations (e.g., countertop, sink, toilet).  \n- Verify the target location is empty or suitable before placing the object.  \n- Prioritize checking locations based on object type (e.g., vases on shelves, newspapers on sidetables)."
+    },
+    "puttwo": {
+      "games_used": [
+        21,
+        92,
+        98,
+        129,
+        131,
+        134
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5235,
+      "completion_tokens": 117,
+      "response": "- Check likely storage locations first, such as drawers, cabinets, shelves, and sidetables.  \n- If the first item is found, systematically search remaining locations for the second item.  \n- Revisit previously checked locations if the second item is not immediately found.  \n- Use object-specific intuition to narrow search (e.g., books on beds, credit cards on countertops or sidetables).  \n- Place each item as soon as it is found to avoid confusion and track progress.  \n- If an object cannot be taken directly, consider moving it or checking alternative placements."
+    }
+  },
+  "n_items": 35,
+  "footprint_o200k": 728,
+  "body_words": 478,
+  "finish_reasons": [
+    "stop"
+  ]
+}

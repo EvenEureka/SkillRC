@@ -1,0 +1,92 @@
+{
+  "pool": "data/pools/w1a_q8_d8_r2_insights.jsonl",
+  "control": "data/pools/w1a_q8_d8_r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20261695,
+  "n_items": 31,
+  "body_words": 482,
+  "distinct_templates": 31,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 679,
+      "before": 679,
+      "control": 679
+    },
+    "qwen3_8b": {
+      "target": 680,
+      "before": 680,
+      "control": 680
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0795,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q8_d8_r2_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q8_d8_r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    20,
+    69,
+    90,
+    62,
+    88,
+    41,
+    181,
+    84,
+    165,
+    100,
+    57,
+    182,
+    4,
+    26,
+    163,
+    85,
+    8,
+    5,
+    42,
+    94,
+    53,
+    17,
+    7,
+    1,
+    164,
+    23,
+    15,
+    35,
+    168,
+    159,
+    175
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations like fridge, countertops, dining tables, and sink basins first when searching for items.",
+      "control": "[clean] Sow carrots directly into fine, stone-free soil, because transplanting disturbs the taproot and produces forked roots."
+    },
+    {
+      "original": "[clean] Clean items using the sinkbasin before placing them in their final destination.",
+      "control": "[clean] Snap off rhubarb stalks rather than cutting them, so the crown heals."
+    },
+    {
+      "original": "[clean] Systematically search through cabinets, drawers, and other storage units if the item is not found in obvious places.",
+      "control": "[clean] If aphids cluster on the shoot tips, rub them off gently before the colony spreads to other plants."
+    },
+    {
+      "original": "[clean] Verify the target location is accessible and open before attempting to place an item there.",
+      "control": "[clean] Plant a few sunflowers at the north end so they do not shade shorter crops."
+    }
+  ]
+}

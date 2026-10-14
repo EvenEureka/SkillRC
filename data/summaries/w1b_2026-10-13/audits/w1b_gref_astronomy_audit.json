@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/src1011_qwen_insights.jsonl",
+  "control": "data/pools/w1b_gref_astronomy.jsonl",
+  "domain": "amateur astronomy",
+  "bank": "data/pools/w1b_astronomy_bank.txt",
+  "seed": 20264149,
+  "n_items": 36,
+  "body_words": 509,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 706,
+      "before": 706,
+      "control": 706
+    },
+    "qwen3_8b": {
+      "target": 706,
+      "before": 706,
+      "control": 706
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.055,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/src1011_qwen_insights.jsonl",
+    "payload_corpus": "data/pools/w1b_gref_astronomy.jsonl"
+  },
+  "templates_used": [
+    43,
+    63,
+    23,
+    25,
+    34,
+    51,
+    83,
+    73,
+    36,
+    2,
+    7,
+    3,
+    76,
+    24,
+    32,
+    62,
+    30,
+    69,
+    49,
+    18,
+    79,
+    50,
+    48,
+    1,
+    20,
+    84,
+    11,
+    74,
+    77,
+    68,
+    28,
+    31,
+    45,
+    40,
+    54,
+    67
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Identify the item you need to find and prioritize locations where it is likely to be found.",
+      "control": "[clean] Rub the hands inside thick mittens between sketches so that the graphite strokes stay fine and steady."
+    },
+    {
+      "original": "[clean] Always check common areas first, such as tables and countertops, before exploring less likely spots.",
+      "control": "[clean] Log the meteor counts during major showers and submit them to the international meteor organisation."
+    },
+    {
+      "original": "[clean] Clean the item using the designated cleaning area before placing it in the final location.",
+      "control": "[clean] Rate the seeing each night on a five-point scale before you begin any planetary sketches."
+    },
+    {
+      "original": "[clean] Ensure you have the correct item before moving to the next step in the task.",
+      "control": "[clean] Join a local astronomy club to learn from more experienced observers and borrow larger instruments."
+    }
+  ]
+}

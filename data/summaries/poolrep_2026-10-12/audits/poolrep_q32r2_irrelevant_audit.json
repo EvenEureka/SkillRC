@@ -1,0 +1,97 @@
+{
+  "pool": "data/pools/poolrep_q32r2_insights.jsonl",
+  "control": "data/pools/poolrep_q32r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/poolrep_gardening_bank.txt",
+  "seed": 20263831,
+  "n_items": 36,
+  "body_words": 526,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 790,
+      "before": 790,
+      "control": 790
+    },
+    "qwen3_8b": {
+      "target": 794,
+      "before": 794,
+      "control": 794
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0833,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/poolrep_q32r2_insights.jsonl",
+    "payload_corpus": "data/pools/poolrep_q32r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    111,
+    50,
+    94,
+    14,
+    90,
+    117,
+    81,
+    152,
+    1,
+    41,
+    56,
+    28,
+    114,
+    16,
+    103,
+    74,
+    106,
+    151,
+    24,
+    96,
+    7,
+    15,
+    4,
+    39,
+    26,
+    85,
+    92,
+    6,
+    77,
+    3,
+    73,
+    29,
+    13,
+    34,
+    2,
+    63
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Start by identifying the object type and its likely locations based on common usage or storage.",
+      "control": "[clean] Plant spring bulbs (tulips, daffodils, alliums) at three times their own depth during October or November."
+    },
+    {
+      "original": "[clean] Always check the most probable locations first, such as sinks, countertops, cabinets, or drawers.",
+      "control": "[clean] Remove suckers from the base of grafted rose bushes as soon as they appear."
+    },
+    {
+      "original": "[clean] Open containers (e.g., cabinets, drawers, fridges) before searching inside them.",
+      "control": "[clean] Ventilate the greenhouse so humid air does not encourage mould."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin as soon as it is retrieved.",
+      "control": "[clean] Save seed only from plants so the next season starts out strong."
+    }
+  ]
+}

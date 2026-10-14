@@ -1,0 +1,90 @@
+{
+  "model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "max_per_type": 6,
+  "obs_chars": 300,
+  "prompt": "Below are successful agent trajectories for WebShop '{task_type}' shopping tasks.\nExtract 3 to 6 concise, GENERAL insights (rules/heuristics) that help solve this task type. Each insight: one imperative line, no specific product names, product IDs or prices. Output ONLY a bullet list, each line starting with '- '.\n\nTrajectories:\n{trajs}",
+  "categories": {
+    "beauty": {
+      "episodes": 120,
+      "successes": 14,
+      "mean_reward": 0.338,
+      "sessions_used": [
+        1567,
+        1722,
+        2196,
+        2238,
+        2490,
+        2505
+      ],
+      "response": "- Always include specific attributes and price limits in your search queries.\n- Use concise and relevant keywords to improve search accuracy.\n- Click on products that match your criteria to verify details before purchasing.\n- Utilize pagination to explore multiple pages of search results if necessary.\n- Confirm product specifications and features before finalizing the purchase.\n- Ensure the product meets all specified requirements to avoid returns.",
+      "n_insights": 6,
+      "prompt_tokens": 2862
+    },
+    "electronics": {
+      "episodes": 120,
+      "successes": 23,
+      "mean_reward": 0.3284,
+      "sessions_used": [
+        1643,
+        2056,
+        2122,
+        2130,
+        2536,
+        3449
+      ],
+      "response": "- Use specific keywords that describe the product features and requirements.\n- Include price constraints in the search query to filter results effectively.\n- Click on the first relevant product to streamline the purchasing process.\n- Ensure to check product details for compliance with specified features before buying.\n- Utilize pagination to explore more options if initial results are unsatisfactory.\n- Confirm product attributes such as color and style during the selection process.",
+      "n_insights": 6,
+      "prompt_tokens": 2289
+    },
+    "fashion": {
+      "episodes": 120,
+      "successes": 19,
+      "mean_reward": 0.2469,
+      "sessions_used": [
+        1502,
+        1503,
+        1514,
+        1521,
+        1526,
+        1530
+      ],
+      "response": "- Use specific keywords related to the product features when searching.\n- Click on the relevant filters for size and color after the initial search.\n- Always check the price range to ensure it meets the budget criteria.\n- If the desired product is not found, consider re-searching with the same criteria.\n- Prioritize clicking on the product that matches all specified attributes.\n- Complete the purchase by confirming the selected options before finalizing.",
+      "n_insights": 6,
+      "prompt_tokens": 3705
+    },
+    "garden": {
+      "episodes": 120,
+      "successes": 5,
+      "mean_reward": 0.1609,
+      "sessions_used": [
+        1532,
+        1533,
+        1620,
+        1635,
+        1805
+      ],
+      "response": "- Always include specific attributes like color, size, and price in your search queries to narrow down results effectively.\n- Utilize filters for size and color after initial search results to refine options further.\n- If the first search does not yield satisfactory results, repeat the search with the same parameters to ensure consistency.\n- Click on relevant product options to verify details before making a purchase decision.\n- Prioritize products that meet all specified criteria to avoid unnecessary browsing.\n- Use clear and concise language in instructions to enhance search accuracy and efficiency.",
+      "n_insights": 6,
+      "prompt_tokens": 3750
+    },
+    "grocery": {
+      "episodes": 96,
+      "successes": 5,
+      "mean_reward": 0.2112,
+      "sessions_used": [
+        1862,
+        2478,
+        3458,
+        4733,
+        4870
+      ],
+      "response": "- Use specific dietary and product attributes in your search queries to narrow down results effectively.\n- Always include price constraints in your search to filter out options that exceed your budget.\n- If initial search results do not yield desired products, refine your search terms and try again.\n- Utilize product attributes like flavor and size to ensure the items meet your specific requirements.\n- Click through search results methodically, checking for the correct product attributes before making a purchase.\n- If you encounter irrelevant results, return to the search and adjust your keywords for better accuracy.",
+      "n_insights": 6,
+      "prompt_tokens": 3859
+    }
+  },
+  "n_items": 30,
+  "footprint_gpt4omini": 524,
+  "body_words": 377
+}

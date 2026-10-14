@@ -1,0 +1,33 @@
+{"text": "[clean] Search for the object in likely locations such as countertops, drawers, cabinets, or near sinks/basins.", "task_type": "clean"}
+{"text": "[clean] Clean the object using a sinkbasin or similar cleaning location.", "task_type": "clean"}
+{"text": "[clean] Always verify the object is clean before placing it in the target location.", "task_type": "clean"}
+{"text": "[clean] Open containers (drawers, cabinets) before attempting to place or retrieve items.", "task_type": "clean"}
+{"text": "[clean] If an object is not found in expected locations, check less obvious spots like garbagecans or shelves.", "task_type": "clean"}
+{"text": "[clean] Move directly to the target location after cleaning to complete the task efficiently.", "task_type": "clean"}
+{"text": "[cool] Look for the target object in common storage locations like countertops, dining tables, cabinets, or the fridge.", "task_type": "cool"}
+{"text": "[cool] Cool the object using the fridge after it has been picked up.", "task_type": "cool"}
+{"text": "[cool] Always check if the object is already cool before attempting to cool it.", "task_type": "cool"}
+{"text": "[cool] Place the cooled object on the specified surface (e.g., countertop, dining table, cabinet).", "task_type": "cool"}
+{"text": "[cool] Open containers or objects only when necessary to access their contents.", "task_type": "cool"}
+{"text": "[cool] Prioritize nearby or likely locations first when searching for an object.", "task_type": "cool"}
+{"text": "[examine] Check likely object locations first, such as desks, drawers, sidetables, and dressers.", "task_type": "examine"}
+{"text": "[examine] Open closed containers to search for hidden items.", "task_type": "examine"}
+{"text": "[examine] Prioritize finding the object to examine before interacting with the desklamp.", "task_type": "examine"}
+{"text": "[examine] Use the desklamp in its location once both the object and desklamp are found.", "task_type": "examine"}
+{"text": "[examine] Take the object once located to ensure it is in hand for examination.", "task_type": "examine"}
+{"text": "[examine] If the desklamp is visible, use it directly without attempting to take it.", "task_type": "examine"}
+{"text": "[heat] Find a mug first by checking common storage areas like countertops or drawers.", "task_type": "heat"}
+{"text": "[heat] Heat the mug using an available heating appliance like a microwave.", "task_type": "heat"}
+{"text": "[heat] Place the heated mug in an accessible cabinet after opening it.", "task_type": "heat"}
+{"text": "[put] Check likely storage locations first, such as drawers, countertops, or tables.", "task_type": "put"}
+{"text": "[put] If the object is not found in storage, search visible surfaces like tables, sidetables, or armchairs.", "task_type": "put"}
+{"text": "[put] Open closed objects (e.g., drawers, fridges, microwaves) to check their contents.", "task_type": "put"}
+{"text": "[put] Once the object is found, take it and move directly to the target location.", "task_type": "put"}
+{"text": "[put] Place the object on/in the target location as instructed by the task.", "task_type": "put"}
+{"text": "[put] Prioritize checking the most contextually relevant locations based on the object type (e.g., fridge for food, countertop for tissuebox).", "task_type": "put"}
+{"text": "[puttwo] Check likely storage locations first, such as drawers, shelves, and countertops.", "task_type": "puttwo"}
+{"text": "[puttwo] If the first item is found, immediately move it to the target location before searching for the second.", "task_type": "puttwo"}
+{"text": "[puttwo] After finding the first item, recheck the same area for the second item, as multiple items of the same type often appear together.", "task_type": "puttwo"}
+{"text": "[puttwo] If the second item is not found in the initial search area, systematically check other nearby furniture or surfaces.", "task_type": "puttwo"}
+{"text": "[puttwo] Always return to the target location after finding each item to place it correctly.", "task_type": "puttwo"}
+{"text": "[puttwo] Open all closed containers in order when searching for hidden items.", "task_type": "puttwo"}

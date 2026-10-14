@@ -1,0 +1,18 @@
+{
+  "span_R_minus_span_I": {
+    "mean": 0.0373,
+    "ci95": [
+      -0.0498,
+      0.0945
+    ],
+    "share_draws_le_0": 0.2599
+  },
+  "gpt4omini_hard_minus_easy": {
+    "mean": 0.1905,
+    "ci95": [
+      0.0758,
+      0.3088
+    ],
+    "share_draws_le_0": 0.0002
+  }
+}

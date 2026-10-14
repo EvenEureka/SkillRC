@@ -1,0 +1,94 @@
+{
+  "pool": "data/pools/w1a_gpt_d32_r2_insights.jsonl",
+  "control": "data/pools/w1a_gpt_d32_r2_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20263117,
+  "n_items": 33,
+  "body_words": 472,
+  "distinct_templates": 33,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 681,
+      "before": 681,
+      "control": 681
+    },
+    "qwen3_8b": {
+      "target": 684,
+      "before": 684,
+      "control": 684
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.1168,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_gpt_d32_r2_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_gpt_d32_r2_irrelevant.jsonl"
+  },
+  "templates_used": [
+    85,
+    37,
+    77,
+    26,
+    4,
+    34,
+    1,
+    10,
+    45,
+    62,
+    165,
+    18,
+    95,
+    35,
+    125,
+    173,
+    63,
+    7,
+    57,
+    91,
+    42,
+    65,
+    39,
+    76,
+    12,
+    182,
+    53,
+    38,
+    179,
+    129,
+    82,
+    83,
+    84
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Search for the object in likely locations such as countertops, drawers, cabinets, or garbagecan before moving to cleaning.",
+      "control": "[clean] Grow tall climbing crops on the north side of the plot so that nothing shades the shorter rows."
+    },
+    {
+      "original": "[clean] Clean the object using a sinkbasin to ensure it is clean as required by the task.",
+      "control": "[clean] Apply a thin layer of compost each spring rather than digging it deeply into the soil."
+    },
+    {
+      "original": "[clean] After cleaning, place the object in the specified destination, opening it if necessary.",
+      "control": "[clean] Before a dry spell, soak the ground deeply rather than sprinkling it daily."
+    },
+    {
+      "original": "[clean] If an object is not found in expected locations, systematically check all relevant storage or surface areas.",
+      "control": "[clean] Start by testing the soil pH and amending it carefully before sowing the first seeds of spring."
+    }
+  ]
+}

@@ -53,7 +53,7 @@ def _bullets(text: str):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default="configs/m0_alfworld.yaml")
+    ap.add_argument("--config", required=True)
     ap.add_argument("--pool", default="results/pools/alfworld_pool.jsonl")
     ap.add_argument("--expel-out", default="results/pools/expel_insights.jsonl")
     ap.add_argument("--skill-out", default="results/pools/skillos_skills.jsonl")

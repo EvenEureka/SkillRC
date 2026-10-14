@@ -108,7 +108,7 @@ class LLMClient:
             key = api_key or os.environ.get("OPENAI_API_KEY")
             if not key and not base_url:
                 raise RuntimeError(
-                    "OPENAI_API_KEY not set. `export OPENAI_API_KEY=sk-...` "
+                    "OPENAI_API_KEY not set. `export OPENAI_API_KEY=<your key>` "
                     "or set base_url for a local endpoint.")
             self._client = OpenAI(api_key=key or "EMPTY", base_url=base_url,
                                   timeout=request_timeout)

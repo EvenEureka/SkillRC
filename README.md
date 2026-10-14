@@ -1,142 +1,169 @@
-# SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses
+# SkillRC: Is It the Skill or the Stack?
 
-**Yiwen Lu** · University of Notre Dame · ylu37@nd.edu
+**Auditing experience memory in agent harnesses**
 
-[Project page](https://eveneureka.github.io/SkillRC/) · [Paper (PDF)](docs/static/skillrc_paper.pdf)
+Yiwen Lu, University of Notre Dame. Manuscript, 2026.
 
-**SkillRC** is a controlled experience-memory harness for auditing the *experience*
-component of agent harnesses: the distilled insights, trajectories, or procedures
-that a harness injects into a frozen LLM executor. RC stands for *reality check*.
-SkillRC varies only the executor stack and the memory's content, representation,
-presentation, and footprint, keeps the agent loop, decoding, and action parsing
-identical across configurations, and asks three questions in turn, of which a
-with-memory vs. without-memory comparison answers only the first:
+Contact: ylu37@nd.edu
 
-1. **Does the memory improve the system?** It estimates the paired memory effect on
-   identical tasks, prompts, and artifacts for the stack the memory was built with.
-2. **Does the gain transfer across executor stacks?** It repeats the estimate on a
-   second stack and reports the *transport gap* between stacks.
-3. **How much of the gain comes from the skill's content?** It compares the true payload
-   with two payload-matched controls that keep the same items, retrieval order, and token
-   footprint: an **order placebo** that removes every original adjacent word pair, and a
-   **coherent, task-irrelevant memory**. The decision rules are frozen before outcomes are inspected.
+[Paper (PDF)](paper/manuscript.pdf) · [Project page](https://eveneureka.github.io/SkillRC/)
 
-<p align="center"><img src="paper/figures/fig_overview.png" width="92%" alt="SkillRC protocol overview"></p>
+## The question
 
-**Project page:** [`docs/index.html`](docs/index.html) (served by GitHub Pages) ·
-**Paper:** [`paper/manuscript.pdf`](paper/manuscript.pdf) (manuscript)
+A common way to let an LLM agent learn from experience is to distill its past runs into a short list
+of rules and put the list in its prompt. The same list can help one model and do nothing for another,
+or harm it. Is that because of what the rules say (the skill) or because of how each model reads added
+text (the stack)?
 
-## Key findings (ALFWorld, 134 unseen tasks)
+**Answer.** The differences we could attribute are in the skill: no model pays a measurable cost for
+reading the memory, while what the rules say is worth +0.08 to GPT-4o-mini, about +0.04 to Qwen3-8B, nothing
+measurable to four other models, and a loss on WebShop.
 
-| Quantity | Estimate | 95% CI |
-|---|---:|---:|
-| GPT-4o-mini memory gain (33 insights, 645 tokens, BM25) | +0.127 | [+0.072, +0.184] |
-| Qwen3-8B memory gain | −0.021 | [−0.062, +0.020] |
-| Transport gap (Qwen − GPT) | **−0.148** | [−0.218, −0.080] |
-| Order placebo vs. none, GPT / Qwen (first 60-task gate, 2026-07) | +0.089 / −0.108 | [+0.025, +0.153] / [−0.164, −0.053] |
-| Same-window rerun (2026-10-10, 60 games): true vs. scrambled placebo, GPT / Qwen | +0.106 / +0.083 | [+0.028, +0.183] / [+0.022, +0.144] |
-| Rerun: true vs. coherent task-irrelevant control, GPT / Qwen | +0.106 / +0.050 | [+0.039, +0.172] / [−0.022, +0.128] |
-| Rerun: coherent irrelevant vs. scrambled, GPT / Qwen | 0.000 / +0.033 | [−0.072, +0.072] / [−0.028, +0.094] |
-| WebShop reward change with memory (Qwen3-8B, 100 sessions) | −0.090 | [−0.165, −0.016] |
+SkillRC (a reality check for agent skills) separates the two parts. A control keeps everything about
+the memory except its content: the same items, tags, word counts and order, and the same token count
+under every reader's tokenizer. Each rule is replaced by a sentence about gardening, with a few words
+replaced by a placeholder where needed to match token counts. The net effect of the memory then splits
+into a **reading cost** (control minus no memory) and a **content value** (memory minus control).
 
-The memory helps the stack it was built with, on every demonstration pair and with the
-smallest payload tested, and does not help the second stack. A pre-registered same-window rerun with two
-payload-matched controls (a scrambled placebo and a coherent memory about gardening with the same tags,
-word counts, order and 645-token footprint) locates the benefit in the memory's task-relevant content: the
-two controls behave alike and the true memory exceeds them. The stacks differ in what reading an added
-block costs: Qwen3-8B loses with any added payload, which leaves its net gain near zero. The first gate's
-placebo effect on GPT-4o-mini did not reproduce on the rerun's (different) sample of games. Data,
-pre-registration and per-episode logs of the rerun are in `data/summaries/rerun_2026-10-10/`.
-See the paper for task-level transport maps and the context-cost audit.
+![Reading cost and content value per reader](docs/static/img/fig_readers.png)
 
-## Install
+*Reading cost and content value on 134 unseen ALFWorld games, with 95% intervals. Left: one pool read
+by five models. Right: the mean over 18 pools for three Qwen3 models; dots are single pools.*
+
+## Findings
+
+1. **No reader pays a measurable reading cost.** Matched unrelated text changes ALFWorld success by at
+   most 0.04 for each of six models, and no reader's reading cost is distinguishable from zero. Where a
+   memory does nothing for a model, its content value is near zero too, so no reading cost is masking a
+   gain.
+2. **Content is worth something to two readers and lowers the score on WebShop.** For Qwen3-8B,
+   averaged over 18 pools, the content value is +0.039 [0.012, 0.065]. GPT-4o-mini also gains reliably from a pool built
+   from its own runs, while Qwen3-14B, Qwen3-32B, Llama-3.1-8B and GPT-4.1-mini gain nothing
+   measurable. On WebShop the distilled rules lower the score of both readers that can do the task.
+3. **For Qwen3 readers, distilled rules beat generic advice and the source agent made no difference.**
+   For Qwen3-8B and Qwen3-14B, rules distilled from trajectories beat equally long rules written from the
+   task description alone by +0.035 [0.014, 0.057] (the two lists were written by different models; see
+   the paper). Qwen3-32B did not read the generic rules. For all three Qwen3 readers, with the same number
+   of trajectories per task type from each source, it made no difference which agent supplied them. Pools built by the same pipeline differ
+   from one another about as much as the effects, so a memory is best judged over several pools.
+
+**Scope.** The one planned test of a difference between readers (Qwen3-8B against Qwen3-32B) was not
+significant. The intervals of the differences between readers' reading costs reach 0.10, and changing
+the control's topic from gardening to astronomy shifts the reading cost by 0.025. The readers are open
+models of 8B to 32B parameters and two small hosted models. The predictions and analysis of each of the
+five studies were written down before its runs, and the paper's Appendix A lists every prediction with
+its outcome and marks the exploratory analyses.
+
+## Reproduce
+
+All commands run from the repository root.
+
+### Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+conda create -n skillrc python=3.10 -y && conda activate skillrc
 pip install -r requirements.txt
+bash scripts/setup_alfworld.sh          # ALFWorld data, pinned base config and ReAct demonstrations
+export ALFWORLD_DATA=$PWD/data/alfworld
+python tests/test_smoke_mock.py         # end-to-end check on a mock environment, no model needed
 ```
 
-## Quickstart
+`data/alfworld_tasks/valid_unseen_gamefiles.json` lists the game behind each of the 134 test task ids,
+so you can check that your ALFWorld download maps ids to the same games.
+
+### Re-run the analyses without any model
+
+`data/outcomes/` holds the per-episode outcome of every reported run (seed, task, success or score,
+steps, memory tokens, and the actions the analyses need). Expand it into the layout the analysis scripts
+read, then run them:
 
 ```bash
-# 1) Zero-cost check of the full harness (mock executor + mock environment; no API, no GPU)
-python tests/test_smoke_mock.py
-python -m unittest tests.test_passport
-
-# 2) ALFWorld with a hosted OpenAI-compatible model
-alfworld-download                       # one-time ALFWorld data download
-bash scripts/fetch_alfworld_prompts.sh  # canonical ReAct demonstrations (3 per task type)
-export OPENAI_API_KEY=...
-python -m skillrc.runner --config configs/m2_expel.yaml --max-tasks 3
-
-# 3) The same run against a local vLLM server (e.g. Qwen3-8B with thinking disabled)
-vllm serve Qwen/Qwen3-8B --served-model-name qwen3-8b --port 8000 --max-model-len 16384
-python -m skillrc.runner --config configs/papero_placebo_qwen.yaml --max-tasks 3 \
-    --override base_url=http://localhost:8000/v1 api_key=EMPTY
+python scripts/outcomes.py unpack                        # writes results/*.episodes.jsonl and results/placebo/
+python scripts/analysis/analyze_rerun_2026-10-10.py      # five-reader study, first 60-game batch
+python scripts/analysis/analyze_phase2_2026-10-10.py     # five-reader study
+python scripts/analysis/exploratory_phase2_2026-10-10.py # its two exploratory intervals
+python scripts/analysis/analyze_webshop_2026-10-10.py    # WebShop study
+python scripts/analysis/compliance_2026-10-11.py         # WebShop action counts (exploratory)
+python scripts/analysis/w1a_2026-10-13.py                # crossover study
+python scripts/analysis/w1b_2026-10-13.py                # generic-rule study
+python scripts/analysis/poolrep_2026-10-12.py            # pool-replication study
 ```
 
-Every run is specified by one YAML file whose keys map onto the six control surfaces
-(executor, scaffold, representation, presentation, footprint, environment). Episodes
-stream to `results/<run_id>.episodes.jsonl` with realized memory tokens per episode.
+Each script writes its JSON to `results/placebo/`. From the released outcomes, every one of them
+reproduces the corresponding file in `data/summaries/` exactly. Numbers in the paper are rounded from
+unrounded estimates; the JSON files round to four decimals. The figures are drawn from
+`data/summaries/` with `python paper/figures/make_figures.py`, and `bash paper/build.sh` builds the PDF.
 
-## Repository layout
+### Re-run the experiments with local readers
 
-```
-skillrc/                 harness package
-  llm.py                 OpenAI-compatible executor client, token/cost accounting
-  react.py               ReAct loop (seeded demo-pair selection, admissible actions)
-  memory.py              pool memories: raw_traj | expel | skillos | random_k | full_context
-                         + BM25 / dense / lexical ranking, budget fill, ranking reference
-  passport.py            payload passport (SHA-256 identity card for memory payloads)
-  selfevolve.py          optional online curator (per-skill utility posterior)
-  envs/                  mock | alfworld | webshop adapters
-configs/                 run configurations used in the paper
-data/pools/              focal 33-insight pool and its order placebo
-scripts/analysis/        placebo construction + audits, paired/bootstrapped analyses
-scripts/cluster/         SGE job scripts (examples; see the README there)
-paper/                   LaTeX source of the manuscript, figures, build.sh
-docs/                    project page for GitHub Pages
-tests/                   mock end-to-end smoke test, passport tests
-```
-
-## Order placebo
-
-`data/pools/expel_insights_order_placebo.jsonl` is the placebo used in the paper. It is
-rebuilt deterministically from the focal pool (seed 20260713):
+Serve a reader with vLLM (we used vLLM 0.24, bf16) under the name the configs expect:
 
 ```bash
-PYTHONPATH=. python scripts/analysis/build_order_placebo.py
-# -> target_tokens 645, preadjust_tokens 673, body_tokens 472, nonce_replacements 28,
-#    retained_body_fraction 0.9407
-PYTHONPATH=. python scripts/analysis/audit_placebo_tokenizers.py   # 645/645 under GPT and Qwen3 tokenizers
+vllm serve Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 \
+  --served-model-name qwen3-8b --port 8000 --dtype bfloat16 --max-model-len 16384 --enforce-eager
+#   Qwen3-14B:    --revision 40c069824f4251a91eefaf281ebe4c544efd3e18 --served-model-name qwen3-14b
+#   Qwen3-32B:    --revision 9216db5781bf21249d130ec9da846c4624c16137 --served-model-name qwen3-32b --tensor-parallel-size 2
+#   Llama-3.1-8B: unsloth/Llama-3.1-8B-Instruct --revision 4699cc75b550f9c6f3173fb80f4703b62d946aa5 --served-model-name llama-3.1-8b
 ```
 
-Placebo runs pass the original pool as `rank_reference_pool`, so BM25 scores are
-computed on the true text while the placebo text is injected at the same indices
-(`audit_lexical_placebo_runtime.py` checks the realized order at run time). The
-scripts `build_semantic_placebo.py` and `build_lexical_score_placebo.py` are the two
-prototypes abandoned before any outcome was inspected; they are kept for audit.
-
-## Paper and figures
+The Qwen3 configs turn thinking off through `chat_template_kwargs`. Run all arms of one reader together,
+so they share one time window and one server:
 
 ```bash
-cd paper && ./build.sh                    # -> paper/manuscript.pdf
-python paper/figures/make_figures.py      # regenerates the five result figures
+bash scripts/run_configs.sh http://127.0.0.1:8000/v1 configs/w1_2026_10_13/eval/*_Q8.yaml        # crossover and generic rules, Qwen3-8B
+bash scripts/run_configs.sh http://127.0.0.1:8000/v1 configs/poolrep_2026_10_12/*.yaml           # pool replication, Qwen3-8B
+bash scripts/run_configs.sh http://127.0.0.1:8000/v1 configs/phase2_2026_10_10/P2C_*_QWEN14B.yaml # five-reader study, Qwen3-14B
 ```
 
-The manuscript uses a LaTeX template built on Linux Libertine and tcolorbox.
-On a TeX Live installation that lacks them, install the packages in user mode:
-`tlmgr --usermode install libertine newtx inconsolata tcolorbox multirow preprint
-lastpage wrapfig units environ trimspaces mweights fontaxes listingsutf8 upquote`.
+Outputs go to `results/<run_id>.episodes.jsonl` and `.summary.json`, and existing outputs are never
+overwritten. `configs/w1_2026_10_13/eval/jobs_<reader>_S<k>.txt` list how the arms were split over two
+servers in our runs.
 
-The figure script plots the frozen summary statistics reported in the paper.
-Per-episode logs are not part of this release; see [`PROVENANCE.md`](PROVENANCE.md).
+### Hosted readers
+
+GPT-4o-mini and GPT-4.1-mini configs call the OpenAI API. Set `OPENAI_API_KEY` in your environment and
+run a config directly, for example
+`python -m skillrc.runner --config configs/phase2_2026_10_10/P2B_true_GPT.yaml`.
+
+### WebShop
+
+WebShop runs need the official WebShop code (commit `64fa2a5c15c7`) in `third_party/WebShop`, in its
+own Python 3.8 environment with JDK 11 for pyserini, as described in the WebShop repository. The
+original data links no longer resolve; we used the 1,000-product files from the Hugging Face dataset
+`YWZBrandon/webshop-data` (revision `ce990fff5aee388db2706f07820c578ab68e0453`:
+`items_shuffle_1000.json`, `items_ins_v2_1000.json`, `items_human_ins.json`) and built the Lucene
+indexes with WebShop's `search_engine/run_indexing.sh`. Then:
+
+```bash
+WEBSHOP_ENV=/path/to/webshop-env bash scripts/webshop/start_server.sh 3000 1000   # seeded server, waits for /health
+bash scripts/run_configs.sh http://127.0.0.1:8000/v1 configs/webshop_2026_10_10/WS1010_*_QWEN.yaml
+```
+
+`scripts/webshop_server.py` seeds WebShop's random price generation (`--seed 0`, with
+`PYTHONHASHSEED=0`), so every session gets the same instruction across restarts.
+`data/summaries/webshop_2026-10-10/instructions_seed0_1k.json` holds the resulting instructions.
+
+## Repository map
+
+| Path | Contents |
+|---|---|
+| `skillrc/` | The harness: ReAct loop, memory insertion with BM25 ordering and token budget, ALFWorld and WebShop adapters, OpenAI-compatible client |
+| `configs/` | One YAML per run: `phase2_2026_10_10` (five-reader study), `rerun_2026_10_10` (its first 60-game batch), `webshop_2026_10_10` (WebShop), `w1_2026_10_13` (crossover W1-A and generic-rule W1-B), `poolrep_2026_10_12` (pool replication), `source_2026_10_11` (the source collections and base configs the generators copy) |
+| `data/pools/` | Memories and controls: the focal pool `expel_insights*`, the Qwen-sourced pool `src1011_qwen_insights`, the crossover pools `w1a_*`, the pool-replication pools `poolrep_*`, generic rules and astronomy controls `w1b_*`, the WebShop pool `webshop1010_*`, and the sentence banks |
+| `data/outcomes/` | Per-episode outcomes of every reported run |
+| `data/summaries/` | Result JSON of every study, control and injection audits, raw outputs of the generic-rule writer, WebShop instructions |
+| `data/alfworld_tasks/` | The 134 test games in task-id order |
+| `scripts/analysis/` | Pool distillation, control builders, injection audits and the analysis of each study |
+| `scripts/webshop/` | WebShop pool, controls, configs and server launcher |
+| `scripts/` | Config generators, `outcomes.py`, `run_configs.sh`, `setup_alfworld.sh` |
+| `paper/` | LaTeX source, figure script and the PDF |
+| `docs/` | Project page |
 
 ## Citation
 
 ```bibtex
-@misc{skillrc2026,
-  title  = {SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
+@misc{lu2026skillrc,
+  title  = {{SkillRC}: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
   author = {Lu, Yiwen},
   year   = {2026},
   note   = {Manuscript},
@@ -146,5 +173,6 @@ Per-episode logs are not part of this release; see [`PROVENANCE.md`](PROVENANCE.
 
 ## License
 
-MIT (see [`LICENSE`](LICENSE)). ALFWorld, WebShop, and the ReAct demonstrations are
-obtained from their original sources under their own licenses.
+Apache License 2.0 (see `LICENSE`). The ACL style files `paper/acl.sty` and `paper/acl_natbib.bst` keep
+their own terms (the latter carries its LPPL notice). ALFWorld and WebShop are MIT-licensed; Qwen3 is
+released under Apache 2.0 and Llama 3.1 under its community license.

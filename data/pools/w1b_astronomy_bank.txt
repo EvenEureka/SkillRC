@@ -1,0 +1,90 @@
+# Amateur-astronomy (stargazing) sentence templates for the W1-B second irrelevant control.
+# Same format as the gardening bank: one imperative sentence per line; words in [square brackets] form an optional unit, and
+# any subset of the units of a line can be dropped while the sentence stays grammatical. build_irrelevant_control_poolrep.py
+# checks every word against the ALFWorld vocabulary and the 134 test games' text before use.
+Let your eyes adapt to the darkness for [at least] twenty minutes before judging faint galaxies [at the eyepiece].
+Carry a red torch so [that] your night vision survives [while you read the star charts].
+Set the telescope outside an hour before observing so [that] its optics settle [to the night air].
+Align the finder scope on a [bright,] distant treetop [during daylight] before each night session.
+Begin [each session] with a low-power eyepiece and change to [higher] magnification [only] once the planet sits centred.
+Star-hop from [bright] Polaris [to fainter neighbours] [along the curve of Cassiopeia] [rather than sweeping at random].
+Plan observing nights around the new moon, when the sky is darkest [and faint nebulae stand out].
+Record the date, sky conditions and eyepiece in a logbook after every [observing] session.
+Collimate the reflector [carefully] whenever the stars appear as [tiny] comets rather than [sharp] points.
+Shield the eyepiece from stray glare [with a hood] so [that] faint galaxies keep their contrast.
+Fit a dew heater [around the corrector lens] on humid nights before fog spoils the [whole] session.
+Never aim the telescope at the sun without a [certified] solar filter [firmly fitted] over the front [of the tube].
+Drive [well] away from city skyglow to a [dark,] rural site [for the faintest deep-sky showpieces].
+Level the tripod on firm ground so [that] the mount stays steady [during long exposures].
+Balance the tube in both axes before tracking a planet [across the sky].
+Sketch each galaxy [at the eyepiece] [with a soft graphite stick], noting [only] what your eye [truly] perceives.
+Wait until Jupiter climbs well above the horizon, where the atmosphere [usually] blurs its belts [much] less.
+Polar-align the equatorial mount on Polaris [each night] so [that] stars stay centred [for longer].
+Dress in layers [and thick socks], because standing still at the eyepiece [for hours] saps [your] stamina [surprisingly fast].
+Learn the brightest constellations by eye [first] before [ever] buying a large telescope [or a computerised mount].
+Average [several] short exposures of the nebula instead of [risking] one long, trailed frame.
+Breathe away from the eyepiece so [that] your breath never fogs the [delicate] [optical] surfaces.
+Count the meteors [of the Perseids] [in fifteen-minute blocks] and note the faintest star [visible overhead].
+Rate the seeing [each night] on a [simple] five-point scale [before you begin any planetary sketches].
+Cap the eyepieces [and the tube] at the end of each night to keep dust off the [coated] lenses.
+Join a local astronomy club to learn from [more] experienced observers [and borrow larger instruments].
+Note the transparency [of the sky] separately from the seeing, since a steady sky can [still] be hazy.
+Wait for Saturn to cross the meridian, where its rings appear [crisp and] steadiest [through the atmosphere].
+Avert your gaze [slightly] from a faint galaxy, because the edge of the eye is far more sensitive [to dim glows].
+Tap the tube [gently] and time how long the image shakes to judge the mount's stability.
+Mark each planet's position [nightly] on a star chart to trace its slow drift [against the background stars].
+Plan the [observing] list [in advance] so [that] showpieces near the western horizon come [first] [before they set].
+Store the telescope in an [unheated] shed so [that] its optics need [less] time to settle [each evening].
+Swap the [stock] diagonal for a [higher-quality] dielectric one [to brighten dim nebulae noticeably].
+Keep [spare] batteries [for the mount] in an inside pocket, since [damp] night air drains them [fast].
+Photograph the moon near the terminator, where [long] shadows reveal crater walls [in sharp relief].
+Follow [the] variable stars [each week] and compare their brightness against [nearby] reference stars.
+Report fireball sightings [promptly] to the meteor network [with the time and direction of travel].
+Sweep the Milky Way [slowly] with [wide-field] binoculars [from a reclining lounger] [during late summer].
+Wipe the lenses only when dust [truly] degrades the view, because frequent wiping scratches the [delicate] coatings.
+Give each faint galaxy several minutes [at the eyepiece], since detail [often] emerges [only] slowly.
+Choose a [stable] alt-azimuth mount for [quick] casual sessions [and an equatorial mount for long imaging runs].
+Download [the] satellite pass predictions [each evening] so that a passing station never ruins an exposure.
+Rub [the] hands [inside thick mittens] between sketches so [that] the graphite strokes stay [fine and] steady.
+Compare each galaxy at low and high power [on successive nights] to learn which magnification shows its [faint] spiral arms [most clearly].
+Write down the limiting magnitude [of the sky] [near the zenith] at the start of each session so [that] nights can be compared [fairly] [across the year].
+Aim the binoculars at the Pleiades [on an autumn evening] and count how many stars you can separate [with the naked eye].
+Wait [patiently] for moments of steady air, because fine planetary detail [such as Jovian festoons] appears only in brief glimpses [of calm seeing].
+Mount the camera on a [sturdy] tracking head and begin with short exposures of [bright] constellations [before moving on to faint nebulae].
+Read the [monthly] sky guide [before each session] so [that] you know which planets [and comets] rise after dusk [that week].
+Follow the [bright] comet [nightly] as its tail lengthens [on the way toward the sun], and sketch its changing shape [each time].
+Seek a site with a low southern horizon for [summer] views of the [rich] star clouds [near Sagittarius and Scorpius].
+Practise star-hopping from Vega to the Ring Nebula [in Lyra] [on short summer nights] before tackling [harder] galaxies.
+Let newcomers adapt to the darkness [quietly] before inviting them to the eyepiece [for the planets].
+Keep the dew shield extended [at all times] [on damp nights], since moisture forms [first] on the [exposed] front lens [of a refractor].
+Rotate the eyepiece [only] after the planet is centred, because even [small] bumps can knock the image out of the field [of view].
+Time the eclipse contacts [against a radio-synchronised signal] and log each one [to the nearest second].
+Note every satellite flare in the logbook with its time, brightness and position [among the nearby stars].
+Choose an eyepiece whose exit pupil matches your [dark-adapted] eye for the brightest [possible] views of [faint] nebulae.
+Respect the dark site by shielding [car] headlights and [bright] screens whenever other observers are nearby.
+Inspect the star image [slightly] out of focus to judge the collimation from the shape of the diffraction rings.
+Drift-align the [equatorial] mount on a star near the celestial equator for the most accurate [long] exposures.
+Plan [lunar] sessions around the first and last quarters, when the terminator reveals the most dramatic [crater] shadows.
+Log the meteor counts [every hour] during major showers and submit them to the [international] meteor organisation.
+Hunt for [faint] double stars on nights of steady seeing, when the diffraction discs stay small [and sharp].
+Trace the winter hexagon from Sirius through Procyon and Capella to learn the bright stars [of the season].
+Review [your] old sketches each winter to notice how much more detail your [trained] eye now perceives.
+Prefer a [smaller,] portable telescope that you will carry outside often over a large one that stays indoors.
+Retire the old star atlas only once the new edition shows every galaxy you have [already] logged.
+Point the telescope [slowly] toward the eastern horizon [after midnight] to catch the winter constellations [as they rise].
+Keep a spare eyepiece [in a padded case] [in the car] for nights when the [usual] kit gets left behind.
+Attach a [small] dew strap to the finder [as well], because a fogged finder makes star-hopping [nearly] impossible.
+Note the colour of each bright star [before dawn], from [the] blue Rigel to [the] orange Arcturus.
+Pick a night of [good] transparency [rather than steady seeing] for faint galaxies [and broad nebulae].
+Allow the [large] reflector [an extra] half hour to settle [on frosty nights] before attempting [high-power] views.
+Re-centre the planet [every few minutes] if the mount has no drive [to follow the sky].
+Start [each] imaging run with a [short] test frame to judge focus [and framing].
+Keep the star diagonal [dry and] dust-free [by capping it] between sessions.
+Name the [bright] summer triangle [stars] for beginners [first]: Vega, Deneb and Altair.
+Prefer [long] focal ratios for [crisp] planetary views [and short ones for wide nebulae].
+Note the phase of Venus [each week] [through the eyepiece] [as it swings around the sun].
+Dim [all] screens to their [lowest] red setting [before stepping outside].
+Plot the [month's] lunar occultations [in advance] and set [several] reminders [for each event].
+Mount a [low-power] red-dot finder beside the [optical] finder [for faster aiming].
+Lean [comfortably] on a [padded] observing stool, since a relaxed body [steadies the eye] [at the eyepiece].
+Prefer [steady] nights after a weather front [has passed] for [the] sharpest planetary detail.

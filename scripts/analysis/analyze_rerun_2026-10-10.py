@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Analysis of the 2026-10-10 rerun of the placebo gate with the coherent task-irrelevant control
-(PREREG_rerun_2026-10-10.md). Same estimator as analyze_semantic_placebo.py: equal-pair task means over
+"""Analysis of the first 60-game batch of the five-reader study (GPT-4o-mini and Qwen3-8B, four conditions,
+including the coherent task-irrelevant control). Estimator: equal-pair task means over
 seeds [0, 1, 5], stratified task bootstrap (10 tasks per type), 20,000 draws, seed 20260713.
 Output: results/placebo/rerun_2026-10-10_results.json and a Markdown table on stdout."""
 from __future__ import annotations
@@ -16,7 +16,6 @@ RESULTS = ROOT / "results"
 SEEDS = (0, 1, 5)
 CONDS = ("none", "true", "placebo", "irrelevant")
 N_BOOT, BOOT_SEED = 20_000, 20260713
-OLD = {"gpt": {"none": 0.544, "true": 0.681, "placebo": 0.633}, "qwen": {"none": 0.728, "true": 0.683, "placebo": 0.620}}
 
 
 def load(run_id):
@@ -47,8 +46,7 @@ def boot(values, task_types):
 
 
 def main():
-    # the frozen 60-task sample is pinned in the configs; task types come from the episode records
-    # (the 2026-07 frozen_tasks.json was not part of the public release)
+    # the 60-task sample is pinned in the configs; task types come from the episode records
     import yaml
     cfg = yaml.safe_load((ROOT / "configs/rerun_2026_10_10/none_gpt.yaml").read_text())
     task_ids = [int(t) for t in cfg["task_ids"]]
@@ -60,10 +58,10 @@ def main():
     by_type = defaultdict(list)
     for t in task_ids:
         by_type[task_types[t]].append(t)
-    # Addendum A: the game behind each id differs from 2026-07; strata are the observed types (unequal sizes allowed)
+    # strata are the observed task types (unequal sizes allowed)
     assert len(task_ids) == 60 and len(by_type) == 6, {k: len(v) for k, v in by_type.items()}
     (RESULTS / "placebo" / "frozen_tasks_rerun_2026-10-10.json").write_text(json.dumps({"task_ids": task_ids, "by_type": dict(by_type)}, indent=2) + "\n")
-    out = {"estimands": {}, "means": {}, "drift_vs_2026_07": {}, "footprint": {}}
+    out = {"estimands": {}, "means": {}, "footprint": {}}
     means = {}
     for ex in ("gpt", "qwen"):
         for cond in CONDS:
@@ -76,8 +74,6 @@ def main():
                 out["footprint"][f"{ex}/{cond}"] = sorted(toks)
             means[(ex, cond)] = {t: float(np.mean([rows[(s, t)]["success"] for s in SEEDS])) for t in task_ids}
             out["means"][f"{ex}/{cond}"] = round(float(np.mean(list(means[(ex, cond)].values()))), 4)
-            if cond in OLD[ex]:
-                out["drift_vs_2026_07"][f"{ex}/{cond}"] = round(out["means"][f"{ex}/{cond}"] - OLD[ex][cond], 4)
     contrasts = {"T": ("true", "none"), "P": ("placebo", "none"), "I": ("irrelevant", "none"),
                  "S": ("true", "placebo"), "R": ("true", "irrelevant"), "C": ("irrelevant", "placebo")}
     per_ex = {}
@@ -109,7 +105,6 @@ def main():
         f = lambda k: f"{e[k]['mean']:+.3f} [{e[k]['ci95'][0]:+.3f}, {e[k]['ci95'][1]:+.3f}]"  # noqa: E731
         print(f"| {name} ({contrasts[name][0]} - {contrasts[name][1]}) | {f(f'{name}_gpt')} | {f(f'{name}_qwen')} | {f(f'Delta_{name}')} |")
     print("\ndecision rule:", rule)
-    print("drift vs 2026-07 gate:", out["drift_vs_2026_07"])
 
 
 if __name__ == "__main__":

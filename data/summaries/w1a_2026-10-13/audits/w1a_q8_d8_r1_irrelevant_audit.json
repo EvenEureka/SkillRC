@@ -1,0 +1,92 @@
+{
+  "pool": "data/pools/w1a_q8_d8_r1_insights.jsonl",
+  "control": "data/pools/w1a_q8_d8_r1_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20265917,
+  "n_items": 31,
+  "body_words": 482,
+  "distinct_templates": 31,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 664,
+      "before": 664,
+      "control": 664
+    },
+    "qwen3_8b": {
+      "target": 666,
+      "before": 666,
+      "control": 666
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0859,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q8_d8_r1_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q8_d8_r1_irrelevant.jsonl"
+  },
+  "templates_used": [
+    46,
+    18,
+    57,
+    22,
+    42,
+    95,
+    117,
+    58,
+    83,
+    75,
+    62,
+    14,
+    97,
+    6,
+    84,
+    177,
+    173,
+    164,
+    72,
+    91,
+    15,
+    7,
+    179,
+    85,
+    3,
+    1,
+    50,
+    82,
+    165,
+    175,
+    176
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations for the object first, starting with the task destination",
+      "control": "[clean] Keep grass paths mown short so slugs have fewer spots to hide."
+    },
+    {
+      "original": "[clean] Use sinkbasin to clean objects before placing them in their final location",
+      "control": "[clean] Turn the compost pile so it keeps breaking down through the summer."
+    },
+    {
+      "original": "[clean] Open containers if necessary to access objects inside",
+      "control": "[clean] Plant onion sets with the tips just showing."
+    },
+    {
+      "original": "[clean] Systematically search through likely storage areas if the object is not immediately found",
+      "control": "[clean] Irrigate deeply at the base of each plant rather than over the leaves."
+    }
+  ]
+}

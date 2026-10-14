@@ -1,0 +1,33 @@
+{"text": "[clean] Check common locations like countertops, sink basins, and cabinets first when searching for an object.", "task_type": "clean"}
+{"text": "[clean] Clean the object using the sinkbasin before placing it in the target location.", "task_type": "clean"}
+{"text": "[clean] If an object is not immediately found, systematically search through likely storage areas such as drawers, cabinets, and shelves.", "task_type": "clean"}
+{"text": "[clean] Verify the object's state (e.g., clean) before attempting to place it in the final destination.", "task_type": "clean"}
+{"text": "[clean] If an object is in a container, open the container first to access the item.", "task_type": "clean"}
+{"text": "[clean] Use the sinkbasin to clean objects even if they appear already clean, as the task may require it.", "task_type": "clean"}
+{"text": "[cool] Check the fridge first when searching for coolable items.", "task_type": "cool"}
+{"text": "[cool] Look for the target item in common locations like dining tables, countertops, and cabinets before moving to less likely places.", "task_type": "cool"}
+{"text": "[cool] Use the fridge to cool items if they are not already cool.", "task_type": "cool"}
+{"text": "[cool] Always verify the item's state before proceeding with the final placement.", "task_type": "cool"}
+{"text": "[cool] Move the cooled item directly to the designated location after cooling.", "task_type": "cool"}
+{"text": "[examine] Check drawers, desks, dressers, and shelves systematically to locate items like keychains, CDs, or vases.", "task_type": "examine"}
+{"text": "[examine] Prioritize checking locations where the target item is more likely to be found, such as drawers for small objects and desks for lamps.", "task_type": "examine"}
+{"text": "[examine] Use the desklamp after obtaining it by turning it on to achieve the task objective.", "task_type": "examine"}
+{"text": "[examine] If an item is not immediately available, continue searching through other containers or surfaces in the room.", "task_type": "examine"}
+{"text": "[examine] Start with the most probable locations and move systematically to ensure no potential spot is missed.", "task_type": "examine"}
+{"text": "[examine] Always confirm the presence of the desklamp before attempting to use it.", "task_type": "examine"}
+{"text": "[heat] Check common locations like countertops, cabinets, and drawers for a mug.", "task_type": "heat"}
+{"text": "[heat] Use the microwave to heat the mug if it is not already hot.", "task_type": "heat"}
+{"text": "[heat] Open the target cabinet before placing the hot mug inside.", "task_type": "heat"}
+{"text": "[heat] Ensure the mug is heated before attempting to place it in a cabinet.", "task_type": "heat"}
+{"text": "[heat] Prioritize checking the microwave if heating is required.", "task_type": "heat"}
+{"text": "[put] Check common storage areas like countertops, drawers, and shelves first when searching for an object.", "task_type": "put"}
+{"text": "[put] Open containers or cabinets if the object is not immediately visible.", "task_type": "put"}
+{"text": "[put] Verify the target location is accessible and clear before moving the object there.", "task_type": "put"}
+{"text": "[put] Use the 'move' command once you have the object and are at the destination.", "task_type": "put"}
+{"text": "[put] Start with the most likely locations for the object based on its type.", "task_type": "put"}
+{"text": "[puttwo] Check common storage areas like shelves, drawers, and desks first before moving to less obvious locations.", "task_type": "puttwo"}
+{"text": "[puttwo] If an item is not found in the initial search, systematically check other likely locations such as beds or tables.", "task_type": "puttwo"}
+{"text": "[puttwo] Always verify the target location before attempting to place an item to avoid errors.", "task_type": "puttwo"}
+{"text": "[puttwo] If an item is found in a location, ensure it is properly picked up before moving to the next step.", "task_type": "puttwo"}
+{"text": "[puttwo] Recheck previously visited locations if the second item is not immediately found.", "task_type": "puttwo"}
+{"text": "[puttwo] Open all containers before searching inside to ensure no items are missed.", "task_type": "puttwo"}

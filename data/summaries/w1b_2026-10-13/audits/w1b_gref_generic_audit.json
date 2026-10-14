@@ -1,0 +1,266 @@
+{
+  "focal": "gref",
+  "focal_pool": "data/pools/src1011_qwen_insights.jsonl",
+  "control": "data/pools/w1b_gref_generic.jsonl",
+  "kind": "generic rules, no trajectories",
+  "writer": {
+    "model": "Qwen/Qwen3-32B",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+    "enable_thinking": false
+  },
+  "lengthfix_file": "results/placebo/w1b_generic_lengthfix.json",
+  "n_items": 36,
+  "body_words": 509,
+  "variants_per_item": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+  ],
+  "variant_chosen": [
+    5,
+    2,
+    3,
+    0,
+    4,
+    3,
+    3,
+    1,
+    1,
+    2,
+    3,
+    0,
+    2,
+    1,
+    0,
+    3,
+    5,
+    2,
+    5,
+    0,
+    0,
+    1,
+    3,
+    3,
+    5,
+    2,
+    1,
+    5,
+    5,
+    1,
+    3,
+    1,
+    2,
+    0,
+    3,
+    1
+  ],
+  "search": "uniform, then density-biased",
+  "choices_tried": 6000,
+  "below_target_choices": 5014,
+  "tries": 1,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 706,
+      "before": 706,
+      "control": 706
+    },
+    "qwen3": {
+      "target": 706,
+      "before": 706,
+      "control": 706
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.055,
+    "generic": 0.0851,
+    "gardening_control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/src1011_qwen_insights.jsonl",
+    "payload_corpus": "data/pools/w1b_gref_generic.jsonl"
+  },
+  "replacements": [],
+  "pairs": [
+    {
+      "true": "[clean] Identify the item you need to find and prioritize locations where it is likely to be found.",
+      "generic": "[clean] Check if the object is inside a closed receptacle and open it if needed before proceeding further."
+    },
+    {
+      "true": "[clean] Always check common areas first, such as tables and countertops, before exploring less likely spots.",
+      "generic": "[clean] Find a sinkbasin or other suitable cleaning receptacle and use it to clean the object."
+    },
+    {
+      "true": "[clean] Clean the item using the designated cleaning area before placing it in the final location.",
+      "generic": "[clean] After cleaning, you must take the object from its location if not already being held."
+    },
+    {
+      "true": "[clean] Ensure you have the correct item before moving to the next step in the task.",
+      "generic": "[clean] Confirm the task is complete by checking the object or looking at the receptacle carefully."
+    },
+    {
+      "true": "[clean] Keep track of the sequence of actions: find, clean, and then place the item.",
+      "generic": "[clean] Place the clean object into the correct target receptacle as specified in the task."
+    },
+    {
+      "true": "[clean] If the first location does not yield the item, systematically check other potential locations.",
+      "generic": "[clean] Check the item to verify where it is and what condition it is in."
+    },
+    {
+      "true": "[cool] Identify the target item and its likely locations before searching.",
+      "generic": "[cool] Open all closed receptacles and carefully inspect their contents thoroughly."
+    },
+    {
+      "true": "[cool] Check common storage areas systematically to maximize efficiency.",
+      "generic": "[cool] Use the proper receptacle to cool the object."
+    },
+    {
+      "true": "[cool] Always verify if the required appliance is open before using it.",
+      "generic": "[cool] Place the cooled item into the properly designated destination container location."
+    },
+    {
+      "true": "[cool] Follow the task sequence logically: find, cool, and then place the item.",
+      "generic": "[cool] Once found, take the object from its current location and move it."
+    },
+    {
+      "true": "[cool] If the first location doesn't yield results, move to the next most probable location.",
+      "generic": "[cool] Approach a cool container like a refrigerator or sink to store or retrieve item."
+    },
+    {
+      "true": "[cool] Ensure the final placement is in the correct designated area as per the task.",
+      "generic": "[cool] Go to the receptacle in which the object is most likely to be found."
+    },
+    {
+      "true": "[examine] Identify the target object and its likely locations before searching.",
+      "generic": "[examine] Illuminate the area with the desklamp before examining any object."
+    },
+    {
+      "true": "[examine] Prioritize checking containers and surfaces where the target object is most likely to be found.",
+      "generic": "[examine] Use the \"examine\" command on the object while standing in the light of the desklamp."
+    },
+    {
+      "true": "[examine] If an object is not found in one location, systematically check other potential locations.",
+      "generic": "[examine] Go to the receptacle or location where the object is expected to be found."
+    },
+    {
+      "true": "[examine] Use available tools, like a desklamp, to illuminate areas that may be obscured or difficult to see.",
+      "generic": "[examine] If the object is not visible, check all likely receptacles in the room methodically and thoroughly again."
+    },
+    {
+      "true": "[examine] Revisit previously checked locations if necessary, as items may be hidden or overlooked.",
+      "generic": "[examine] Take the object if it is inside a container receptacle to examine directly."
+    },
+    {
+      "true": "[examine] Maintain a logical sequence in your search to ensure thoroughness and efficiency.",
+      "generic": "[examine] Open all closed receptacles that may contain or hide the object question."
+    },
+    {
+      "true": "[heat] Start by identifying the most likely locations for the target item based on the task requirements.",
+      "generic": "[heat] You must go to the receptacle that contains the object which needs to be heated now."
+    },
+    {
+      "true": "[heat] Check each location systematically, prioritizing those with higher likelihoods of containing the desired item.",
+      "generic": "[heat] Place the warmed item inside the destination container by moving it carefully and safely."
+    },
+    {
+      "true": "[heat] Once the item is found, proceed to the heating appliance without delay.",
+      "generic": "[heat] Take the object out of the receptacle where it is currently located."
+    },
+    {
+      "true": "[heat] Ensure the heating appliance is open before attempting to heat the item.",
+      "generic": "[heat] Use the heating appliance in the kitchen to heat the object carefully."
+    },
+    {
+      "true": "[heat] After heating, confirm the final destination for placing the item and navigate there directly.",
+      "generic": "[heat] Open the receptacle to access the object if it is currently indeed physically closed."
+    },
+    {
+      "true": "[heat] Maintain a clear sequence of actions: find, heat, and place the item to avoid confusion.",
+      "generic": "[heat] Navigate to a heating appliance such as a microwave, stoveburner, or oven for the task."
+    },
+    {
+      "true": "[put] Start by identifying likely locations for the target item based on common storage patterns.",
+      "generic": "[put] Open a closed receptacle when the object you need is located inside of it."
+    },
+    {
+      "true": "[put] Check each location systematically, ensuring to open closed containers before searching their contents.",
+      "generic": "[put] Go to the receptacle that holds the object you need to put first."
+    },
+    {
+      "true": "[put] If the first location does not yield the item, move to the next most probable location without skipping options.",
+      "generic": "[put] Open the target receptacle if it is closed and needs to be opened in order to complete the task."
+    },
+    {
+      "true": "[put] Once the item is found, navigate to the designated placement area directly.",
+      "generic": "[put] Pick up the object from wherever it is located at the moment."
+    },
+    {
+      "true": "[put] Ensure the placement area is clear of obstructions before placing the item.",
+      "generic": "[put] Place the item into or onto the correctly and designated storage receptacle."
+    },
+    {
+      "true": "[put] Confirm the task is complete by verifying the item is in the correct location after placement.",
+      "generic": "[put] Navigate to the location where the item needs to be put in the correct place carefully."
+    },
+    {
+      "true": "[puttwo] Start by checking the most likely locations for the target items first, such as countertops, drawers, and cabinets.",
+      "generic": "[puttwo] Take the second object found in the environment and put it into the designated target container as instructed."
+    },
+    {
+      "true": "[puttwo] If the first search does not yield results, systematically check other potential locations in a logical order.",
+      "generic": "[puttwo] Open any closed receptacles that might contain the object you are currently trying to locate and retrieve."
+    },
+    {
+      "true": "[puttwo] Once an item is found, immediately plan the next steps to retrieve and place it in the designated location.",
+      "generic": "[puttwo] Take the first instance of the object you encounter and place it into the intended target receptacle location immediately."
+    },
+    {
+      "true": "[puttwo] Keep track of where items are found to avoid unnecessary backtracking.",
+      "generic": "[puttwo] Look through all visible receptacles to find the required object carefully."
+    },
+    {
+      "true": "[puttwo] If an item cannot be picked up, re-examine the location or try different commands to interact with it.",
+      "generic": "[puttwo] Avoid moving objects between receptacles unless it is absolutely necessary in order to successfully access the target location."
+    },
+    {
+      "true": "[puttwo] Always confirm the state of the target location before placing items to ensure it is still available.",
+      "generic": "[puttwo] Search the environment thoroughly until a second instance of the target object is located, confirmed, and reported."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "pool": "w1a_gpt_d32_r1",
+  "source": "gpt",
+  "source_runs": [
+    "SRC1011_COLLECT_GPT"
+  ],
+  "replicate": 1,
+  "subsample_seed": 20261024,
+  "k_per_type": {
+    "clean": 6,
+    "cool": 6,
+    "examine": 6,
+    "heat": 1,
+    "put": 6,
+    "puttwo": 6
+  },
+  "distiller": {
+    "model": "Qwen/Qwen3-32B",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+    "served_as": "qwen3-32b",
+    "server": "vLLM 0.24, tensor parallel 2, bf16, max-model-len 16384",
+    "enable_thinking": false
+  },
+  "temperature": 0.0,
+  "max_completion_tokens": 512,
+  "types": {
+    "clean": {
+      "games_used": [
+        15,
+        18,
+        19,
+        37,
+        46,
+        97
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5779,
+      "completion_tokens": 131,
+      "response": "- Find the object by checking likely locations such as countertops, cabinets, drawers, or other storage areas.  \n- Clean the object using a sinkbasin, even if it requires moving the object to the sinkbasin first.  \n- If placing the object directly fails, try moving it to the destination location instead of putting it there.  \n- If the object appears already clean, skip the cleaning step and proceed to the destination.  \n- Open containers (e.g., cabinets, drawers) before attempting to access or place items inside.  \n- If an object cannot be placed in the intended location, try an alternative location of the same type."
+    },
+    "cool": {
+      "games_used": [
+        22,
+        26,
+        70,
+        72,
+        95,
+        137
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 4661,
+      "completion_tokens": 124,
+      "response": "- Look for the target object in likely locations such as countertops, dining tables, cabinets, drawers, or stove burners.  \n- Cool the object using the fridge after it has been retrieved.  \n- Always move to the cooling location (fridge) before attempting to cool the object.  \n- Place the cooled object on the specified surface (e.g., countertop, dining table, sidetable) as instructed.  \n- If the object is not found in the first location, systematically check other probable storage or usage areas.  \n- Open containers (e.g., cabinets, fridge) before searching their contents."
+    },
+    "examine": {
+      "games_used": [
+        6,
+        56,
+        61,
+        101,
+        104,
+        128
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 2917,
+      "completion_tokens": 125,
+      "response": "- Start by identifying the two key objects in the task and locate them one at a time.  \n- Search for objects in likely furniture types (e.g., drawers, desks, shelves, sidetables) based on object type.  \n- Open or check furniture systematically, starting with the most probable locations.  \n- Once the first object is found, shift focus to locating the second object.  \n- Use the desklamp in its location rather than trying to take it.  \n- Prioritize checking furniture that combines both object types (e.g., a desk may hold both a laptop and a desklamp)."
+    },
+    "heat": {
+      "games_used": [
+        42
+      ],
+      "n_insights": 3,
+      "finish_reason": "stop",
+      "prompt_tokens": 712,
+      "completion_tokens": 44,
+      "response": "- Find a mug first by checking common storage areas like countertops or drawers.  \n- Heat the mug using an available heating appliance like a microwave.  \n- Place the heated mug in an accessible cabinet after opening it."
+    },
+    "put": {
+      "games_used": [
+        67,
+        74,
+        84,
+        87,
+        105,
+        125
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3117,
+      "completion_tokens": 128,
+      "response": "- Check likely storage locations first, such as drawers, cabinets, shelves, or countertops, to find the target object.  \n- Open closed containers to inspect their contents when searching for an object.  \n- Prioritize common object locations based on the object type (e.g., fridge for food, sidetables for small items).  \n- Once the object is found and taken, move directly to the target location to complete the task.  \n- If the target location is a container, ensure it is open before placing the object inside.  \n- Use the most direct path to the target location after obtaining the object to minimize unnecessary steps."
+    },
+    "puttwo": {
+      "games_used": [
+        5,
+        21,
+        53,
+        83,
+        91,
+        92
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5629,
+      "completion_tokens": 114,
+      "response": "- Check likely storage locations first, such as drawers, shelves, and desks.  \n- If the first item is found, return to the target location to place it before searching for the second.  \n- Revisit previously checked areas if the second item is not immediately visible.  \n- Open all closed containers systematically to ensure no items are missed.  \n- Prioritize locations based on object type (e.g., books on beds, tissueboxes in drawers or on countertops).  \n- Keep track of which objects have been placed to avoid duplication or missing the task goal."
+    }
+  },
+  "n_items": 33,
+  "footprint_o200k": 709,
+  "body_words": 485,
+  "finish_reasons": [
+    "stop"
+  ]
+}

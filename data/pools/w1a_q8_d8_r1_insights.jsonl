@@ -1,0 +1,31 @@
+{"text": "[clean] Check common locations for the object first, starting with the task destination", "task_type": "clean"}
+{"text": "[clean] Use sinkbasin to clean objects before placing them in their final location", "task_type": "clean"}
+{"text": "[clean] Open containers if necessary to access objects inside", "task_type": "clean"}
+{"text": "[clean] Systematically search through likely storage areas if the object is not immediately found", "task_type": "clean"}
+{"text": "[clean] Verify the object's presence before attempting to clean or move it", "task_type": "clean"}
+{"text": "[clean] Always return to the target location before placing the cleaned object", "task_type": "clean"}
+{"text": "[cool] Check common storage locations like fridge, countertops, dining tables, and cabinets systematically before moving to less likely areas.", "task_type": "cool"}
+{"text": "[cool] Cool the object using the fridge after retrieving it.", "task_type": "cool"}
+{"text": "[cool] Always open the target container before placing the cooled object inside.", "task_type": "cool"}
+{"text": "[cool] Start with the most probable locations for the object and expand systematically if it is not found.", "task_type": "cool"}
+{"text": "[cool] Ensure the object is in hand before attempting to cool or place it in the target location.", "task_type": "cool"}
+{"text": "[cool] Verify the target location is accessible and open before attempting to put the object inside.", "task_type": "cool"}
+{"text": "[examine] Check common storage locations like drawers, desks, and shelves systematically before moving to less likely areas.", "task_type": "examine"}
+{"text": "[examine] Use the desklamp to illuminate areas where items might be hidden or not immediately visible.", "task_type": "examine"}
+{"text": "[examine] If an item is not found in expected locations, re-examine previously checked areas under the desklamp's light.", "task_type": "examine"}
+{"text": "[examine] Prioritize checking locations where the target item and the desklamp are likely to coexist, such as desks and sidetables.", "task_type": "examine"}
+{"text": "[examine] If the task involves examining an item with the desklamp, ensure the desklamp is turned on before attempting to examine the item.", "task_type": "examine"}
+{"text": "[examine] If the initial examination does not yield results, consider checking other similar items in the same area for potential clues.", "task_type": "examine"}
+{"text": "[heat] Check common locations like countertops, dining tables, and drawers before searching cabinets for a mug.", "task_type": "heat"}
+{"text": "[heat] Use the microwave to heat the mug after picking it up.", "task_type": "heat"}
+{"text": "[heat] Place the heated mug in any empty cabinet to complete the task.", "task_type": "heat"}
+{"text": "[put] Check common storage areas like shelves, tables, and cabinets first when searching for an object.", "task_type": "put"}
+{"text": "[put] Start with the most likely locations for the target object based on typical placements (e.g., remote controls on TV stands, watches on coffee tables).", "task_type": "put"}
+{"text": "[put] If the object is not immediately found, systematically check each likely location in order.", "task_type": "put"}
+{"text": "[put] Always verify if a container is open before searching inside it.", "task_type": "put"}
+{"text": "[put] Once the object is found, navigate directly to the target location and place the object there.", "task_type": "put"}
+{"text": "[puttwo] Check likely storage locations first, such as drawers, shelves, or tables, before moving to less common areas.", "task_type": "puttwo"}
+{"text": "[puttwo] If an item is not found in the initial target location, systematically check other potential locations in a logical order.", "task_type": "puttwo"}
+{"text": "[puttwo] Always return to previously checked locations if the second item is not found, as items may be present there.", "task_type": "puttwo"}
+{"text": "[puttwo] After picking up an item, immediately proceed to the target location to place it before moving on to find the next item.", "task_type": "puttwo"}
+{"text": "[puttwo] If the first item is found but the second is not, continue searching in the same area or nearby locations before moving further.", "task_type": "puttwo"}

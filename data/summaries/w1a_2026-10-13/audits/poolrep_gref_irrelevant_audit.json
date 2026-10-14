@@ -1,0 +1,113 @@
+{
+  "pool": "data/pools/src1011_qwen_insights.jsonl",
+  "control": "data/pools/poolrep_gref_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/poolrep_gardening_bank.txt",
+  "seed": 20264149,
+  "n_items": 36,
+  "body_words": 509,
+  "distinct_templates": 36,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 3,
+  "retained_body_fraction": 0.9941,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 706,
+      "before": 707,
+      "control": 706
+    },
+    "qwen3_8b": {
+      "target": 706,
+      "before": 710,
+      "control": 706
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.055,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/src1011_qwen_insights.jsonl",
+    "payload_corpus": "data/pools/poolrep_gref_irrelevant.jsonl"
+  },
+  "templates_used": [
+    128,
+    55,
+    6,
+    147,
+    1,
+    23,
+    18,
+    47,
+    3,
+    14,
+    94,
+    76,
+    60,
+    17,
+    70,
+    84,
+    57,
+    5,
+    83,
+    42,
+    24,
+    103,
+    2,
+    72,
+    35,
+    4,
+    97,
+    12,
+    45,
+    50,
+    85,
+    41,
+    91,
+    15,
+    82,
+    90
+  ],
+  "replacements": [
+    {
+      "doc_index": 0,
+      "word_index": 6,
+      "original_word": "30"
+    },
+    {
+      "doc_index": 12,
+      "word_index": 6,
+      "original_word": "shrubs"
+    },
+    {
+      "doc_index": 14,
+      "word_index": 4,
+      "original_word": "mulch"
+    }
+  ],
+  "examples": [
+    {
+      "original": "[clean] Identify the item you need to find and prioritize locations where it is likely to be found.",
+      "control": "[clean] Test drainage by digging a x cm hole and timing how long the hole needs to drain."
+    },
+    {
+      "original": "[clean] Always check common areas first, such as tables and countertops, before exploring less likely spots.",
+      "control": "[clean] Never dig heavy wet clay, because treading on it ruins the soil structure for months."
+    },
+    {
+      "original": "[clean] Clean the item using the designated cleaning area before placing it in the final location.",
+      "control": "[clean] If the leaves turn yellow, test the soil before adding more fertilizer to the patch."
+    },
+    {
+      "original": "[clean] Ensure you have the correct item before moving to the next step in the task.",
+      "control": "[clean] Cut lavender back by one-third after flowering (late August), never cutting into old, bare wood."
+    }
+  ]
+}

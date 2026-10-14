@@ -1,0 +1,36 @@
+{"text": "[clean] Examine the object to confirm its current state and location.", "task_type": "clean"}
+{"text": "[clean] Check if the object is in a receptacle that needs to be opened; open it if necessary.", "task_type": "clean"}
+{"text": "[clean] Locate a sinkbasin or other cleaning receptacle and use it to clean the object.", "task_type": "clean"}
+{"text": "[clean] After cleaning, take the object from its current location if not already in hand.", "task_type": "clean"}
+{"text": "[clean] Put the clean object into the specified target receptacle.", "task_type": "clean"}
+{"text": "[clean] Verify the task is complete by examining the object or looking at the receptacle.", "task_type": "clean"}
+{"text": "[cool] Go to the receptacle where the object is likely to be found.", "task_type": "cool"}
+{"text": "[cool] Open any closed receptacles to check their contents.", "task_type": "cool"}
+{"text": "[cool] Take the object from its current location once found.", "task_type": "cool"}
+{"text": "[cool] Go to a cooling receptacle, such as a fridge or sink.", "task_type": "cool"}
+{"text": "[cool] Cool the object using the appropriate receptacle.", "task_type": "cool"}
+{"text": "[cool] Put the cooled object into the target receptacle.", "task_type": "cool"}
+{"text": "[examine] Use the desklamp to illuminate the area before examining the object.", "task_type": "examine"}
+{"text": "[examine] Go to the receptacle or location where the object is expected to be found.", "task_type": "examine"}
+{"text": "[examine] Open any closed receptacles that may contain or obscure the object.", "task_type": "examine"}
+{"text": "[examine] Take the object if it is inside a receptacle to examine it directly.", "task_type": "examine"}
+{"text": "[examine] Use the \"examine\" command on the object while under the light of the desklamp.", "task_type": "examine"}
+{"text": "[examine] If the object is not visible, check all likely receptacles in the room systematically.", "task_type": "examine"}
+{"text": "[heat] Go to the receptacle containing the object that needs to be heated.", "task_type": "heat"}
+{"text": "[heat] Open the receptacle if it is closed to access the object.", "task_type": "heat"}
+{"text": "[heat] Take the object from its current receptacle.", "task_type": "heat"}
+{"text": "[heat] Go to a heating appliance such as a microwave or stoveburner.", "task_type": "heat"}
+{"text": "[heat] Use the heating appliance to heat the object.", "task_type": "heat"}
+{"text": "[heat] Put the heated object into the target receptacle.", "task_type": "heat"}
+{"text": "[put] Go to the receptacle containing the object first.", "task_type": "put"}
+{"text": "[put] Open any closed receptacle if the object is inside.", "task_type": "put"}
+{"text": "[put] Take the object from its current receptacle.", "task_type": "put"}
+{"text": "[put] Go to the target receptacle where the object should be placed.", "task_type": "put"}
+{"text": "[put] Open the target receptacle if it is closed and requires opening.", "task_type": "put"}
+{"text": "[put] Put the object in/on the target receptacle.", "task_type": "put"}
+{"text": "[puttwo] Search all visible receptacles for the required object.", "task_type": "puttwo"}
+{"text": "[puttwo] Open any closed receptacles that might contain the object.", "task_type": "puttwo"}
+{"text": "[puttwo] Take the first instance of the object and place it in the target receptacle.", "task_type": "puttwo"}
+{"text": "[puttwo] Continue searching until a second instance of the object is found.", "task_type": "puttwo"}
+{"text": "[puttwo] Take the second instance and place it in the target receptacle.", "task_type": "puttwo"}
+{"text": "[puttwo] Avoid moving objects between receptacles unless necessary to access the target.", "task_type": "puttwo"}

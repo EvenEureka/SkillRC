@@ -75,7 +75,7 @@ class ALFWorldEnv(BaseEnv):
             from alfworld.agents.environment import get_environment
         except Exception as e:  # noqa: BLE001
             raise RuntimeError(
-                "ALFWorld not installed. Run scripts/install_alfworld.sge on a node. "
+                "ALFWorld not installed. Run `bash scripts/setup_alfworld.sh`. "
                 f"(import error: {e})")
         os.environ.setdefault(
             "ALFWORLD_DATA", data_dir or os.path.join(_REPO_ROOT, "data", "alfworld"))

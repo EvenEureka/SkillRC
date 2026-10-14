@@ -1,0 +1,118 @@
+{
+  "pool": "q32r3",
+  "source_run": "SRC1011_COLLECT_QWEN",
+  "episodes": 140,
+  "successes": 111,
+  "distiller": {
+    "model": "Qwen/Qwen3-32B",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+    "served_as": "qwen3-32b",
+    "server": "vLLM 0.24 (local, tensor parallel 2)",
+    "enable_thinking": false
+  },
+  "temperature": 0.0,
+  "max_completion_tokens": 512,
+  "per_type": 6,
+  "subsample": "random.Random(20261015).sample per type in ['clean', 'cool', 'examine', 'heat', 'put', 'puttwo'] order, sorted by game id",
+  "types": {
+    "clean": {
+      "successes": 17,
+      "games_used": [
+        7,
+        46,
+        49,
+        77,
+        110,
+        139
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5327,
+      "completion_tokens": 122,
+      "response": "- Check common object locations systematically, starting with the most likely (e.g., fridge, countertop, diningtable).  \n- Clean the object using a sinkbasin as soon as it is obtained.  \n- Always verify the object is clean before placing it in the target location.  \n- Prioritize accessible and open locations to avoid unnecessary opening actions.  \n- If the object is not found in initial locations, systematically check cabinets, drawers, and shelves.  \n- Place the cleaned object in the specified target location (e.g., countertop, cabinet, coffeemachine) as the final step."
+    },
+    "cool": {
+      "successes": 20,
+      "games_used": [
+        16,
+        41,
+        64,
+        79,
+        95,
+        119
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 8095,
+      "completion_tokens": 131,
+      "response": "- Start by identifying the object to cool and the target location from the task description.  \n- Search for the object in common locations like fridge, diningtable, countertop, cabinets, and drawers, starting with the most likely ones.  \n- Once the object is found, cool it using the fridge before proceeding.  \n- After cooling, navigate to the target location (e.g., microwave, garbagecan, countertop) and place the object there.  \n- Open containers (e.g., fridge, microwave, cabinet) before interacting with their contents.  \n- If the object is not found in expected locations, systematically check all possible storage areas."
+    },
+    "examine": {
+      "successes": 11,
+      "games_used": [
+        4,
+        29,
+        56,
+        61,
+        101,
+        128
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3799,
+      "completion_tokens": 111,
+      "response": "- Check likely object locations systematically, starting with drawers, desks, and sidetables.  \n- Open closed containers to access their contents.  \n- Use the desklamp in its location to illuminate and examine objects nearby.  \n- If an object is not found initially, re-examine areas or consider less obvious locations like shelves or garbagecans.  \n- Prioritize finding the object first before using the desklamp for examination.  \n- Take the target object before using the desklamp to ensure it is in hand for the task."
+    },
+    "heat": {
+      "successes": 14,
+      "games_used": [
+        13,
+        24,
+        31,
+        36,
+        42,
+        81
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5559,
+      "completion_tokens": 121,
+      "response": "- Check common storage locations like fridge, countertop, diningtable, drawer, and cabinet first when searching for an object.  \n- Open containers (e.g., fridge, microwave, drawer) before inspecting or using their contents.  \n- Use the microwave to heat the object after it has been retrieved.  \n- Always confirm the object is in hand before attempting to heat or move it.  \n- Move the heated object to the specified destination (e.g., diningtable, fridge, cabinet) after heating.  \n- Prioritize efficiency by starting searches in the most likely locations and proceeding systematically."
+    },
+    "put": {
+      "successes": 32,
+      "games_used": [
+        50,
+        54,
+        88,
+        105,
+        108,
+        126
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 3303,
+      "completion_tokens": 98,
+      "response": "- Check the target location first to avoid redundant movement  \n- Search likely storage locations (drawers, cabinets, shelves) when the object is not immediately visible  \n- Open closed containers to inspect their contents  \n- Prioritize examining objects in areas directly related to the task (e.g., toiletpaper near bathroom fixtures)  \n- Take the object as soon as it is found to avoid losing track of it  \n- Move directly to the destination after obtaining the object to complete the task efficiently"
+    },
+    "puttwo": {
+      "successes": 17,
+      "games_used": [
+        14,
+        82,
+        112,
+        114,
+        129,
+        130
+      ],
+      "n_insights": 6,
+      "finish_reason": "stop",
+      "prompt_tokens": 5239,
+      "completion_tokens": 123,
+      "response": "- Start by identifying the most likely locations for the target object based on common sense and task context.  \n- Check one location at a time, systematically moving through the list of likely candidates.  \n- After finding and picking up the first object, immediately proceed to the target destination to place it.  \n- Return to search for the second object only after the first has been successfully placed.  \n- Revisit previously checked locations if there is a possibility of finding a second instance of the object there.  \n- If the second object is not found in initial locations, expand the search to less likely or remaining areas."
+    }
+  },
+  "n_items": 36,
+  "footprint_o200k": 752,
+  "body_words": 503
+}

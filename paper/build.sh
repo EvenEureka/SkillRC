@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build the manuscript: pdflatex -> bibtex -> pdflatex x2.
-# Needs libertine, newtx, inconsolata, tcolorbox, multirow, authblk, lastpage, wrapfig.
+# Uses the ACL style files in this directory (acl.sty, acl_natbib.bst); needs times, inconsolata, booktabs.
 set -euo pipefail
 cd "$(dirname "$0")"
 pdflatex -interaction=nonstopmode -halt-on-error manuscript.tex >/dev/null

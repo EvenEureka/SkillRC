@@ -30,6 +30,7 @@ class RunConfig:
     max_steps: int = 30
     webshop_base_url: str = "http://127.0.0.1:3000"
     webshop_n_tasks: int = 100
+    alfworld_split: str = "eval_out_of_distribution"  # 134 unseen games; 'eval_in_distribution' = 140 seen games
 
     # --- frozen executor (LLM) ---
     provider: str = "openai"                # openai | mock  (openai == any OpenAI-compatible endpoint)
@@ -70,7 +71,7 @@ class RunConfig:
     credit: str = "uniform"                 # uniform (whole retrieved set) | cf_judge (per-skill counterfactual, +API)
     cluster_by_type: bool = True            # maintain a separate utility posterior per task-type cluster
     stream_shuffle_seed: Optional[int] = None  # if set, shuffle task stream order by this seed (online seed axis)
-    credit_file: Optional[str] = None       # curator=precomputed_gate: offline debiased-credit json (credit_analysis.py)
+    credit_file: Optional[str] = None       # curator=precomputed_gate: offline debiased-credit json (not used in the reported studies)
     credit_gate_cut: float = 0.0            # precomputed_gate: drop skills with debiased credit < cut
 
     # --- experiment control ---

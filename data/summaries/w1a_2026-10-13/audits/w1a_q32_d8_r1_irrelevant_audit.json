@@ -1,0 +1,95 @@
+{
+  "pool": "data/pools/w1a_q32_d8_r1_insights.jsonl",
+  "control": "data/pools/w1a_q32_d8_r1_irrelevant.jsonl",
+  "domain": "vegetable gardening",
+  "bank": "data/pools/w1_gardening_bank.txt",
+  "seed": 20263635,
+  "n_items": 34,
+  "body_words": 523,
+  "distinct_templates": 34,
+  "matchings_found": 3000,
+  "search": 3000,
+  "candidates_tried": 1,
+  "climb_starts": 6,
+  "climb_steps": 1500,
+  "nonce_replacements": 0,
+  "retained_body_fraction": 1.0,
+  "tries": 1,
+  "context_tokens": {
+    "gpt_4o_mini_o200k": {
+      "target": 742,
+      "before": 742,
+      "control": 742
+    },
+    "qwen3_8b": {
+      "target": 742,
+      "before": 742,
+      "control": 742
+    }
+  },
+  "both_tokenizers_match": true,
+  "test_game_vocab_overlap": {
+    "true_pool": 0.0533,
+    "control": 0.0
+  },
+  "retrieval_control": {
+    "kind": "index-aligned reference ranking",
+    "ranking_corpus": "data/pools/w1a_q32_d8_r1_insights.jsonl",
+    "payload_corpus": "data/pools/w1a_q32_d8_r1_irrelevant.jsonl"
+  },
+  "templates_used": [
+    26,
+    22,
+    46,
+    135,
+    94,
+    62,
+    38,
+    3,
+    173,
+    1,
+    34,
+    6,
+    152,
+    12,
+    96,
+    28,
+    2,
+    91,
+    8,
+    53,
+    17,
+    90,
+    63,
+    175,
+    14,
+    7,
+    179,
+    143,
+    83,
+    41,
+    165,
+    84,
+    82,
+    85
+  ],
+  "replacements": [],
+  "examples": [
+    {
+      "original": "[clean] Check common locations like countertops, cabinets, drawers, and sinkbasin first when searching for an object.",
+      "control": "[clean] Start by testing the soil pH and amending it carefully before sowing the first seeds."
+    },
+    {
+      "original": "[clean] Clean the object using the sinkbasin before placing it in the target location.",
+      "control": "[clean] Irrigate deeply at the base of each plant rather than over the leaves."
+    },
+    {
+      "original": "[clean] Open containers like drawers and cabinets to inspect their contents before interacting.",
+      "control": "[clean] Keep grass paths mown short so slugs have fewer spots to hide."
+    },
+    {
+      "original": "[clean] Follow a logical sequence: find, take, clean, and place the object in the designated location.",
+      "control": "[clean] Keep the soil around blueberries always acidic (pH 4.5\u20135.5) with ericaceous compost and collected rain."
+    }
+  ]
+}
