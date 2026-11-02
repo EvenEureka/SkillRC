@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SkillRC</title>
-<meta name="description" content="When a distilled experience memory helps one model and not another, is it what the memory says or how the model reads it? SkillRC splits the effect into a reading cost and a content value.">
-<meta property="og:title" content="SkillRC: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses">
-<meta property="og:description" content="When an experience memory helps one model and not another, the differences we could attribute are in what the rules say. No model pays a measurable cost for reading them; their content is worth something to two of six readers and costs on WebShop.">
-<meta property="og:image" content="https://eveneureka.github.io/SkillRC/static/img/fig_readers.png">
+<title>A Gain Is Not Proof of Learning | SkillRC</title>
+<meta name="description" content="A gain over no memory is the usual evidence that an agent learned from experience. SkillRC checks what that gain shows, with matched controls, comparison texts and replicate pools.">
+<meta property="og:title" content="A Gain Is Not Proof of Learning: SkillRC, a Reality Check for Distilled Agent Memory">
+<meta property="og:description" content="A gain on one distilled memory is weak evidence of learning: what remains after matched comparisons is modest, depends on the comparison text, and varies between replicate pools.">
+<meta property="og:image" content="https://eveneureka.github.io/SkillRC/static/img/report_overview.png">
 <style>
   :root {
     color-scheme: light;
@@ -66,6 +66,7 @@
   ol.findings strong { color: var(--text); }
   .note { font-size: 16px; color: var(--text-2); }
   pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.45; }
+  footer p { margin: 0 0 6px; }
   footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--text-3); text-align: center; }
   @media (max-width: 520px) { body { font-size: 17px; } header { padding-top: 32px; } }
 </style>
@@ -73,79 +74,91 @@
 <body>
 <main>
 <header>
-  <h1>SkillRC: Is It the Skill or the Stack?</h1>
-  <p class="subtitle">Auditing experience memory in agent harnesses</p>
+  <h1>A Gain Is Not Proof of Learning</h1>
+  <p class="subtitle">SkillRC, a reality check for distilled agent memory</p>
   <p class="byline">Yiwen Lu &middot; University of Notre Dame &middot; <a href="mailto:ylu37@nd.edu">ylu37@nd.edu</a></p>
-  <p class="status">Manuscript, 2026</p>
+  <p class="status">Research report, November 2026</p>
   <div class="links">
-    <a class="btn primary" href="static/skillrc_paper.pdf">Paper (PDF)</a>
+    <a class="btn primary" href="static/skillrc_report.pdf">Report (PDF)</a>
     <a class="btn" href="https://github.com/EvenEureka/SkillRC">Code and data</a>
   </div>
 </header>
 
 <h2>The question</h2>
 <p>A common way to let an LLM agent learn from experience is to distill its past runs into a short
-list of rules and put the list in its prompt. The same list can help one model and do nothing for
-another, or harm it. Is that because of what the rules say, the skill, or because of how each model
-reads added text, the stack?</p>
-<p class="answer"><strong>Answer.</strong> The differences we could attribute are in the skill. No model
-pays a measurable cost for reading the memory, while what the rules say is worth +0.08 to GPT-4o-mini, about
-+0.04 to Qwen3-8B, nothing measurable to four other models, and a loss on WebShop.</p>
-<p>To separate the two, we built a control that keeps everything about the memory except its content:
-the same items, tags, word counts and order, and the same token count under every model's tokenizer.
-Each rule is replaced by a sentence about gardening, with a few words replaced by a placeholder where
-needed to match token counts. The memory's effect then splits into a <em>reading cost</em> (control
-minus no memory) and a <em>content value</em> (memory minus control).</p>
+list of rules and put the list in its prompt. The usual evidence that this works is a gain over the
+same agent without memory. Does such a gain show that the agent learned from experience?</p>
+<p class="answer"><strong>Short answer.</strong> Not by itself. A memory also adds text to read, and it
+is one draw from the pipeline that built it. Against matched comparisons, what remains of a gain is
+modest, depends on the comparison text, and varies between replicate pools about as much as its size.</p>
+<p>We compare a memory with a control that keeps everything except its content: the same items, tags,
+word counts and order, and the same token count under each tested model's tokenizer, with each rule
+replaced by a sentence about gardening. Control minus no memory gives a <em>reading effect</em>, and
+memory minus control gives a <em>content value</em>. These are contrasts against a chosen control, so
+we also compare the memory with rules written without experience and with advice for another
+environment, and we repeat the comparison over pools built by the same pipeline.</p>
 
 <figure>
-  <a href="static/img/fig_readers.png"><div class="frame"><img src="static/img/fig_readers.png" alt="Dot plot of reading cost and content value with 95% intervals. Reading cost lies within 0.04 of zero for every reader. Content value is about +0.08 for GPT-4o-mini and +0.04 for Qwen3-8B, and near zero for Llama-3.1-8B, Qwen3-14B and Qwen3-32B."></div></a>
-  <figcaption>Reading cost and content value on 134 unseen ALFWorld games, with 95% intervals. Left: one
-  pool read by five models (single runs). Right: the mean over 18 pools for three Qwen3 models, with
-  intervals that resample pools as well as games; the light dots are single pools. Below each model:
-  its success rate without memory. <span class="tap">Tap the figure to open it at full size.</span></figcaption>
+  <a href="static/img/report_overview.png"><div class="frame"><img src="static/img/report_overview.png" alt="Overview of SkillRC. One frozen reader runs the same tasks three times, with a distilled memory, a matched control or nothing in one prompt slot. The gaps between the three success rates give the content value R and the reading effect I, which add up to the net effect T."></div></a>
+  <figcaption>One frozen reader runs the same tasks three times, and only the text in one prompt slot
+  changes. The gaps between the three success rates give the content value <em>R</em> and the reading
+  effect <em>I</em>, which add up to the net effect <em>T</em> that a with-and-without comparison
+  reports. <span class="tap">Tap the figure to open it at full size.</span></figcaption>
 </figure>
 
 <h2>What we found</h2>
 <ol class="findings">
-  <li><strong>No reader pays a measurable reading cost.</strong> Matched unrelated text changes ALFWorld
-  success by at most 0.04 for each of six models, and no model's reading cost is distinguishable from
-  zero. Where a memory does nothing for a model, its content value is near zero too, so no reading cost is
-  masking a gain.</li>
-  <li><strong>Content is worth something to two readers and lowers the score on WebShop.</strong> For Qwen3-8B,
-  averaged over 18 pools, the content value is +0.039 [0.012, 0.065]. GPT-4o-mini also gains reliably
-  from a pool built from its own runs, while four other models gain nothing measurable. On WebShop the
-  distilled rules lower the score: several rules tell the agent to search again, and GPT-4o-mini
-  searches more than twice as often (5.7 against 2.4 times per session).</li>
-  <li><strong>For Qwen3 readers, distilled rules beat generic advice and the source agent made no
-  difference.</strong> For Qwen3-8B and Qwen3-14B,
-  rules distilled from trajectories beat equally long rules written from the task description alone by
-  +0.035 [0.014, 0.057] (the two lists were written by different models; see the paper). Qwen3-32B did
-  not read the generic rules. For all three Qwen3 readers, with the same number of trajectories per task
-  type from each source, it made no difference which agent supplied them.
-  Pools built by the same pipeline differ from one another about as much as the effects, so a memory is
-  best judged over several pools.</li>
+  <li><strong>Against unrelated text, a memory's value is modest.</strong> Over many pools the content
+  value is +5.0 points for Llama-3.1-8B and +3.9 for Qwen3-8B, and for Qwen3-14B and Qwen3-32B, at +1.3
+  and +1.2, it cannot be distinguished from zero. The largest value, +9.1, is GPT-4o-mini's on a single
+  pool built from its own successes, chosen because it had helped that model. A net effect can also
+  hide this: Llama-3.1-8B's net of +0.6 combines a reading effect of &minus;4.4 and a content value of
+  +5.0.</li>
+  <li><strong>The value depends on what the memory is compared with.</strong> Over three pools and two
+  readers, the memory leads gardening text by +3.1 [&minus;0.8, 7.7], generic rules from the same writer
+  by +3.5 [0.2, 7.2], and advice for another environment by only +1.1 [&minus;2.7, 4.9]. We detected no
+  advantage of the generic rules over gardening, so the lead over them may reflect a weak generic list
+  as much as a strong memory.</li>
+  <li><strong>The value does not carry over reliably, and it can be negative.</strong> Replicate pools
+  differ about as much as the value itself, with a standard deviation of 1.9 points that includes
+  unseparated run variation. For Qwen3-8B, three pools built the same way give 0.0, +6.0 and +10.4. One
+  WebShop pool lowers GPT-4o-mini's score by 15.8 points and Qwen3-8B's by 11.6 against its control, in
+  a harness whose observations do not name the current page.</li>
 </ol>
 
+<h2>What this means</h2>
+<p>A gain on one memory is weak evidence of learning. Adding the control changes nominal gain detection
+in 11 of 54 evaluations: of 16 net gains on single pools, 8 come with no detected content gain, although
+this does not show that they are false. Distilled memory is not worthless, since for two readers rules
+beat their own scrambled words, and on three pools they beat generic rules from the same writer. For
+claims that a gain comes from experience, we recommend at least two matched controls and several
+pools, with the pipeline that builds memories as the unit of evaluation. Per reader, eight pools take
+17 runs with one matched control, or 25 with two, against 2 for one with-and-without comparison. The
+extra runs buy interpretability, and any benefit for decision accuracy remains to be shown.</p>
+
 <h2>How it was tested</h2>
-<p class="note">Five studies on ALFWorld and WebShop with six readers (GPT-4o-mini, GPT-4.1-mini,
-Llama-3.1-8B, Qwen3-8B, Qwen3-14B, Qwen3-32B) and 24 ALFWorld pools. For each study the predictions and
-the analysis were written down before its runs; the paper lists every prediction with its outcome and
-marks the exploratory analyses. The one planned test of a difference between readers was not
-significant, the intervals of the differences between readers' reading costs reach 0.10, and the topic
-of the unrelated text shifts the reading cost by 0.025. The readers are small and mid-sized models and
-the memories are short rule lists, so the results do not speak to frontier models or long procedural
-skills.</p>
+<p class="note">Six studies on ALFWorld and WebShop with six readers (GPT-4o-mini, GPT-4.1-mini,
+Llama-3.1-8B, Qwen3-8B, Qwen3-14B, Qwen3-32B) and 24 ALFWorld pools. Predictions and analyses were
+written down before the runs, except for one addendum written after two hosted readers had been
+analysed. The contrasts are relative to the chosen control and do not identify a topic-independent
+reading cost or an experience-specific learning effect. The memories are short rule lists placed whole
+in the prompt, so the results do not speak to frontier models or long procedural skills. The
+same-window configurations and summaries are not yet public.</p>
 
 <h2>Citation</h2>
 <pre>@misc{lu2026skillrc,
-  title  = {{SkillRC}: Is It the Skill or the Stack? Auditing Experience Memory in Agent Harnesses},
+  title  = {A Gain Is Not Proof of Learning: {SkillRC},
+            a Reality Check for Distilled Agent Memory},
   author = {Lu, Yiwen},
   year   = {2026},
-  note   = {Manuscript},
-  url    = {https://github.com/EvenEureka/SkillRC}
+  note   = {Research report},
+  url    = {https://eveneureka.github.io/SkillRC/}
 }</pre>
 
-<footer>SkillRC &middot; Yiwen Lu &middot; University of Notre Dame</footer>
+<footer>
+  <p>This report supersedes an earlier manuscript, <a href="static/skillrc_paper.pdf">Is It the Skill or the Stack?</a></p>
+  <p>SkillRC &middot; Yiwen Lu &middot; University of Notre Dame</p>
+</footer>
 </main>
 </body>
 </html>

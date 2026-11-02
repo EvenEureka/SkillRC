@@ -1,3 +1,5 @@
+> **Latest report:** [A Gain Is Not Proof of Learning: SkillRC, a Reality Check for Distilled Agent Memory](https://eveneureka.github.io/SkillRC/static/skillrc_report.pdf) (November 2026). It supersedes the manuscript described below, and some conclusions changed. See the [project page](https://eveneureka.github.io/SkillRC/).
+
 # SkillRC: Is It the Skill or the Stack?
 
 **Auditing experience memory in agent harnesses**
