@@ -36,13 +36,14 @@
   .PASS{color:var(--pass);background:var(--pass-bg)} .BLOCK{color:var(--block);background:var(--block-bg)}
   .INCONCLUSIVE{color:var(--inc);background:var(--inc-bg)} .DESCRIPTIVE{color:var(--desc);background:var(--desc-bg)}
   .INVALID{color:var(--inv);background:var(--inv-bg)}
-  figure { margin: 22px 0 8px; } .frame { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px; }
+  figure { margin: 22px 0 8px; } .frame { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px; overflow-x: auto; }
   figcaption { font-size: 15px; color: var(--text-2); margin-top: 8px; line-height: 1.5; }
-  svg.iv { width:100%; height:auto; font-family: var(--sans); } svg.iv .lab, svg.iv .reflab { fill: var(--text-2); font-size: 12px; }
+  svg.iv { width:100%; min-width: 640px; height:auto; font-family: var(--sans); } svg.iv .lab, svg.iv .reflab { fill: var(--text-2); font-size: 12px; }
   svg.iv .bar { stroke: var(--text); stroke-width: 3; stroke-linecap: round } svg.iv .dot { fill: var(--text) }
   svg.iv .bar.block{stroke:var(--block)} svg.iv .dot.block{fill:var(--block)} svg.iv .bar.pass{stroke:var(--pass)} svg.iv .dot.pass{fill:var(--pass)}
   svg.iv .bar.inconclusive{stroke:var(--inc)} svg.iv .dot.inconclusive{fill:var(--inc)} svg.iv .bar.descriptive{stroke:var(--desc)} svg.iv .dot.descriptive{fill:var(--desc)}
   svg.iv .bar.invalid{stroke:var(--inv)} svg.iv .dot.invalid{fill:var(--inv)}
+  svg.iv .bar.neutral{stroke:var(--text-3)} svg.iv .dot.neutral{fill:var(--text-3)}
   svg.iv .ref { stroke: var(--rule); stroke-width: 1.5 } svg.iv .ref.margin { stroke: var(--block); stroke-dasharray: 4 3 }
   table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: 14.5px; font-variant-numeric: tabular-nums; }
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; } th { color: var(--text-3); font-weight: 600; }
@@ -65,7 +66,7 @@
   <div class="links">
     <a class="btn primary" href="https://github.com/EvenEureka/SkillRC/blob/main/docs/gate/README.md">Docs</a>
     <a class="btn" href="https://github.com/EvenEureka/SkillRC/tree/main/skillrc/gate">Code</a>
-    
+    <a class="btn" href="reports/release.html">Release-check report</a>
     <a class="btn" href="reports/historical.html">Historical report</a>
     <a class="btn" href="reports/inspect.html">Inspect report</a>
   </div>
@@ -77,13 +78,15 @@ new version better or worse on a fixed task set, by how much, at what cost, and 
 is responsible? A single before-and-after number cannot answer that, especially when several changes ship together.</p>
 <p>The gate reads the logs of both versions on the same tasks and returns one verdict per declared change:
 <span class="badge PASS">PASS</span> <span class="badge BLOCK">BLOCK</span> <span class="badge INCONCLUSIVE">INCONCLUSIVE</span> <span class="badge INVALID">INVALID</span> <span class="badge DESCRIPTIVE">DESCRIPTIVE</span>.
-The command's exit code is the verdict, so a CI job can stop a release.</p>
+The exit code is the verdict of the target selected with <code>--target</code> (or the spec's default target), so a CI
+job can stop a release.</p>
 
 <figure>
-  <div class="frame"><svg class="iv" viewBox="0 0 820 168" role="img" aria-label="score change intervals by release target"><line x1="458.2" y1="6" x2="458.2" y2="144" class="ref margin"/><text x="454.2" y="159" class="reflab" text-anchor="end">−δ = −0.05</text><line x1="503.5" y1="6" x2="503.5" y2="144" class="ref zero"/><text x="507.5" y="159" class="reflab" text-anchor="start">0</text><text x="318" y="24" class="lab" text-anchor="end">historical: label + memory vs old release</text><line x1="584.1" y1="20" x2="661.6" y2="20" class="bar descriptive"/><circle cx="623.6" cy="20" r="5" class="dot descriptive"/><text x="318" y="56" class="lab" text-anchor="end">historical: page label alone</text><line x1="692.3" y1="52" x2="771.0" y2="52" class="bar descriptive"/><circle cx="731.7" cy="52" r="5" class="dot descriptive"/><text x="318" y="88" class="lab" text-anchor="end">historical: memory, given the label</text><line x1="355.0" y1="84" x2="435.9" y2="84" class="bar descriptive"/><circle cx="395.4" cy="84" r="5" class="dot descriptive"/><text x="318" y="120" class="lab" text-anchor="end">Inspect AgentDojo: add a tips block</text><line x1="461.0" y1="116" x2="593.3" y2="116" class="bar inconclusive"/><circle cx="527.2" cy="116" r="5" class="dot inconclusive"/></svg></div>
+  <div class="frame"><svg class="iv" viewBox="0 0 820 232" role="img" aria-label="score change intervals by release target"><line x1="466.5" y1="6" x2="466.5" y2="208" class="ref margin"/><text x="462.5" y="223" class="reflab" text-anchor="end">−δ = −0.05</text><line x1="510.7" y1="6" x2="510.7" y2="208" class="ref zero"/><text x="514.7" y="223" class="reflab" text-anchor="start">0</text><text x="318" y="24" class="lab" text-anchor="end">historical: label + memory vs old release</text><line x1="589.0" y1="20" x2="664.5" y2="20" class="bar descriptive"/><circle cx="627.5" cy="20" r="5" class="dot descriptive"/><text x="318" y="56" class="lab" text-anchor="end">historical: page label alone</text><line x1="694.4" y1="52" x2="771.0" y2="52" class="bar descriptive"/><circle cx="732.7" cy="52" r="5" class="dot descriptive"/><text x="318" y="88" class="lab" text-anchor="end">historical: memory, given the label</text><line x1="366.0" y1="84" x2="444.8" y2="84" class="bar descriptive"/><circle cx="405.4" cy="84" r="5" class="dot descriptive"/><text x="318" y="120" class="lab" text-anchor="end">pre-registered C1: ship the memory</text><line x1="355.0" y1="116" x2="429.4" y2="116" class="bar block"/><circle cx="392.1" cy="116" r="5" class="dot block"/><text x="318" y="152" class="lab" text-anchor="end">pre-registered C2: ship the repaired memory</text><line x1="405.7" y1="148" x2="485.3" y2="148" class="bar inconclusive"/><circle cx="445.0" cy="148" r="5" class="dot inconclusive"/><text x="318" y="184" class="lab" text-anchor="end">Inspect AgentDojo: add a tips block</text><line x1="469.3" y1="180" x2="598.1" y2="180" class="bar inconclusive"/><circle cx="533.7" cy="180" r="5" class="dot inconclusive"/></svg></div>
   <figcaption>Change in mean score (candidate minus baseline) with 95% paired intervals, coloured by verdict. The dashed
-  line is the margin: a change passes only if its whole interval clears −0.05, and is blocked if its whole interval lies
-  below it. Rows are release targets from the three cases below.</figcaption>
+  line is the margin. For the release-eligible, non-degenerate results shown here, the score check passes when the whole
+  interval clears −0.05 and blocks when it lies wholly below −0.05; a target PASS also needs every cost guardrail to pass. The historical rows stay
+  DESCRIPTIVE because their logs lack provenance. Rows are release targets from the cases below.</figcaption>
 </figure>
 
 <h2>What the gate found</h2>
@@ -92,30 +95,67 @@ The command's exit code is the verdict, so a CI job can stop a release.</p>
   <li><strong>A bundled release hid a regression.</strong> On 500 WebShop sessions with Qwen3-8B, shipping a page label and a
   distilled memory together looked like a gain over the old release (Δ +0.132
   [+0.089, +0.174]). Split into declared interventions, the label alone
-  gave +0.251 and the memory, given the label, -0.119
-  [-0.164, -0.075] while adding +55%
+  gave +0.251 and the memory, given the label, −0.119
+  [−0.164, −0.075] while adding +55%
   prompt tokens per episode. These logs predate the provenance contract, so the gate reports them as
   <span class="badge DESCRIPTIVE">DESCRIPTIVE</span>: real statistics, no release decision.</li>
   
-  <li><strong>The pre-registered release check.</strong>
-  <span class="pending">Running now: 13 arm-runs in two execution blocks on two GPUs (published memory vs none on
-  sessions 0–499; repaired memory, the published memory and three matched comparator edits on held-out sessions
-  520–1019). This section is generated from the gate's result file when the runs finish.</span>
-  </li>
+  
+  <li><strong>Re-run under the contract, the memory is blocked.</strong> Fresh runs with full provenance, on the same 500
+  sessions and the same reader. With the published memory the agent scored 0.436; without it,
+  0.571 (Δ −0.134 [−0.176, −0.092]). The memory also added
+  +58% prompt tokens per episode. The gate returns <span class="badge BLOCK">BLOCK</span> on both the score and the cost
+  limit. The logs show what changed: with the memory the agent went back to search
+  0.82 times per episode instead of
+  0.29, and ended
+  31% of episodes without buying anything instead of
+  18%.</li>
+  
+  <li><strong>Fixing the visible symptom did not fix the regression.</strong> Six of the memory's 30 rules tell the agent
+  to keep searching. On 500 held-out sessions, replacing those six with unrelated text of the same length cut the
+  extra searching: returns to search per episode fell from
+  0.84 with the published memory to
+  0.26 (no memory:
+  0.32). The score gain over the published memory was small and
+  uncertain: +0.036 [−0.003, +0.075]. One of three comparison edits, which replaced six
+  other rules chosen by a fixed random draw, did better than the repair (−0.083 [−0.123, −0.043]
+  for repair minus that edit). The localization criterion was set in advance: the repair must beat the published memory and each
+  comparison edit. It is <strong>not met</strong> (not supported:
+  repair vs published memory; repair vs comparison edit 1; repair vs comparison edit 3), so the logs do not support the explanation that these six rules cause the loss.
+  The repaired memory still scores below no memory: Δ −0.074 [−0.119, −0.029], with
+  +38.5% [+29.8%, +48.1%] prompt tokens. The score interval excludes zero but
+  crosses the −0.05 boundary, and the token interval crosses its +30% limit; both checks are inconclusive, so the gate
+  returns <span class="badge INCONCLUSIVE">INCONCLUSIVE</span> and the change does not get release approval. With a margin of 0.02 the score check
+  would BLOCK.</li>
+  
+  
   
   <li><strong>Not enough evidence is also a verdict.</strong> Through Inspect AI on 96 AgentDojo tasks (two epochs per arm),
   a block of six tips in the system prompt scored 0.427 vs 0.401
-  (Δ +0.026 [-0.047, +0.099]): non-inferior within the margin, but its token cost
-  (+21%, interval up to +59%) could neither be shown under the +30% tolerance nor shown to
-  exceed it. The gate returns <span class="badge INCONCLUSIVE">INCONCLUSIVE</span> and says why; at 96 tasks the smallest detectable score change is
-  about 0.11.</li>
+  (Δ +0.026 [−0.047, +0.099]): the score passes the non-inferiority check, but the token cost
+  (+21% [−2%, +59%]) and p95 latency (−15%
+  [−43%, +53%]) could neither be shown under the +30% tolerance nor shown to exceed it.
+  The gate returns <span class="badge INCONCLUSIVE">INCONCLUSIVE</span> and says why. With 96 tasks, the score change detectable with 80% power
+  (two-sided α = 0.05, normal approximation from the observed paired variability) is about 0.11.</li>
   
 </ol>
 
+<figure>
+  <div class="frame"><svg class="iv" viewBox="0 0 820 200" role="img" aria-label="score change intervals by release target"><line x1="397.1" y1="6" x2="397.1" y2="176" class="ref zero"/><text x="401.1" y="191" class="reflab" text-anchor="start">−0.1</text><line x1="577.2" y1="6" x2="577.2" y2="176" class="ref zero"/><text x="581.2" y="191" class="reflab" text-anchor="start">0</text><line x1="757.3" y1="6" x2="757.3" y2="176" class="ref zero"/><text x="761.3" y="191" class="reflab" text-anchor="start">+0.1</text><text x="318" y="24" class="lab" text-anchor="end">repair vs published memory</text><line x1="571.2" y1="20" x2="712.2" y2="20" class="bar neutral"/><circle cx="641.8" cy="20" r="5" class="dot neutral"/><text x="318" y="56" class="lab" text-anchor="end">repair vs comparison edit 1</text><line x1="355.0" y1="52" x2="498.9" y2="52" class="bar block"/><circle cx="427.5" cy="52" r="5" class="dot block"/><text x="318" y="88" class="lab" text-anchor="end">repair vs comparison edit 2</text><line x1="624.1" y1="84" x2="771.0" y2="84" class="bar pass"/><circle cx="697.4" cy="84" r="5" class="dot pass"/><text x="318" y="120" class="lab" text-anchor="end">repair vs comparison edit 3</text><line x1="437.8" y1="116" x2="587.5" y2="116" class="bar neutral"/><circle cx="513.3" cy="116" r="5" class="dot neutral"/><text x="318" y="152" class="lab" text-anchor="end">repair vs mean of the three edits</text><line x1="484.0" y1="148" x2="607.7" y2="148" class="bar neutral"/><circle cx="546.1" cy="148" r="5" class="dot neutral"/></svg></div>
+  <figcaption>Did the repair beat the alternatives? Score difference, repaired memory minus each alternative, with 95%
+  paired intervals (held-out sessions 520–1019). Green: the repair is better (interval above 0). Red: the alternative is
+  better (interval below 0). Grey: unclear. The localization claim needed the top four rows to be green.</figcaption>
+</figure>
+
+<p class="note"><strong>Qwen3-32B extension</strong> (pre-registered addendum):
+results pending. It starts with a 100-session pilot and proceeds to the
+500 sessions of panel T, with both repetitions, only if the pre-registered pilot screen passes. Its verdict and the
+difference between the two readers' memory effects will be added here.</p>
+
 
 <h2>From verdict to trajectory</h2>
-<p class="note">Task 1 (fashion), chosen by a fixed rule (baseline scored higher (first by task id)), not by hand. Highlighted: the
-first step where the two versions act differently.</p>
+<p class="note">Task 1 (fashion), picked by a rule fixed in advance, not by hand: baseline scored higher (first by task id).
+Highlighted: the first step where the two versions act differently.</p>
 <div class="replay">
   
   <div><p class="note"><strong>without the memory</strong> · score 1.00 · 5 steps</p>
@@ -133,10 +173,10 @@ passes one thing to the next:</p>
 <div class="scroll"><table>
 <tr><th>stage</th><th>what it does</th><th>passes on</th></tr>
 <tr><td>ingest</td><td>parses each arm's logs into episodes and a run manifest; all runs of an arm must share one fingerprint</td><td>arms (a broken arm fails only its own targets)</td></tr>
-<tr><td>fingerprint check</td><td>the two versions may differ only in the declared interventions; model revision, scorer, serving, environment and every other file hash must match; missing provenance means no decision</td><td>undeclared differences (any → INVALID)</td></tr>
+<tr><td>fingerprint check</td><td>the two versions may differ only in the declared interventions and in execution metadata (GPU, host, ports, job and block ids); all other configuration, the model revision, the scorer, the scientific serving and environment settings, and every file hash must match; missing provenance means no release decision</td><td>undeclared differences (any → INVALID)</td></tr>
 <tr><td>pairing</td><td>builds the expected task × repetition grid from a frozen task registry, picks each cell's scored attempt, counts missing and failed cells</td><td>task-aligned table</td></tr>
 <tr><td>statistics</td><td>task-clustered, stratified bootstrap; order-statistic intervals that agree exactly with the p-values; Holm across guardrails; missing cells bound the score</td><td>estimates and intervals</td></tr>
-<tr><td>verdict</td><td>BLOCK if the score interval lies below −δ or a cost limit is confirmed broken; PASS if the score clears −δ and every guardrail stays under its limit; else INCONCLUSIVE</td><td>one verdict per change, with reasons</td></tr>
+<tr><td>verdict</td><td>validity and provenance checks come first; a degenerate component is INCONCLUSIVE; otherwise BLOCK needs a score interval wholly below −δ or a Holm-confirmed cost violation, and PASS needs a score interval wholly above −δ, every guardrail passing and no missing cells; everything else is INCONCLUSIVE</td><td>one verdict per change, with reasons</td></tr>
 <tr><td>report</td><td>JSON for machines, Markdown for CI, HTML with behaviour shifts and paired replays</td><td>files and exit code</td></tr>
 </table></div>
 <pre>pip install -e .
@@ -147,10 +187,19 @@ open /tmp/gate_demo/report.html</pre>
 <p>The producer side is built for unattended GPU runs: every attempt is journaled before it starts; a run resumes only
 under the same fingerprint; interrupted or truncated records are recovered; a run stops itself after repeated
 infrastructure failures so its servers can be restarted; each job in a chain checks that its predecessors succeeded
-(hash-verified markers); state files are published atomically. The contract was reviewed in eleven rounds with an
-independent reviewer before launch (<a href="https://github.com/EvenEureka/SkillRC/tree/main/engineering">design, pre-registration and review record</a>);
+(hash-verified markers); state files are published atomically. The contract and its implementation went through eleven
+numbered rounds of review by an independent model reviewer (Codex) before launch (<a href="https://github.com/EvenEureka/SkillRC/tree/main/engineering">design, pre-registration and review record</a>);
 94 tests and a calibration study (<a href="https://github.com/EvenEureka/SkillRC/blob/main/docs/gate/calibration.md">calibration.md</a>) back the
 decision rules.</p>
+
+<p>The pre-registered runs: 6,500 episodes over 13 arm-runs, with
+0 infrastructure failures and 0 missing cells. Each repeated arm ran its
+second repetition in a separate execution window hours later. Across these two windows, all
+2500 of 2500 arm–task
+pairs (5 arms) matched on score, step count and prompt-token count (greedy decoding, prefix caching
+off, seeded environment). The score A/A contrast is therefore exactly zero, and the gate reports it as degenerate
+rather than as evidence of stability. This does not establish determinism for latency or for future runs, but here the
+second repetition added no score information; more tasks would have bought more precision.</p>
 
 <h2>Limits</h2>
 <p class="note">WebShop here is the 1,000-product version with generated goals, fashion-heavy test panels and a 15-step
@@ -158,10 +207,13 @@ budget; readers are open Qwen3 models. Intervals describe task-sampling uncertai
 windows, not future windows. The error budget is nominal: in simulation, the chance of a PASS when the true change sits
 exactly at the margin was 0.018–0.041 against a nominal 0.025. The margin (0.05) and the cost tolerances (+30%) are
 illustrative policies fixed before the runs, not recommendations. Which rule caused a loss is tested only through
-declared ablation arms, never inferred automatically.</p>
+declared ablation arms, never inferred automatically. The repair replaces the six rules with unrelated text of the same
+length, so it tests replacement, not deletion; the three comparison edits are the only alternatives the localization
+claim covers. Behaviour shifts (returns to search, episodes without a purchase) are descriptive, with no multiplicity
+adjustment, and are not part of any verdict.</p>
 
 <footer>
-  <p>skillrc-gate is part of <a href="https://github.com/EvenEureka/SkillRC">SkillRC</a> · page generated 2026-11-16 from the gate's result files by
+  <p>skillrc-gate is part of <a href="https://github.com/EvenEureka/SkillRC">SkillRC</a> · page generated 2026-11-17 from the gate's result files by
   <code>scripts/gate/build_case_page.py</code></p>
 </footer>
 </main>

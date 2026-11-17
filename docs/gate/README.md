@@ -155,6 +155,9 @@ claims:                             # joint claims: every listed contrast must h
 - `examples/webshop_bundled_release/` — historical logs, DESCRIPTIVE; the bundled-release case.
 - `examples/inspect_agentdojo/` — Inspect AI on AgentDojo, Qwen3-8B, a tips block in the system prompt.
 - `examples/webshop_release_check/` — the pre-registered release check (`engineering/PREREG_gate_ws_2026-11-16.md`).
+  Its logs are published compressed in `data/summaries/gate_ws_2026_11/`; `bash scripts/gate/restore_release_logs.sh`
+  puts them where the frozen spec reads them, then `skillrc-gate report examples/webshop_release_check/gate.yaml`.
+- Case page with all three: <https://eveneureka.github.io/SkillRC/gate/>.
 
 ### Example: a bundled release hides a regression
 
@@ -165,6 +168,20 @@ Qwen3-8B, 500 WebShop test sessions, one execution window (historical SkillRC st
 | page label + memory vs old release | +0.132 [+0.089, +0.174] | +12.5% |
 | page label alone | +0.251 [+0.208, +0.295] | −27.6% |
 | memory, given the page label | −0.119 [−0.164, −0.075] | +55.4% |
+
+### Example: the pre-registered release check
+
+Qwen3-8B, fresh runs with full provenance, two execution blocks, 6,500 episodes, no infrastructure failures or
+missing cells (`examples/webshop_release_check/report/`):
+
+| target | verdict | Δ score [95%] | prompt tokens |
+|---|---|---|---|
+| C1 ship the published memory (sessions 0–499) | BLOCK | −0.134 [−0.176, −0.092] | +58.1% (Holm-confirmed over +30%) |
+| C2 ship the repaired memory (sessions 520–1019) | INCONCLUSIVE | −0.074 [−0.119, −0.029] | +38.5% [+29.8%, +48.1%] |
+
+The localization claim (replacing six "keep searching" rules beats the published memory and three comparison edits
+of other rules) is not met: the repair cut returns to search from 0.84 to 0.26 per episode, but its score gain over
+the published memory was +0.036 [−0.003, +0.075], and one comparison edit did better than the repair.
 
 ## Limitations
 

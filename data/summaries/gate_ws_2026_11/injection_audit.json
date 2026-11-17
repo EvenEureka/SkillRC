@@ -1,0 +1,311 @@
+{
+ "template": "[Current page: Search]\nWebShop [SEP] Instruction: [SEP] {INSTR} [SEP] Search",
+ "qwen3_target": 529,
+ "configs": {
+  "GWS_D_ABL_R1_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    4,
+    11,
+    16,
+    21,
+    27,
+    30
+   ],
+   "declared_lines": [
+    4,
+    11,
+    16,
+    21,
+    27,
+    30
+   ],
+   "ok": true
+  },
+  "GWS_D_ABL_R2_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    4,
+    11,
+    16,
+    21,
+    27,
+    30
+   ],
+   "declared_lines": [
+    4,
+    11,
+    16,
+    21,
+    27,
+    30
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP1_HA_Q8.yaml": {
+   "n_tasks": 252,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    3,
+    10,
+    17,
+    19,
+    26,
+    29
+   ],
+   "declared_lines": [
+    3,
+    10,
+    17,
+    19,
+    26,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP1_HB_Q8.yaml": {
+   "n_tasks": 248,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    3,
+    10,
+    17,
+    19,
+    26,
+    29
+   ],
+   "declared_lines": [
+    3,
+    10,
+    17,
+    19,
+    26,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP2_HA_Q8.yaml": {
+   "n_tasks": 252,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    1,
+    8,
+    14,
+    19,
+    26,
+    29
+   ],
+   "declared_lines": [
+    1,
+    8,
+    14,
+    19,
+    26,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP2_HB_Q8.yaml": {
+   "n_tasks": 248,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    1,
+    8,
+    14,
+    19,
+    26,
+    29
+   ],
+   "declared_lines": [
+    1,
+    8,
+    14,
+    19,
+    26,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP3_HA_Q8.yaml": {
+   "n_tasks": 252,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    6,
+    10,
+    15,
+    19,
+    28,
+    29
+   ],
+   "declared_lines": [
+    6,
+    10,
+    15,
+    19,
+    28,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_COMP3_HB_Q8.yaml": {
+   "n_tasks": 248,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [
+    6,
+    10,
+    15,
+    19,
+    28,
+    29
+   ],
+   "declared_lines": [
+    6,
+    10,
+    15,
+    19,
+    28,
+    29
+   ],
+   "ok": true
+  },
+  "GWS_D_TRUE_R1_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [],
+   "declared_lines": [],
+   "ok": true
+  },
+  "GWS_D_TRUE_R2_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [],
+   "declared_lines": [],
+   "ok": true
+  },
+  "GWS_T_TRUE_R1_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [],
+   "declared_lines": [],
+   "ok": true
+  },
+  "GWS_T_TRUE_R2_Q8.yaml": {
+   "n_tasks": 500,
+   "order_mismatch": 0,
+   "n_items": [
+    30
+   ],
+   "o200k": [
+    524
+   ],
+   "qwen3": [
+    529
+   ],
+   "diff_lines": [],
+   "declared_lines": [],
+   "ok": true
+  }
+ },
+ "failed": []
+}

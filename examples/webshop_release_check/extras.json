@@ -1,0 +1,615 @@
+{
+ "note": "descriptive, computed after the runs with skillrc.gate.behaviour; not part of any verdict; paired 95% intervals, no multiplicity adjustment",
+ "spec": "examples/webshop_release_check/gate.yaml",
+ "behaviour": {
+  "D_TRUE-D_NONE": {
+   "actions_per_episode": [
+    {
+     "key": "search",
+     "candidate": 2.246,
+     "baseline": 1.378,
+     "diff_estimate": 0.868,
+     "diff_lower": 0.684,
+     "diff_upper": 1.062
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.844,
+     "baseline": 0.32,
+     "diff_estimate": 0.524,
+     "diff_lower": 0.418,
+     "diff_upper": 0.63
+    },
+    {
+     "key": "choose_option",
+     "candidate": 1.894,
+     "baseline": 2.302,
+     "diff_estimate": -0.408,
+     "diff_lower": -0.554,
+     "diff_upper": -0.26
+    },
+    {
+     "key": "open_product",
+     "candidate": 2.194,
+     "baseline": 1.816,
+     "diff_estimate": 0.378,
+     "diff_lower": 0.252,
+     "diff_upper": 0.504
+    },
+    {
+     "key": "paginate",
+     "candidate": 0.98,
+     "baseline": 1.24,
+     "diff_estimate": -0.26,
+     "diff_lower": -0.452,
+     "diff_upper": -0.072
+    },
+    {
+     "key": "buy",
+     "candidate": 1.398,
+     "baseline": 1.598,
+     "diff_estimate": -0.2,
+     "diff_lower": -0.42,
+     "diff_upper": 0.018
+    },
+    {
+     "key": "subpage",
+     "candidate": 1.388,
+     "baseline": 1.216,
+     "diff_estimate": 0.172,
+     "diff_lower": 0.022,
+     "diff_upper": 0.328
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "no_purchase",
+     "candidate": 0.35,
+     "baseline": 0.202,
+     "diff_estimate": 0.148,
+     "diff_lower": 0.106,
+     "diff_upper": 0.19
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.65,
+     "baseline": 0.798,
+     "diff_estimate": -0.148,
+     "diff_lower": -0.19,
+     "diff_upper": -0.106
+    },
+    {
+     "key": "success",
+     "candidate": 0.244,
+     "baseline": 0.308,
+     "diff_estimate": -0.064,
+     "diff_lower": -0.106,
+     "diff_upper": -0.022
+    },
+    {
+     "key": "loop_3x",
+     "candidate": 0.186,
+     "baseline": 0.17,
+     "diff_estimate": 0.016,
+     "diff_lower": -0.024,
+     "diff_upper": 0.056
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": -0.1102169696969697
+  },
+  "D_ABL-D_TRUE": {
+   "actions_per_episode": [
+    {
+     "key": "search",
+     "candidate": 1.224,
+     "baseline": 2.246,
+     "diff_estimate": -1.022,
+     "diff_lower": -1.224,
+     "diff_upper": -0.83
+    },
+    {
+     "key": "paginate",
+     "candidate": 1.626,
+     "baseline": 0.98,
+     "diff_estimate": 0.646,
+     "diff_lower": 0.456,
+     "diff_upper": 0.84
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.262,
+     "baseline": 0.844,
+     "diff_estimate": -0.582,
+     "diff_lower": -0.692,
+     "diff_upper": -0.474
+    },
+    {
+     "key": "buy",
+     "candidate": 1.882,
+     "baseline": 1.398,
+     "diff_estimate": 0.484,
+     "diff_lower": 0.272,
+     "diff_upper": 0.704
+    },
+    {
+     "key": "choose_option",
+     "candidate": 2.166,
+     "baseline": 1.894,
+     "diff_estimate": 0.272,
+     "diff_lower": 0.132,
+     "diff_upper": 0.414
+    },
+    {
+     "key": "subpage",
+     "candidate": 1.644,
+     "baseline": 1.388,
+     "diff_estimate": 0.256,
+     "diff_lower": 0.126,
+     "diff_upper": 0.386
+    },
+    {
+     "key": "open_product",
+     "candidate": 1.976,
+     "baseline": 2.194,
+     "diff_estimate": -0.218,
+     "diff_lower": -0.348,
+     "diff_upper": -0.086
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "no_purchase",
+     "candidate": 0.242,
+     "baseline": 0.35,
+     "diff_estimate": -0.108,
+     "diff_lower": -0.152,
+     "diff_upper": -0.064
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.758,
+     "baseline": 0.65,
+     "diff_estimate": 0.108,
+     "diff_lower": 0.064,
+     "diff_upper": 0.152
+    },
+    {
+     "key": "success",
+     "candidate": 0.268,
+     "baseline": 0.244,
+     "diff_estimate": 0.024,
+     "diff_lower": -0.012,
+     "diff_upper": 0.06
+    },
+    {
+     "key": "loop_3x",
+     "candidate": 0.19,
+     "baseline": 0.186,
+     "diff_estimate": 0.004,
+     "diff_lower": -0.036,
+     "diff_upper": 0.044
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": 0.03589670274170274
+  },
+  "D_COMP1-D_TRUE": {
+   "actions_per_episode": [
+    {
+     "key": "subpage",
+     "candidate": 0.85,
+     "baseline": 1.388,
+     "diff_estimate": -0.538,
+     "diff_lower": -0.676,
+     "diff_upper": -0.402
+    },
+    {
+     "key": "search",
+     "candidate": 1.8,
+     "baseline": 2.246,
+     "diff_estimate": -0.446,
+     "diff_lower": -0.602,
+     "diff_upper": -0.296
+    },
+    {
+     "key": "open_product",
+     "candidate": 1.856,
+     "baseline": 2.194,
+     "diff_estimate": -0.338,
+     "diff_lower": -0.446,
+     "diff_upper": -0.23
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.572,
+     "baseline": 0.844,
+     "diff_estimate": -0.272,
+     "diff_lower": -0.366,
+     "diff_upper": -0.178
+    },
+    {
+     "key": "choose_option",
+     "candidate": 2.126,
+     "baseline": 1.894,
+     "diff_estimate": 0.232,
+     "diff_lower": 0.096,
+     "diff_upper": 0.372
+    },
+    {
+     "key": "paginate",
+     "candidate": 0.834,
+     "baseline": 0.98,
+     "diff_estimate": -0.146,
+     "diff_lower": -0.304,
+     "diff_upper": 0.01
+    },
+    {
+     "key": "buy",
+     "candidate": 1.388,
+     "baseline": 1.398,
+     "diff_estimate": -0.01,
+     "diff_lower": -0.214,
+     "diff_upper": 0.192
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "no_purchase",
+     "candidate": 0.238,
+     "baseline": 0.35,
+     "diff_estimate": -0.112,
+     "diff_lower": -0.152,
+     "diff_upper": -0.072
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.762,
+     "baseline": 0.65,
+     "diff_estimate": 0.112,
+     "diff_lower": 0.072,
+     "diff_upper": 0.152
+    },
+    {
+     "key": "success",
+     "candidate": 0.316,
+     "baseline": 0.244,
+     "diff_estimate": 0.072,
+     "diff_lower": 0.038,
+     "diff_upper": 0.108
+    },
+    {
+     "key": "loop_3x",
+     "candidate": 0.156,
+     "baseline": 0.186,
+     "diff_estimate": -0.03,
+     "diff_lower": -0.068,
+     "diff_upper": 0.008
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": 0.11904445887445889
+  },
+  "D_COMP2-D_TRUE": {
+   "actions_per_episode": [
+    {
+     "key": "buy",
+     "candidate": 1.734,
+     "baseline": 1.398,
+     "diff_estimate": 0.336,
+     "diff_lower": 0.112,
+     "diff_upper": 0.56
+    },
+    {
+     "key": "paginate",
+     "candidate": 0.758,
+     "baseline": 0.98,
+     "diff_estimate": -0.222,
+     "diff_lower": -0.382,
+     "diff_upper": -0.062
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.954,
+     "baseline": 0.844,
+     "diff_estimate": 0.11,
+     "diff_lower": 0.008,
+     "diff_upper": 0.214
+    },
+    {
+     "key": "choose_option",
+     "candidate": 1.984,
+     "baseline": 1.894,
+     "diff_estimate": 0.09,
+     "diff_lower": -0.046,
+     "diff_upper": 0.228
+    },
+    {
+     "key": "subpage",
+     "candidate": 1.47,
+     "baseline": 1.388,
+     "diff_estimate": 0.082,
+     "diff_lower": -0.05,
+     "diff_upper": 0.214
+    },
+    {
+     "key": "open_product",
+     "candidate": 2.244,
+     "baseline": 2.194,
+     "diff_estimate": 0.05,
+     "diff_lower": -0.06,
+     "diff_upper": 0.162
+    },
+    {
+     "key": "search",
+     "candidate": 2.198,
+     "baseline": 2.246,
+     "diff_estimate": -0.048,
+     "diff_lower": -0.21,
+     "diff_upper": 0.11
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "loop_3x",
+     "candidate": 0.214,
+     "baseline": 0.186,
+     "diff_estimate": 0.028,
+     "diff_lower": -0.012,
+     "diff_upper": 0.068
+    },
+    {
+     "key": "success",
+     "candidate": 0.216,
+     "baseline": 0.244,
+     "diff_estimate": -0.028,
+     "diff_lower": -0.06,
+     "diff_upper": 0.002
+    },
+    {
+     "key": "no_purchase",
+     "candidate": 0.356,
+     "baseline": 0.35,
+     "diff_estimate": 0.006,
+     "diff_lower": -0.032,
+     "diff_upper": 0.044
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.644,
+     "baseline": 0.65,
+     "diff_estimate": -0.006,
+     "diff_lower": -0.044,
+     "diff_upper": 0.032
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": -0.030833030303030307
+  },
+  "D_COMP3-D_TRUE": {
+   "actions_per_episode": [
+    {
+     "key": "subpage",
+     "candidate": 0.958,
+     "baseline": 1.388,
+     "diff_estimate": -0.43,
+     "diff_lower": -0.57,
+     "diff_upper": -0.29
+    },
+    {
+     "key": "search",
+     "candidate": 2.072,
+     "baseline": 2.246,
+     "diff_estimate": -0.174,
+     "diff_lower": -0.308,
+     "diff_upper": -0.038
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.682,
+     "baseline": 0.844,
+     "diff_estimate": -0.162,
+     "diff_lower": -0.264,
+     "diff_upper": -0.06
+    },
+    {
+     "key": "open_product",
+     "candidate": 2.082,
+     "baseline": 2.194,
+     "diff_estimate": -0.112,
+     "diff_lower": -0.226,
+     "diff_upper": 0.0
+    },
+    {
+     "key": "choose_option",
+     "candidate": 1.986,
+     "baseline": 1.894,
+     "diff_estimate": 0.092,
+     "diff_lower": -0.044,
+     "diff_upper": 0.228
+    },
+    {
+     "key": "buy",
+     "candidate": 1.344,
+     "baseline": 1.398,
+     "diff_estimate": -0.054,
+     "diff_lower": -0.242,
+     "diff_upper": 0.14
+    },
+    {
+     "key": "paginate",
+     "candidate": 0.934,
+     "baseline": 0.98,
+     "diff_estimate": -0.046,
+     "diff_lower": -0.21,
+     "diff_upper": 0.12
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "no_purchase",
+     "candidate": 0.27,
+     "baseline": 0.35,
+     "diff_estimate": -0.08,
+     "diff_lower": -0.122,
+     "diff_upper": -0.038
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.73,
+     "baseline": 0.65,
+     "diff_estimate": 0.08,
+     "diff_lower": 0.038,
+     "diff_upper": 0.122
+    },
+    {
+     "key": "success",
+     "candidate": 0.286,
+     "baseline": 0.244,
+     "diff_estimate": 0.042,
+     "diff_lower": 0.01,
+     "diff_upper": 0.076
+    },
+    {
+     "key": "loop_3x",
+     "candidate": 0.156,
+     "baseline": 0.186,
+     "diff_estimate": -0.03,
+     "diff_lower": -0.066,
+     "diff_upper": 0.006
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": 0.07137500721500721
+  },
+  "D_ABL-D_NONE": {
+   "actions_per_episode": [
+    {
+     "key": "subpage",
+     "candidate": 1.644,
+     "baseline": 1.216,
+     "diff_estimate": 0.428,
+     "diff_lower": 0.272,
+     "diff_upper": 0.586
+    },
+    {
+     "key": "paginate",
+     "candidate": 1.626,
+     "baseline": 1.24,
+     "diff_estimate": 0.386,
+     "diff_lower": 0.19,
+     "diff_upper": 0.578
+    },
+    {
+     "key": "buy",
+     "candidate": 1.882,
+     "baseline": 1.598,
+     "diff_estimate": 0.284,
+     "diff_lower": 0.028,
+     "diff_upper": 0.548
+    },
+    {
+     "key": "open_product",
+     "candidate": 1.976,
+     "baseline": 1.816,
+     "diff_estimate": 0.16,
+     "diff_lower": 0.034,
+     "diff_upper": 0.29
+    },
+    {
+     "key": "search",
+     "candidate": 1.224,
+     "baseline": 1.378,
+     "diff_estimate": -0.154,
+     "diff_lower": -0.262,
+     "diff_upper": -0.056
+    },
+    {
+     "key": "choose_option",
+     "candidate": 2.166,
+     "baseline": 2.302,
+     "diff_estimate": -0.136,
+     "diff_lower": -0.278,
+     "diff_upper": 0.006
+    },
+    {
+     "key": "back_to_search",
+     "candidate": 0.262,
+     "baseline": 0.32,
+     "diff_estimate": -0.058,
+     "diff_lower": -0.142,
+     "diff_upper": 0.024
+    }
+   ],
+   "outcomes": [
+    {
+     "key": "no_purchase",
+     "candidate": 0.242,
+     "baseline": 0.202,
+     "diff_estimate": 0.04,
+     "diff_lower": -0.004,
+     "diff_upper": 0.084
+    },
+    {
+     "key": "purchased",
+     "candidate": 0.758,
+     "baseline": 0.798,
+     "diff_estimate": -0.04,
+     "diff_lower": -0.084,
+     "diff_upper": 0.004
+    },
+    {
+     "key": "success",
+     "candidate": 0.268,
+     "baseline": 0.308,
+     "diff_estimate": -0.04,
+     "diff_lower": -0.08,
+     "diff_upper": 0.002
+    },
+    {
+     "key": "loop_3x",
+     "candidate": 0.19,
+     "baseline": 0.17,
+     "diff_estimate": 0.02,
+     "diff_lower": -0.022,
+     "diff_upper": 0.062
+    }
+   ],
+   "note": "descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict",
+   "score_diff": -0.07432026695526696
+  }
+ },
+ "reruns": {
+  "T_NONE": {
+   "tasks": 500,
+   "same_score": 500,
+   "same_score_steps_tokens": 500
+  },
+  "T_TRUE": {
+   "tasks": 500,
+   "same_score": 500,
+   "same_score_steps_tokens": 500
+  },
+  "D_NONE": {
+   "tasks": 500,
+   "same_score": 500,
+   "same_score_steps_tokens": 500
+  },
+  "D_TRUE": {
+   "tasks": 500,
+   "same_score": 500,
+   "same_score_steps_tokens": 500
+  },
+  "D_ABL": {
+   "tasks": 500,
+   "same_score": 500,
+   "same_score_steps_tokens": 500
+  }
+ },
+ "totals": {
+  "arm_runs_attempts": 6500,
+  "scored_cells": 6500,
+  "missing_cells": 0,
+  "infra_failed_cells": 0
+ }
+}
