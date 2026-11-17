@@ -1,0 +1,6 @@
+configs/gate_ws32_2026_11/GWS32_D_COMP1_HA_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_D_COMP2_HB_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_D_TRUE_R1_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_D_NONE_R1_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_D_COMP3_HA_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_D_ABL_R1_Q32.yaml

@@ -1,0 +1,6 @@
+- Read each tool result before the next call, and do not repeat a call whose result you already have.
+- When the user mentions a file, email, contact or event, look it up with a tool instead of guessing its id.
+- Before sending money, messages or invitations, re-read the request and check every recipient and amount.
+- If a tool returns an error, change the argument the error names instead of retrying the same call.
+- Prefer one precise search over several broad ones.
+- End with a short answer that says what you did.

@@ -1,0 +1,33 @@
+{
+ "seed": 20261116,
+ "blocks": {
+  "1": {
+   "A": [
+    "GWS_D_ABL_R1_Q8",
+    "GWS_T_NONE_R1_Q8",
+    "GWS_D_NONE_R1_Q8",
+    "GWS_D_COMP3_HA_Q8"
+   ],
+   "B": [
+    "GWS_D_COMP2_HB_Q8",
+    "GWS_D_TRUE_R1_Q8",
+    "GWS_D_COMP1_HA_Q8",
+    "GWS_T_TRUE_R1_Q8"
+   ]
+  },
+  "2": {
+   "A": [
+    "GWS_D_COMP2_HA_Q8",
+    "GWS_T_TRUE_R2_Q8",
+    "GWS_D_COMP1_HB_Q8",
+    "GWS_D_TRUE_R2_Q8"
+   ],
+   "B": [
+    "GWS_D_ABL_R2_Q8",
+    "GWS_D_NONE_R2_Q8",
+    "GWS_D_COMP3_HB_Q8",
+    "GWS_T_NONE_R2_Q8"
+   ]
+  }
+ }
+}

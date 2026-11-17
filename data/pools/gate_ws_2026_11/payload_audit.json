@@ -1,0 +1,535 @@
+{
+ "source_pool": "data/pools/webshop1010_insights.jsonl",
+ "source_sha256": "89893797d7d171f5bb0b11a7661ee6aae03491d9fbf3f90ac56470f6bc5954b4",
+ "criterion": "explicitly directs another search, a revised search, or pagination after inadequate results, and contains no search-count, step-budget or stopping rule; excluded: initial-query construction, filters, inspecting current results",
+ "suspect_lines": [
+  4,
+  11,
+  16,
+  21,
+  27,
+  30
+ ],
+ "suspects": [
+  {
+   "line": 4,
+   "text": "[beauty] Utilize pagination to explore multiple pages of search results if necessary.",
+   "sha256": "2365108e32f14d9de953a8581c21eef5ee4a65cd84a0f3e0b1ba776907aa7719"
+  },
+  {
+   "line": 11,
+   "text": "[electronics] Utilize pagination to explore more options if initial results are unsatisfactory.",
+   "sha256": "8276ced863d2fd3163f976807774e5be11c77d8d2249ac41b566e1ffa169b381"
+  },
+  {
+   "line": 16,
+   "text": "[fashion] If the desired product is not found, consider re-searching with the same criteria.",
+   "sha256": "f216df1842b5ffc76108be842f6078b0a598ace2f1cd8e1739e932924e94947f"
+  },
+  {
+   "line": 21,
+   "text": "[garden] If the first search does not yield satisfactory results, repeat the search with the same parameters to ensure consistency.",
+   "sha256": "2cb295e35f0a3845e70e5dbf26f056600992db4bbd74d899fde6d72abaa7e0c3"
+  },
+  {
+   "line": 27,
+   "text": "[grocery] If initial search results do not yield desired products, refine your search terms and try again.",
+   "sha256": "9ccf2adfabb9e29ec0dc88925eab304282e381e280e629e16318c3a8d696c030"
+  },
+  {
+   "line": 30,
+   "text": "[grocery] If you encounter irrelevant results, return to the search and adjust your keywords for better accuracy.",
+   "sha256": "a2b4a24e1e2a221dc892bba13529b05591927a829f9395024a77abbafd5eca2f"
+  }
+ ],
+ "complement_rule": {
+  "profile": {
+   "beauty": 1,
+   "electronics": 1,
+   "fashion": 1,
+   "garden": 1,
+   "grocery": 2
+  },
+  "suspect_body_words": 86,
+  "window": [
+   81.7,
+   90.3
+  ],
+  "n_eligible_subsets": 210,
+  "draws": [
+   {
+    "name": "COMP1",
+    "seed": 20261117,
+    "tries": 14,
+    "lines": [
+     3,
+     10,
+     17,
+     19,
+     26,
+     29
+    ],
+    "body_words": 82
+   },
+   {
+    "name": "COMP2",
+    "seed": 20261118,
+    "tries": 32,
+    "lines": [
+     1,
+     8,
+     14,
+     19,
+     26,
+     29
+    ],
+    "body_words": 83
+   },
+   {
+    "name": "COMP3",
+    "seed": 20261119,
+    "tries": 2,
+    "lines": [
+     6,
+     10,
+     15,
+     19,
+     28,
+     29
+    ],
+    "body_words": 82
+   }
+  ],
+  "pairwise_overlap": {
+   "COMP1-COMP2": 3,
+   "COMP1-COMP3": 3,
+   "COMP2-COMP3": 2
+  }
+ },
+ "payloads": {
+  "ABL": {
+   "target_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "payload_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "nonce_words": 0,
+   "items": [
+    {
+     "line": 4,
+     "replaced_sha256": "2365108e32f14d9de953a8581c21eef5ee4a65cd84a0f3e0b1ba776907aa7719",
+     "replaced": "[beauty] Utilize pagination to explore multiple pages of search results if necessary.",
+     "replacement": "[beauty] Lift your soft palate as if yawning to brighten the tone.",
+     "body_words": [
+      11,
+      11
+     ],
+     "token_diff": {
+      "o200k": 1,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 11,
+     "replaced_sha256": "8276ced863d2fd3163f976807774e5be11c77d8d2249ac41b566e1ffa169b381",
+     "replaced": "[electronics] Utilize pagination to explore more options if initial results are unsatisfactory.",
+     "replacement": "[electronics] Watch the conductor's hands closely at each entrance during the concert.",
+     "body_words": [
+      11,
+      11
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": -2
+     }
+    },
+    {
+     "line": 16,
+     "replaced_sha256": "f216df1842b5ffc76108be842f6078b0a598ace2f1cd8e1739e932924e94947f",
+     "replaced": "[fashion] If the desired product is not found, consider re-searching with the same criteria.",
+     "replacement": "[fashion] Roll your shoulders and stretch your neck before singing the long opening chorale.",
+     "body_words": [
+      13,
+      13
+     ],
+     "token_diff": {
+      "o200k": -2,
+      "qwen3": -2
+     }
+    },
+    {
+     "line": 21,
+     "replaced_sha256": "2cb295e35f0a3845e70e5dbf26f056600992db4bbd74d899fde6d72abaa7e0c3",
+     "replaced": "[garden] If the first search does not yield satisfactory results, repeat the search with the same parameters to ensure consistency.",
+     "replacement": "[garden] Divide a long passage into short sections before you join them together with the words marked by the conductor.",
+     "body_words": [
+      19,
+      19
+     ],
+     "token_diff": {
+      "o200k": -1,
+      "qwen3": -1
+     }
+    },
+    {
+     "line": 27,
+     "replaced_sha256": "9ccf2adfabb9e29ec0dc88925eab304282e381e280e629e16318c3a8d696c030",
+     "replaced": "[grocery] If initial search results do not yield desired products, refine your search terms and try again.",
+     "replacement": "[grocery] If your voice tires during an extended rehearsal, mark the upper passages an octave down instead.",
+     "body_words": [
+      16,
+      16
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 0
+     }
+    },
+    {
+     "line": 30,
+     "replaced_sha256": "a2b4a24e1e2a221dc892bba13529b05591927a829f9395024a77abbafd5eca2f",
+     "replaced": "[grocery] If you encounter irrelevant results, return to the search and adjust your keywords for better accuracy.",
+     "replacement": "[grocery] Blend the altos with the sopranos by matching their vowels at every cadence in the psalm.",
+     "body_words": [
+      16,
+      16
+     ],
+     "token_diff": {
+      "o200k": 2,
+      "qwen3": 4
+     }
+    }
+   ],
+   "sha256": "0a601d39fabb429263b075e89c8057b0cd32e3bfaf3801b58f0e1817ab79d4ad",
+   "lines": [
+    4,
+    11,
+    16,
+    21,
+    27,
+    30
+   ]
+  },
+  "COMP1": {
+   "target_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "payload_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "nonce_words": 0,
+   "items": [
+    {
+     "line": 3,
+     "replaced_sha256": "30d7df4b1761b9af69c6e26e281157e1cd9e1311411afb74232e1e6c1827bf1d",
+     "replaced": "[beauty] Click on products that match your criteria to verify details before purchasing.",
+     "replacement": "[beauty] Attack each note cleanly without scooping up to it in fast passages.",
+     "body_words": [
+      12,
+      12
+     ],
+     "token_diff": {
+      "o200k": 2,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 10,
+     "replaced_sha256": "7f87775cdb8ffbafcb86a64c650422b37622cc7568ddbfbc8a821ec246046615",
+     "replaced": "[electronics] Ensure to check product details for compliance with specified features before buying.",
+     "replacement": "[electronics] Practice the difficult intervals slowly until they feel secure in your ear.",
+     "body_words": [
+      12,
+      12
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 0
+     }
+    },
+    {
+     "line": 17,
+     "replaced_sha256": "dea7fcab1871bacb56dd23f5327f3263a706eba3cf09d593b19fd3ed984ac4ec",
+     "replaced": "[fashion] Prioritize clicking on the product that matches all specified attributes.",
+     "replacement": "[fashion] Warm down with slow sighs after the concert by morning.",
+     "body_words": [
+      10,
+      10
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 0
+     }
+    },
+    {
+     "line": 19,
+     "replaced_sha256": "e6b5b758da2ed6f64c9bc5efb5eac4c8847529991a2ec836a57a1db985830396",
+     "replaced": "[garden] Always include specific attributes like color, size, and price in your search queries to narrow down results effectively.",
+     "replacement": "[garden] Tap the pulse lightly with one finger while the soloist sings or any dragging in the slow movement.",
+     "body_words": [
+      18,
+      18
+     ],
+     "token_diff": {
+      "o200k": -1,
+      "qwen3": -1
+     }
+    },
+    {
+     "line": 26,
+     "replaced_sha256": "06fdbd5f60d239a02ee389694f56cabc665d5d974a101509d55e963c045f93da",
+     "replaced": "[grocery] Always include price constraints in your search to filter out options that exceed your budget.",
+     "replacement": "[grocery] Lift your soft palate as if yawning to brighten the tone of your upper register.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": 1,
+      "qwen3": 2
+     }
+    },
+    {
+     "line": 29,
+     "replaced_sha256": "a55b2ecd78464fb7bd94c2327053ec4863993555791ebb5868e4bf61f0c9ebe1",
+     "replaced": "[grocery] Click through search results methodically, checking for the correct product attributes before making a purchase.",
+     "replacement": "[grocery] Support long notes with steady breath from the ribs instead of pushing from the throat.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": -2,
+      "qwen3": -2
+     }
+    }
+   ],
+   "sha256": "7d879c402dd05db5f152e94b1bf15d401c170acd4c00051a44a6a772619f87a6",
+   "lines": [
+    3,
+    10,
+    17,
+    19,
+    26,
+    29
+   ]
+  },
+  "COMP2": {
+   "target_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "payload_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "nonce_words": 0,
+   "items": [
+    {
+     "line": 1,
+     "replaced_sha256": "ca0e24b7771bd0ccbe2dbc3d7d628265389afa5a07507abcca322854449029ca",
+     "replaced": "[beauty] Always include specific attributes and price limits in your search queries.",
+     "replacement": "[beauty] Warm up your voice with humming before every choir rehearsal begins.",
+     "body_words": [
+      11,
+      11
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 0
+     }
+    },
+    {
+     "line": 8,
+     "replaced_sha256": "06670c7a4276b13bcde2945f7e8c61b03a3d3eb23a530f21909081530401f2ba",
+     "replaced": "[electronics] Include price constraints in the search query to filter results effectively.",
+     "replacement": "[electronics] Sing with a gentle smile to keep the pitch from sagging.",
+     "body_words": [
+      11,
+      11
+     ],
+     "token_diff": {
+      "o200k": 1,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 14,
+     "replaced_sha256": "5308809298ed301c3ce13506152da135d2abbfc98c5463ed0da14c88d800a6d3",
+     "replaced": "[fashion] Click on the relevant filters for size and color after the initial search.",
+     "replacement": "[fashion] Watch the conductor's hands at each entrance and each cutoff during the concert.",
+     "body_words": [
+      13,
+      13
+     ],
+     "token_diff": {
+      "o200k": 1,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 19,
+     "replaced_sha256": "e6b5b758da2ed6f64c9bc5efb5eac4c8847529991a2ec836a57a1db985830396",
+     "replaced": "[garden] Always include specific attributes like color, size, and price in your search queries to narrow down results effectively.",
+     "replacement": "[garden] Listen for the bass line and tune your thirds and fifths against it in the quiet final bars.",
+     "body_words": [
+      18,
+      18
+     ],
+     "token_diff": {
+      "o200k": -1,
+      "qwen3": -1
+     }
+    },
+    {
+     "line": 26,
+     "replaced_sha256": "06fdbd5f60d239a02ee389694f56cabc665d5d974a101509d55e963c045f93da",
+     "replaced": "[grocery] Always include price constraints in your search to filter out options that exceed your budget.",
+     "replacement": "[grocery] Support long notes with steady breath instead of pushing from the throat at the climax.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 0
+     }
+    },
+    {
+     "line": 29,
+     "replaced_sha256": "a55b2ecd78464fb7bd94c2327053ec4863993555791ebb5868e4bf61f0c9ebe1",
+     "replaced": "[grocery] Click through search results methodically, checking for the correct product attributes before making a purchase.",
+     "replacement": "[grocery] Copy the vibrato of your section or sing straight tone as the early music demands.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": -1,
+      "qwen3": -1
+     }
+    }
+   ],
+   "sha256": "f6b8a5369c9a6e2d15c2df50346ff6f274a2c85f160943861f20171cbec88d2f",
+   "lines": [
+    1,
+    8,
+    14,
+    19,
+    26,
+    29
+   ]
+  },
+  "COMP3": {
+   "target_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "payload_tokens": {
+    "o200k": 524,
+    "qwen3": 529
+   },
+   "nonce_words": 0,
+   "items": [
+    {
+     "line": 6,
+     "replaced_sha256": "a06cb98beaccf6e255db7c5075c6dc1bea2c4803c5f5e411c087b11187c9d94d",
+     "replaced": "[beauty] Ensure the product meets all specified requirements to avoid returns.",
+     "replacement": "[beauty] Warm down after the concert so that your voice recovers.",
+     "body_words": [
+      10,
+      10
+     ],
+     "token_diff": {
+      "o200k": 1,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 10,
+     "replaced_sha256": "7f87775cdb8ffbafcb86a64c650422b37622cc7568ddbfbc8a821ec246046615",
+     "replaced": "[electronics] Ensure to check product details for compliance with specified features before buying.",
+     "replacement": "[electronics] Lift your soft palate to brighten the tone of your upper register.",
+     "body_words": [
+      12,
+      12
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 15,
+     "replaced_sha256": "2fa6ca95c5fc2517eb1f60761a85f30dcda522789047fb6a3199afc1d9645417",
+     "replaced": "[fashion] Always check the price range to ensure it meets the budget criteria.",
+     "replacement": "[fashion] Attack each note cleanly without scooping up to it in fast passages.",
+     "body_words": [
+      12,
+      12
+     ],
+     "token_diff": {
+      "o200k": 2,
+      "qwen3": 1
+     }
+    },
+    {
+     "line": 19,
+     "replaced_sha256": "e6b5b758da2ed6f64c9bc5efb5eac4c8847529991a2ec836a57a1db985830396",
+     "replaced": "[garden] Always include specific attributes like color, size, and price in your search queries to narrow down results effectively.",
+     "replacement": "[garden] Divide a long passage into short sections before you join them together at full speed in your score.",
+     "body_words": [
+      18,
+      18
+     ],
+     "token_diff": {
+      "o200k": -2,
+      "qwen3": -2
+     }
+    },
+    {
+     "line": 28,
+     "replaced_sha256": "255baf601a09afb6e0a6f46bd0ad21bdee17cbef3ba14b7c6c45e12222b8adeb",
+     "replaced": "[grocery] Utilize product attributes like flavor and size to ensure the items meet your specific requirements.",
+     "replacement": "[grocery] Divide a long passage into short sections before you join them together with the words.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": 0,
+      "qwen3": -1
+     }
+    },
+    {
+     "line": 29,
+     "replaced_sha256": "a55b2ecd78464fb7bd94c2327053ec4863993555791ebb5868e4bf61f0c9ebe1",
+     "replaced": "[grocery] Click through search results methodically, checking for the correct product attributes before making a purchase.",
+     "replacement": "[grocery] Lift your soft palate as if yawning to brighten the tone of your upper register.",
+     "body_words": [
+      15,
+      15
+     ],
+     "token_diff": {
+      "o200k": -1,
+      "qwen3": 0
+     }
+    }
+   ],
+   "sha256": "c227eb6784f59b82d7e8d012bfe98a6cbb7ac1941dc8e23e0c3b715b04265cf6",
+   "lines": [
+    6,
+    10,
+    15,
+    19,
+    28,
+    29
+   ]
+  }
+ }
+}

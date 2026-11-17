@@ -1,0 +1,77 @@
+# Historical case: a bundled release hides a memory regression (Qwen3-8B, WebShop 1k, test sessions 0-499).
+#
+# Source: pre-registered SkillRC round-2 study, arm P (results/placebo/PREREG_r2_2026-10-31.md), all arms in one
+# execution window, one repetition each, seed 0, 15 steps. These legacy logs have no run manifest, repetition ids
+# or latency, so every verdict below is DESCRIPTIVE: the statistics are real, but the logs cannot support a release
+# decision. The release-eligible rerun is in examples/webshop_release_check/.
+#
+# Interventions:
+#   page_label  - harness flag webshop_page_label: prefix each observation with "[Current page: ...]"
+#   memory_pub  - inject the published 30-rule WebShop pool (data/pools/webshop1010_insights.jsonl)
+name: "WebShop: page label + distilled memory (historical, descriptive)"
+description: "Qwen3-8B on 500 WebShop test sessions; four release questions about the same two changes."
+seed: 20261116
+bootstrap_draws: 20000
+
+arms:
+  NONE:          {logs: ["logs/R2031_P_NONE_Q8.episodes.jsonl.gz"], label: "old harness, no memory"}
+  PUB_TRUE:      {logs: ["logs/R2031_P_PUB_TRUE_Q8.episodes.jsonl.gz"], label: "old harness + memory"}
+  L_NONE:        {logs: ["logs/R2031_P_L_NONE_Q8.episodes.jsonl.gz"], label: "page label, no memory"}
+  L_PUB_TRUE:    {logs: ["logs/R2031_P_L_PUB_TRUE_Q8.episodes.jsonl.gz"], label: "page label + memory"}
+  L_PUB_CHORAL:  {logs: ["logs/R2031_P_L_PUB_CHORAL_Q8.episodes.jsonl.gz"], label: "page label + length-matched control text"}
+  L_R1_TRUE:     {logs: ["logs/R2031_P_L_R1_TRUE_Q8.episodes.jsonl.gz"], label: "page label + replicate pool R1"}
+  L_R1_CHORAL:   {logs: ["logs/R2031_P_L_R1_CHORAL_Q8.episodes.jsonl.gz"]}
+  L_R2_TRUE:     {logs: ["logs/R2031_P_L_R2_TRUE_Q8.episodes.jsonl.gz"], label: "page label + replicate pool R2"}
+  L_R2_CHORAL:   {logs: ["logs/R2031_P_L_R2_CHORAL_Q8.episodes.jsonl.gz"]}
+
+interventions:
+  page_label: {description: "observation prefixed with the current page name", config_patch: {webshop_page_label: true}}
+  memory_pub: {description: "30 distilled rules injected into every prompt", config_patch: {memory_pool: "data/pools/webshop1010_insights.jsonl"}}
+
+targets:
+  bundle_vs_old:
+    description: "Ship page label + memory together, compared with the old release"
+    baseline: NONE
+    candidate: L_PUB_TRUE
+    interventions: [page_label, memory_pub]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+  label_only:
+    description: "Ship the page label alone"
+    baseline: NONE
+    candidate: L_NONE
+    interventions: [page_label]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+  memory_given_label:
+    description: "Add the memory on top of the page-label harness"
+    default: true
+    baseline: L_NONE
+    candidate: L_PUB_TRUE
+    interventions: [memory_pub]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+  memory_old_harness:
+    description: "Add the memory to the old harness"
+    baseline: NONE
+    candidate: PUB_TRUE
+    interventions: [memory_pub]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+
+contrasts:
+  content_PUB:   {description: "memory vs equal-length control text (content value)", candidate: L_PUB_TRUE, baseline: L_PUB_CHORAL, claim: less, threshold: 0}
+  reading_PUB:   {description: "control text vs no memory (reading cost)", candidate: L_PUB_CHORAL, baseline: L_NONE}
+  content_R1:    {description: "replicate pool R1 vs its control", candidate: L_R1_TRUE, baseline: L_R1_CHORAL, claim: less, threshold: 0}
+  content_R2:    {description: "replicate pool R2 vs its control", candidate: L_R2_TRUE, baseline: L_R2_CHORAL, claim: less, threshold: 0}
+  reading_R1:    {candidate: L_R1_CHORAL, baseline: L_NONE}
+  reading_R2:    {candidate: L_R2_CHORAL, baseline: L_NONE}
+
+claims:
+  memory_content_hurts_all_pools:
+    description: "every distilled pool's content lowers the score (three independently distilled pools)"
+    all_of: [content_PUB, content_R1, content_R2]

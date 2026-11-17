@@ -13,10 +13,15 @@ sys.path.insert(0, ROOT)
 
 from skillrc.runner import main  # noqa: E402
 
+import tempfile  # noqa: E402
+
+# Each run writes to a fresh directory: the runner refuses to append to a file written under another config.
+OUT = ["out_dir=" + tempfile.mkdtemp(prefix="skillrc_smoke_")]
+
 
 def test_mock_end_to_end():
     cfg = os.path.join(ROOT, "configs", "mock_smoke.yaml")
-    summary = main(["--config", cfg])
+    summary = main(["--config", cfg, "--override", *OUT])
     assert summary["n"] == 3, summary
     assert summary["success_rate"] == 1.0, f"expected perfect mock success, got {summary}"
     assert summary["memory"]["kind"] == "none"
@@ -28,7 +33,7 @@ def test_mock_confound_path():
     """Pool-memory path (memory=random_k over the focal 33-insight pool) runs end-to-end."""
     summary = main([
         "--config", os.path.join(ROOT, "configs", "mock_smoke.yaml"),
-        "--override", "run_id=smoke_pool", "memory=random_k", "memory_k=5",
+        "--override", *OUT, "run_id=smoke_pool", "memory=random_k", "memory_k=5",
         "demo_pool=data/pools/expel_insights.jsonl", "seeds=[0,1,2]",
     ])
     assert summary["n"] == 9, summary  # 3 mock tasks x 3 seeds

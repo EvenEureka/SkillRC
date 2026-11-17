@@ -1,3 +1,9 @@
+> **New: `skillrc-gate`, a release check for agent changes.** It reads the episode logs of two agent versions on the
+> same tasks and returns PASS / BLOCK / INCONCLUSIVE / INVALID / DESCRIPTIVE per declared change, with paired
+> intervals, cost and latency guardrails, provenance checks and paired replays. Reads SkillRC and Inspect AI logs;
+> the exit code is the verdict. See [docs/gate/README.md](docs/gate/README.md). Try it on bundled real logs:
+> `pip install -e . && skillrc-gate report examples/webshop_bundled_release/gate.yaml --out /tmp/gate_demo`.
+
 > **Latest report:** [A Gain Is Not Proof of Learning: SkillRC, a Reality Check for Distilled Agent Memory](https://eveneureka.github.io/SkillRC/static/skillrc_report.pdf) (November 2026). It supersedes the manuscript described below, and some conclusions changed. See the [project page](https://eveneureka.github.io/SkillRC/).
 
 # SkillRC: Is It the Skill or the Stack?

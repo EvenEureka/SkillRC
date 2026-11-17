@@ -30,6 +30,7 @@ class RunConfig:
     max_steps: int = 30
     webshop_base_url: str = "http://127.0.0.1:3000"
     webshop_n_tasks: int = 100
+    webshop_page_label: bool = False        # prefix each observation with "[Current page: ...]" (default off)
     alfworld_split: str = "eval_out_of_distribution"  # 134 unseen games; 'eval_in_distribution' = 140 seen games
 
     # --- frozen executor (LLM) ---
@@ -39,7 +40,7 @@ class RunConfig:
     max_completion_tokens: int = 256
     base_url: Optional[str] = None          # set for a local vLLM / compatible server
     request_timeout: float = 120.0
-    max_retries: int = 5
+    max_retries: int = 5                    # retries after the first try (SDK retries are disabled)
     api_key: Optional[str] = None           # override OPENAI_API_KEY (e.g. "EMPTY" for local vLLM)
     chat_template_kwargs: Optional[dict] = None  # e.g. {"enable_thinking": false} to turn off Qwen3 thinking
 
@@ -76,6 +77,15 @@ class RunConfig:
 
     # --- experiment control ---
     seeds: List[int] = field(default_factory=lambda: [0])
+
+    # --- release-check provenance (skillrc-gate) ---
+    repetition: int = 1                     # repetition id: a cell is (task, seed, repetition)
+    block: Optional[int] = None             # execution window this run belongs to
+    model_revision: Optional[str] = None    # pinned model revision, recorded in the run manifest
+    max_infra_reruns: int = 2               # reruns of a cell after an infrastructure failure
+    max_consecutive_infra: int = 2          # stop the run (exit 75) after this many failed attempts in a row, so an
+                                            # outage does not use up the reruns; the job restarts servers and resumes
+    resume: bool = True                     # append to an existing episodes file under the same manifest
 
     @staticmethod
     def load(path: str) -> "RunConfig":

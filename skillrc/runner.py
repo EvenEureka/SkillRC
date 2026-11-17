@@ -13,10 +13,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import socket
+import time
 import traceback
+from collections import Counter
+from datetime import datetime, timezone
 from dataclasses import asdict
 from typing import List
 
+from . import __version__
 from .config import RunConfig
 from .llm import LLMClient
 from .memory import build_memory
@@ -36,6 +41,7 @@ def build_env(cfg: RunConfig):
         return WebShopEnv(
             n_tasks=cfg.webshop_n_tasks,
             base_url=cfg.webshop_base_url,
+            show_page_label=cfg.webshop_page_label,
             timeout=cfg.request_timeout,
         )
     raise ValueError(f"unknown env {cfg.env!r}")
@@ -100,6 +106,199 @@ def _coerce(key: str, v: str):
     return v
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Release-check provenance: run manifest, resume by cell, attempts with infrastructure failures.
+# A cell is (task_id, seed, repetition). Its scored attempt is the first one without an infrastructure failure.
+# ---------------------------------------------------------------------------------------------------------------
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+# Connection details change between launches (ports) and secrets must never be written: they are kept out of the
+# hashed config. Endpoints are recorded under `serving` / `env`; api_key is not recorded anywhere.
+CONNECTION_KEYS = ("base_url", "webshop_base_url", "api_key")
+EXIT_OUTAGE = 75     # EX_TEMPFAIL: consecutive infrastructure failures; resume after restarting the servers
+
+
+def _normalized(cfg: RunConfig) -> dict:
+    d = json.loads(json.dumps(cfg.to_dict(), default=str, sort_keys=True))
+    return {k: v for k, v in d.items() if k not in CONNECTION_KEYS}
+
+
+def build_manifest(cfg: RunConfig) -> dict:
+    """Manifest dict matching skillrc.gate.schema.RunManifest. Serving/env details that the harness cannot see
+    (vLLM version, GPU, server seed) are passed by the job script as JSON in SKILLRC_SERVING_JSON / SKILLRC_ENV_JSON."""
+    from .gate.schema import config_hash, file_sha256
+
+    conf = _normalized(cfg)
+    files = {k: file_sha256(v) for k, v in conf.items() if isinstance(v, str) and v and os.path.isfile(v)}
+    serving = {"provider": cfg.provider, "base_url": cfg.base_url, "temperature": cfg.temperature,
+               "max_completion_tokens": cfg.max_completion_tokens, "request_timeout": cfg.request_timeout,
+               "max_retries": cfg.max_retries}
+    serving.update(json.loads(os.environ.get("SKILLRC_SERVING_JSON", "{}") or "{}"))
+    env_info = {"env": cfg.env, "webshop_base_url": getattr(cfg, "webshop_base_url", None)}
+    env_info.update(json.loads(os.environ.get("SKILLRC_ENV_JSON", "{}") or "{}"))
+    return {"schema_version": 1, "run_id": cfg.run_id, "config": conf, "config_sha256": config_hash(conf),
+            "model": cfg.model, "model_revision": cfg.model_revision, "serving": serving, "env": env_info,
+            "memory": {"kind": cfg.memory, "token_budget": cfg.token_budget},
+            "files_sha256": files, "scorer_version": f"skillrc-{__version__}",
+            "started_at": _now(), "ended_at": None, "host": socket.gethostname(),
+            "segments": [_segment(serving, env_info)]}
+
+
+def _segment(serving: dict, env_info: dict) -> dict:
+    from .gate.schema import EXECUTION_ENV_KEYS, EXECUTION_SERVING_KEYS
+    return {"started_at": _now(), "ended_at": None, "host": socket.gethostname(), "job_id": os.environ.get("JOB_ID"),
+            "serving": {k: v for k, v in serving.items() if k in EXECUTION_SERVING_KEYS},
+            "env": {k: v for k, v in env_info.items() if k in EXECUTION_ENV_KEYS}, "stopped": None}
+
+
+def write_manifest(path: str, manifest: dict) -> None:
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(manifest, f, indent=1, sort_keys=True)
+        f.write("\n")
+    os.replace(tmp, path)
+
+
+def _attempts_path(ep_path: str) -> str:
+    return ep_path.replace(".episodes.jsonl", ".attempts.jsonl")
+
+
+def _read_jsonl_recovering(path: str) -> list:
+    """Parse a JSONL file written by appends, recovering the two states an interrupted append can leave:
+    * a truncated final record (incomplete JSON or a cut multi-byte character): moved to `<path>.partial.<time>`
+      and the file cut back to its last complete record;
+    * a complete final record without its newline: the newline is restored, so the next append starts a new line.
+    Any corrupt record that is not the last one stops the resume: it cannot come from an interrupted append."""
+    with open(path, "rb") as f:
+        raw = f.read()
+    lines = raw.split(b"\n")
+    rows, good_bytes = [], 0
+    for i, ln in enumerate(lines):
+        last = i == len(lines) - 1
+        if not ln.strip():
+            good_bytes += len(ln) + (0 if last else 1)
+            continue
+        try:
+            rows.append(json.loads(ln.decode("utf-8")))
+            good_bytes += len(ln) + (0 if last else 1)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            if any(x.strip() for x in lines[i + 1:]):
+                raise SystemExit(f"{path}: corrupt record at line {i + 1} that is not the last; refusing to resume")
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
+            with open(f"{path}.partial.{stamp}", "wb") as g:
+                g.write(ln)
+            with open(path, "r+b") as g:
+                g.truncate(good_bytes)
+            print(f"[resume] {path}: truncated final record moved aside ({len(ln)} bytes)", flush=True)
+            return rows
+    if raw and not raw.endswith(b"\n"):
+        with open(path, "ab") as g:
+            g.write(b"\n")
+        print(f"[resume] {path}: restored the newline after the final record", flush=True)
+    return rows
+
+
+def load_existing(ep_path: str, man_path: str, manifest: dict, resume: bool) -> dict:
+    """Resume state from an existing run written under the same fingerprint.
+
+    Returns the cells already scored, the attempts used per cell, and the manifest to write: the original identity
+    with this launch appended to `segments` (the original record is never replaced). An attempt that was started
+    (attempts log) but never completed (no episode record) is recorded now as an interrupted infrastructure failure,
+    so it counts against the cell's reruns."""
+    from .gate.schema import RunManifest, fingerprint, fingerprint_diff
+
+    out = {"done": set(), "attempts": Counter(), "manifest": manifest}
+    if not os.path.exists(ep_path):
+        return out
+    if not resume:
+        raise SystemExit(f"{ep_path} exists and resume=false; refusing to overwrite")
+    if not os.path.exists(man_path):
+        raise SystemExit(f"{ep_path} exists without a manifest (legacy run); refusing to append to it")
+    with open(man_path) as f:
+        old = json.load(f)
+    diff = fingerprint_diff(fingerprint(RunManifest.model_validate(old)), fingerprint(RunManifest.model_validate(manifest)))
+    if diff:
+        raise SystemExit(f"refusing to resume {ep_path}: this launch differs from the original run in {diff}")
+    old.setdefault("segments", []).append(manifest["segments"][-1])
+    old["ended_at"] = None
+    out["manifest"] = old
+    completed = set()
+    for r in _read_jsonl_recovering(ep_path):
+        if True:
+            key = (str(r["task_id"]), int(r.get("seed", 0)), int(r.get("repetition") or 1))
+            completed.add((key, int(r.get("attempt", 1))))
+            out["attempts"][key] = max(out["attempts"][key], int(r.get("attempt", 1)))
+            if not r.get("infra_error"):
+                out["done"].add(key)
+    ap = _attempts_path(ep_path)
+    if os.path.exists(ap):
+        interrupted = []
+        for a in _read_jsonl_recovering(ap):   # a truncated start record means the attempt never began
+            key = (str(a["task_id"]), int(a["seed"]), int(a["repetition"]))
+            if (key, int(a["attempt"])) not in completed and key not in out["done"]:
+                interrupted.append((key, a))
+        with open(ep_path, "a") as ep_f:
+            for key, a in interrupted:
+                rec = {"task_id": a["task_id"], "task_type": "unknown", "success": False, "reward": 0.0, "steps": 0,
+                       "prompt_tokens": 0, "completion_tokens": 0, "cost_usd": 0.0, "seed": a["seed"],
+                       "memory_tokens": 0, "error": "interrupted", "task_text": "", "repetition": a["repetition"],
+                       "block": a.get("block"), "attempt": a["attempt"], "latency_s": 0.0, "episode_wall_s": None,
+                       "n_calls": 0, "n_retries": 0, "agent_error": None, "env": a.get("env"), "task_uid": None,
+                       "infra_error": "interrupted: the process stopped during this attempt"}
+                ep_f.write(json.dumps(rec) + "\n")
+                out["attempts"][key] = max(out["attempts"][key], int(a["attempt"]))
+        if interrupted:
+            print(f"[resume] recorded {len(interrupted)} interrupted attempt(s) as infrastructure failures", flush=True)
+    return out
+
+
+def log_attempt_start(ep_path: str, tid, seed, cfg: RunConfig, attempt: int) -> None:
+    with open(_attempts_path(ep_path), "a") as f:
+        f.write(json.dumps({"task_id": str(tid), "seed": int(seed), "repetition": int(cfg.repetition),
+                            "block": cfg.block, "attempt": attempt, "env": cfg.env, "at": _now()}) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
+def run_attempt(agent, env, memory, llm, tid, seed, cfg: RunConfig, attempt: int):
+    """One attempt of one cell. Any exception is an infrastructure failure; tokens and time used so far are kept."""
+    from .gate.ingest.skillrc_jsonl import task_uid
+
+    before = llm.usage.snapshot()
+    t0 = time.perf_counter()
+    infra = None
+    try:
+        r = agent.run_episode(env, tid, seed=seed)
+        memory.update(r.task_id, r.trajectory, r.success, r.reward, task_type=r.task_type)
+    except Exception as e:  # noqa: BLE001
+        traceback.print_exc()
+        infra = f"{type(e).__name__}: {e}"
+        obs = getattr(agent, "last_obs", None)
+        r = EpisodeResult(task_id=tid, task_type=getattr(obs, "task_type", None) or "unknown", success=False,
+                          reward=0.0, steps=0, prompt_tokens=0, completion_tokens=0, cost_usd=0.0, seed=seed,
+                          error=infra, task_text=getattr(obs, "text", "") or "")
+    after = llm.usage.snapshot()
+    payload = episode_to_dict(r)
+    payload.update({
+        "repetition": cfg.repetition, "block": cfg.block, "attempt": attempt,
+        "latency_s": round(after["latency_s"] - before["latency_s"], 4),
+        "episode_wall_s": round(time.perf_counter() - t0, 4),
+        "n_calls": int(after["calls"] - before["calls"] + after["failed_calls"] - before["failed_calls"]),
+        "n_retries": int(after["retries"] - before["retries"]),
+        "infra_error": infra, "agent_error": None, "env": cfg.env,
+        "task_uid": task_uid(tid, payload["task_text"], cfg.env) if payload.get("task_text") else None,
+    })
+    if infra:  # keep what the failed attempt consumed
+        payload["prompt_tokens"] = int(after["prompt_tokens"] - before["prompt_tokens"])
+        payload["completion_tokens"] = int(after["completion_tokens"] - before["completion_tokens"])
+    if cfg.save_trajectories:
+        payload["trajectory"] = [asdict(step) for step in r.trajectory]
+    return r, payload
+
+
 def main(argv: List[str] = None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", required=True)
@@ -146,8 +345,17 @@ def main(argv: List[str] = None):
 
     os.makedirs(cfg.out_dir, exist_ok=True)
     ep_path = os.path.join(cfg.out_dir, f"{cfg.run_id}.episodes.jsonl")
+    man_path = os.path.join(cfg.out_dir, f"{cfg.run_id}.manifest.json")
+    manifest = build_manifest(cfg)
+    existing = load_existing(ep_path, man_path, manifest, cfg.resume)
+    manifest = existing["manifest"]
+    write_manifest(man_path, manifest)
+    done, attempts = existing["done"], existing["attempts"]
+    if done:
+        print(f"[resume] {len(done)} cells already scored in {ep_path}; skipping them", flush=True)
     all_results = []
-    with open(ep_path, "w") as ep_f:
+    streak = 0
+    with open(ep_path, "a") as ep_f:
         for seed in cfg.seeds:
             # rewind sequential envs (e.g. ALFWorld) so every seed pass is aligned
             if hasattr(env, "rewind"):
@@ -156,29 +364,35 @@ def main(argv: List[str] = None):
             if hasattr(memory, "reset_state"):
                 memory.reset_state()
             for tid in stream_ids:
-                try:
-                    r = agent.run_episode(env, tid, seed=seed)
-                    # self-evolution hook: online curators learn from the just-finished
-                    # episode (which skills it injected are stashed on the store). No-op
-                    # for static/pool memories (base MemoryStore.update).
-                    memory.update(r.task_id, r.trajectory, r.success, r.reward,
-                                  task_type=r.task_type)
-                except Exception as e:  # noqa: BLE001
-                    traceback.print_exc()
-                    r = EpisodeResult(task_id=tid, task_type="error", success=False,
-                                      reward=0.0, steps=0, prompt_tokens=0,
-                                      completion_tokens=0, cost_usd=0.0, seed=seed,
-                                      error=f"{type(e).__name__}: {e}")
-                all_results.append(r)
-                payload = episode_to_dict(r)
-                if cfg.save_trajectories:
-                    payload["trajectory"] = [asdict(step) for step in r.trajectory]
-                ep_f.write(json.dumps(payload, ensure_ascii=False) + "\n")
-                ep_f.flush()
-                print(f"[seed {seed}] {r.task_id} succ={int(r.success)} reward={r.reward:.2f} "
-                      f"steps={r.steps} ptok={r.prompt_tokens} memtok={r.memory_tokens} "
-                      f"cost=${r.cost_usd:.4f}" + (f" ERR={r.error}" if r.error else ""),
-                      flush=True)
+                key = (str(tid), int(seed), int(cfg.repetition))
+                if key in done:
+                    continue
+                while attempts[key] < 1 + cfg.max_infra_reruns:
+                    attempts[key] += 1
+                    log_attempt_start(ep_path, tid, seed, cfg, attempts[key])
+                    r, payload = run_attempt(agent, env, memory, llm, tid, seed, cfg, attempts[key])
+                    all_results.append(r)
+                    ep_f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+                    ep_f.flush()
+                    print(f"[seed {seed} rep {cfg.repetition} try {attempts[key]}] {r.task_id} "
+                          f"succ={int(r.success)} reward={r.reward:.2f} steps={r.steps} "
+                          f"ptok={payload['prompt_tokens']} memtok={r.memory_tokens} "
+                          f"llm={payload['latency_s']:.1f}s" + (f" INFRA={r.error}" if r.error else ""),
+                          flush=True)
+                    if not payload["infra_error"]:
+                        done.add(key)
+                        streak = 0
+                        break
+                    streak += 1
+                    if streak >= cfg.max_consecutive_infra:
+                        manifest["segments"][-1].update(ended_at=_now(), stopped="outage")
+                        write_manifest(man_path, manifest)
+                        print(f"[abort] {streak} failed attempts in a row: stopping so the job can restart the "
+                              f"servers and resume (exit {EXIT_OUTAGE})", flush=True)
+                        raise SystemExit(EXIT_OUTAGE)
+    manifest["ended_at"] = _now()
+    manifest["segments"][-1].update(ended_at=manifest["ended_at"], stopped="complete")
+    write_manifest(man_path, manifest)
 
     summary = summarize(all_results)
     summary["memory"] = {"kind": memory.name, **memory.size()}

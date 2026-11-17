@@ -1,0 +1,2 @@
+configs/gate_ws32_2026_11/GWS32_P_NONE_Q32.yaml
+configs/gate_ws32_2026_11/GWS32_P_TRUE_Q32.yaml

@@ -1,0 +1,39 @@
+# Inspect AI producer: AgentDojo (inspect_evals, utility, no injections, no Docker tasks), Qwen3-8B via vLLM,
+# two epochs per arm. Candidate = the same agent with a hand-written block of six tips appended to the system prompt.
+# This example exists to show the gate on logs from an external eval framework; the tips are not distilled memory.
+name: "AgentDojo: appending a tips block to the system prompt (Inspect AI, Qwen3-8B)"
+description: "Two Inspect eval logs per arm; tasks = AgentDojo user tasks; repetitions = Inspect epochs."
+seed: 20261116
+bootstrap_draws: 20000
+
+arms:
+  BASE:
+    format: inspect
+    logs: ["logs/BASE/*.eval"]
+    options: {value_key: utility, task_type_key: task_suite_name}
+    grid: {task_ids_file: task_ids.txt, repetitions: [1, 2]}
+  TIPS:
+    format: inspect
+    logs: ["logs/TIPS/*.eval"]
+    options: {value_key: utility, task_type_key: task_suite_name}
+    grid: {task_ids_file: task_ids.txt, repetitions: [1, 2]}
+
+interventions:
+  tips:
+    description: "six hand-written tips appended to the system prompt"
+    # only these two task arguments may differ; the tips text is pinned by the hash the task checked when it ran
+    config_patch: {task_args.tips_file: /groups/tarikan/ylu37/myproject/SkillRC/examples/inspect_agentdojo/tips.md,
+                   task_args.tips_sha256: 3df1fd84290ef132632c1b0cf090c47ee7672d081b84d515143611c496648b89}
+    files_sha256: {task_args.tips: 3df1fd84290ef132632c1b0cf090c47ee7672d081b84d515143611c496648b89, system_message: null}
+
+targets:
+  add_tips:
+    description: "Ship the tips block"
+    default: true
+    baseline: BASE
+    candidate: TIPS
+    interventions: [tips]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+      - {metric: latency_s, statistic: relative_p95, tolerance: 0.30}

@@ -42,6 +42,12 @@ class LLMResponse:
     cached_tokens: int = 0
     cost_usd: float = 0.0
     raw: Any = None
+    latency_s: float = 0.0        # client-side wall time of the call, retries included
+    retries: int = 0              # failed tries before the successful one
+
+
+class LLMCallFailed(RuntimeError):
+    """The endpoint failed on every retry: an infrastructure failure, not an agent outcome."""
 
 
 @dataclass
@@ -51,6 +57,9 @@ class Usage:
     completion_tokens: int = 0
     cached_tokens: int = 0
     cost_usd: float = 0.0
+    retries: int = 0
+    latency_s: float = 0.0
+    failed_calls: int = 0
 
     def add(self, r: LLMResponse) -> None:
         self.calls += 1
@@ -58,6 +67,12 @@ class Usage:
         self.completion_tokens += r.completion_tokens
         self.cached_tokens += r.cached_tokens
         self.cost_usd += r.cost_usd
+        self.retries += r.retries
+        self.latency_s += r.latency_s
+
+    def snapshot(self) -> Dict[str, float]:
+        return {k: getattr(self, k) for k in ("calls", "prompt_tokens", "completion_tokens", "cached_tokens",
+                                              "cost_usd", "retries", "latency_s", "failed_calls")}
 
 
 def price_of(model: str, prompt_tokens: int, completion_tokens: int,
@@ -110,8 +125,9 @@ class LLMClient:
                 raise RuntimeError(
                     "OPENAI_API_KEY not set. `export OPENAI_API_KEY=<your key>` "
                     "or set base_url for a local endpoint.")
+            # SDK retries off: the only retry loop is ours, so the recorded count is the executed count.
             self._client = OpenAI(api_key=key or "EMPTY", base_url=base_url,
-                                  timeout=request_timeout)
+                                  timeout=request_timeout, max_retries=0)
 
     def complete(self, messages: List[Dict[str, str]]) -> LLMResponse:
         if self.provider == "mock":
@@ -120,17 +136,19 @@ class LLMClient:
 
     def _complete_mock(self, messages) -> LLMResponse:
         from .tokens import count_message_tokens, count_tokens
+        t0 = time.perf_counter()
         text = self._mock_policy(messages) if self._mock_policy else "Action: look"
         r = LLMResponse(text=text,
                         prompt_tokens=count_message_tokens(messages, self.model),
                         completion_tokens=count_tokens(text, self.model),
-                        cost_usd=0.0)
+                        cost_usd=0.0, latency_s=time.perf_counter() - t0)
         self.usage.add(r)
         return r
 
     def _complete_openai(self, messages) -> LLMResponse:
         last_err = None
-        for attempt in range(self.max_retries):
+        t0 = time.perf_counter()
+        for attempt in range(self.max_retries + 1):      # one try plus max_retries retries
             try:
                 kwargs: Dict[str, Any] = dict(model=self.model, messages=messages,
                                               max_completion_tokens=self.max_completion_tokens)
@@ -149,7 +167,8 @@ class LLMClient:
                     cached = int(getattr(details, "cached_tokens", 0) or 0)
                 r = LLMResponse(text=text, prompt_tokens=pt, completion_tokens=ct,
                                 cached_tokens=cached,
-                                cost_usd=price_of(self.model, pt, ct, cached), raw=resp)
+                                cost_usd=price_of(self.model, pt, ct, cached), raw=resp,
+                                latency_s=time.perf_counter() - t0, retries=attempt)
                 self.usage.add(r)
                 return r
             except Exception as e:  # noqa: BLE001
@@ -160,5 +179,9 @@ class LLMClient:
                         ("unsupported" in msg or "does not support" in msg
                          or "only the default" in msg)):
                     self.temperature = None
-                time.sleep(min(2 ** attempt, 20))
-        raise RuntimeError(f"LLM call failed after {self.max_retries} retries: {last_err}")
+                if attempt < self.max_retries:
+                    time.sleep(min(2 ** attempt, 20))
+        self.usage.failed_calls += 1
+        self.usage.retries += self.max_retries
+        self.usage.latency_s += time.perf_counter() - t0
+        raise LLMCallFailed(f"LLM call failed after 1 try + {self.max_retries} retries: {last_err}")

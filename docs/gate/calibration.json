@@ -1,0 +1,1020 @@
+{
+ "delta": 0.05,
+ "bootstrap_draws": 2000,
+ "rows": [
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9475,
+   "coverage_mc95": [
+    0.9298,
+    0.9609
+   ],
+   "p_pass": 0.105,
+   "p_block": 0.00375,
+   "p_inconclusive": 0.89125,
+   "p_pass_mc95": [
+    0.0856,
+    0.1282
+   ],
+   "p_block_mc95": [
+    0.0013,
+    0.011
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.93125,
+   "coverage_mc95": [
+    0.9116,
+    0.9468
+   ],
+   "p_pass": 0.16,
+   "p_block": 0.00125,
+   "p_inconclusive": 0.83875,
+   "p_pass_mc95": [
+    0.1362,
+    0.187
+   ],
+   "p_block_mc95": [
+    0.0002,
+    0.007
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.935,
+   "coverage_mc95": [
+    0.9158,
+    0.9501
+   ],
+   "p_pass": 0.03875,
+   "p_block": 0.02625,
+   "p_inconclusive": 0.935,
+   "p_pass_mc95": [
+    0.0274,
+    0.0545
+   ],
+   "p_block_mc95": [
+    0.0172,
+    0.0398
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9375,
+   "coverage_mc95": [
+    0.9185,
+    0.9523
+   ],
+   "p_pass": 0.03625,
+   "p_block": 0.02625,
+   "p_inconclusive": 0.9375,
+   "p_pass_mc95": [
+    0.0254,
+    0.0516
+   ],
+   "p_block_mc95": [
+    0.0172,
+    0.0398
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.93,
+   "coverage_mc95": [
+    0.9102,
+    0.9457
+   ],
+   "p_pass": 0.005,
+   "p_block": 0.1125,
+   "p_inconclusive": 0.8825,
+   "p_pass_mc95": [
+    0.0019,
+    0.0128
+   ],
+   "p_block_mc95": [
+    0.0924,
+    0.1363
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.94,
+   "coverage_mc95": [
+    0.9213,
+    0.9544
+   ],
+   "p_pass": 0.0025,
+   "p_block": 0.19,
+   "p_inconclusive": 0.8075,
+   "p_pass_mc95": [
+    0.0007,
+    0.0091
+   ],
+   "p_block_mc95": [
+    0.1643,
+    0.2186
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.92625,
+   "coverage_mc95": [
+    0.906,
+    0.9424
+   ],
+   "p_pass": 0.11625,
+   "p_block": 0.00625,
+   "p_inconclusive": 0.8775,
+   "p_pass_mc95": [
+    0.0959,
+    0.1403
+   ],
+   "p_block_mc95": [
+    0.0027,
+    0.0145
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.935,
+   "coverage_mc95": [
+    0.9158,
+    0.9501
+   ],
+   "p_pass": 0.18375,
+   "p_block": 0.00375,
+   "p_inconclusive": 0.8125,
+   "p_pass_mc95": [
+    0.1584,
+    0.2121
+   ],
+   "p_block_mc95": [
+    0.0013,
+    0.011
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9425,
+   "coverage_mc95": [
+    0.9242,
+    0.9566
+   ],
+   "p_pass": 0.0275,
+   "p_block": 0.02875,
+   "p_inconclusive": 0.94375,
+   "p_pass_mc95": [
+    0.0182,
+    0.0413
+   ],
+   "p_block_mc95": [
+    0.0192,
+    0.0428
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.92625,
+   "coverage_mc95": [
+    0.906,
+    0.9424
+   ],
+   "p_pass": 0.04125,
+   "p_block": 0.0325,
+   "p_inconclusive": 0.92625,
+   "p_pass_mc95": [
+    0.0295,
+    0.0574
+   ],
+   "p_block_mc95": [
+    0.0223,
+    0.0472
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.92125,
+   "coverage_mc95": [
+    0.9005,
+    0.938
+   ],
+   "p_pass": 0.005,
+   "p_block": 0.13875,
+   "p_inconclusive": 0.85625,
+   "p_pass_mc95": [
+    0.0019,
+    0.0128
+   ],
+   "p_block_mc95": [
+    0.1165,
+    0.1644
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 50,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9425,
+   "coverage_mc95": [
+    0.9242,
+    0.9566
+   ],
+   "p_pass": 0.0025,
+   "p_block": 0.2025,
+   "p_inconclusive": 0.795,
+   "p_pass_mc95": [
+    0.0007,
+    0.0091
+   ],
+   "p_block_mc95": [
+    0.1761,
+    0.2317
+   ]
+  },
+  {
+   "scenario": "rare-event mixture (round-4 counterexample)",
+   "n": 50,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.046,
+   "true_effect_sd": 0.0,
+   "coverage": 0.22625,
+   "coverage_mc95": [
+    0.1986,
+    0.2565
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.0,
+   "p_inconclusive": 1.0,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.95375,
+   "coverage_mc95": [
+    0.9369,
+    0.9663
+   ],
+   "p_pass": 0.29625,
+   "p_block": 0.0,
+   "p_inconclusive": 0.70375,
+   "p_pass_mc95": [
+    0.2656,
+    0.3288
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9475,
+   "coverage_mc95": [
+    0.9298,
+    0.9609
+   ],
+   "p_pass": 0.49625,
+   "p_block": 0.0,
+   "p_inconclusive": 0.50375,
+   "p_pass_mc95": [
+    0.4617,
+    0.5308
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.93875,
+   "coverage_mc95": [
+    0.9199,
+    0.9534
+   ],
+   "p_pass": 0.02875,
+   "p_block": 0.0275,
+   "p_inconclusive": 0.94375,
+   "p_pass_mc95": [
+    0.0192,
+    0.0428
+   ],
+   "p_block_mc95": [
+    0.0182,
+    0.0413
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.95,
+   "coverage_mc95": [
+    0.9326,
+    0.9631
+   ],
+   "p_pass": 0.02125,
+   "p_block": 0.02875,
+   "p_inconclusive": 0.95,
+   "p_pass_mc95": [
+    0.0133,
+    0.0338
+   ],
+   "p_block_mc95": [
+    0.0192,
+    0.0428
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9425,
+   "coverage_mc95": [
+    0.9242,
+    0.9566
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.30625,
+   "p_inconclusive": 0.69375,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.2753,
+    0.3391
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.94,
+   "coverage_mc95": [
+    0.9213,
+    0.9544
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.47125,
+   "p_inconclusive": 0.52875,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.4369,
+    0.5059
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.95,
+   "coverage_mc95": [
+    0.9326,
+    0.9631
+   ],
+   "p_pass": 0.30375,
+   "p_block": 0.0,
+   "p_inconclusive": 0.69625,
+   "p_pass_mc95": [
+    0.2729,
+    0.3365
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9575,
+   "coverage_mc95": [
+    0.9412,
+    0.9694
+   ],
+   "p_pass": 0.49875,
+   "p_block": 0.0,
+   "p_inconclusive": 0.50125,
+   "p_pass_mc95": [
+    0.4642,
+    0.5333
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.93625,
+   "coverage_mc95": [
+    0.9171,
+    0.9512
+   ],
+   "p_pass": 0.03,
+   "p_block": 0.03375,
+   "p_inconclusive": 0.93625,
+   "p_pass_mc95": [
+    0.0202,
+    0.0443
+   ],
+   "p_block_mc95": [
+    0.0233,
+    0.0487
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.95125,
+   "coverage_mc95": [
+    0.9341,
+    0.9641
+   ],
+   "p_pass": 0.02125,
+   "p_block": 0.0275,
+   "p_inconclusive": 0.95125,
+   "p_pass_mc95": [
+    0.0133,
+    0.0338
+   ],
+   "p_block_mc95": [
+    0.0182,
+    0.0413
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9525,
+   "coverage_mc95": [
+    0.9355,
+    0.9652
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.31375,
+   "p_inconclusive": 0.68625,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.2826,
+    0.3467
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 200,
+   "strata": "D-like",
+   "replicates": 800,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.94375,
+   "coverage_mc95": [
+    0.9256,
+    0.9577
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.475,
+   "p_inconclusive": 0.525,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.4406,
+    0.5096
+   ]
+  },
+  {
+   "scenario": "rare-event mixture (round-4 counterexample)",
+   "n": 200,
+   "strata": "single",
+   "replicates": 800,
+   "true_effect_mean": -0.046,
+   "true_effect_sd": 0.0,
+   "coverage": 0.61875,
+   "coverage_mc95": [
+    0.5846,
+    0.6518
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.0,
+   "p_inconclusive": 1.0,
+   "p_pass_mc95": [
+    0.0,
+    0.0048
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0048
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9583333333333334,
+   "coverage_mc95": [
+    0.9392,
+    0.9716
+   ],
+   "p_pass": 0.6716666666666666,
+   "p_block": 0.0,
+   "p_inconclusive": 0.3283333333333333,
+   "p_pass_mc95": [
+    0.6331,
+    0.708
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0064
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9516666666666667,
+   "coverage_mc95": [
+    0.9314,
+    0.9661
+   ],
+   "p_pass": 0.8883333333333333,
+   "p_block": 0.0,
+   "p_inconclusive": 0.11166666666666666,
+   "p_pass_mc95": [
+    0.8606,
+    0.9111
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0064
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.96,
+   "coverage_mc95": [
+    0.9412,
+    0.973
+   ],
+   "p_pass": 0.018333333333333333,
+   "p_block": 0.018333333333333333,
+   "p_inconclusive": 0.9633333333333334,
+   "p_pass_mc95": [
+    0.0103,
+    0.0325
+   ],
+   "p_block_mc95": [
+    0.0103,
+    0.0325
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9333333333333333,
+   "coverage_mc95": [
+    0.9105,
+    0.9507
+   ],
+   "p_pass": 0.03833333333333333,
+   "p_block": 0.028333333333333332,
+   "p_inconclusive": 0.9333333333333333,
+   "p_pass_mc95": [
+    0.0257,
+    0.0569
+   ],
+   "p_block_mc95": [
+    0.0178,
+    0.0449
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9583333333333334,
+   "coverage_mc95": [
+    0.9392,
+    0.9716
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.6483333333333333,
+   "p_inconclusive": 0.3516666666666667,
+   "p_pass_mc95": [
+    0.0,
+    0.0064
+   ],
+   "p_block_mc95": [
+    0.6093,
+    0.6855
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9516666666666667,
+   "coverage_mc95": [
+    0.9314,
+    0.9661
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.87,
+   "p_inconclusive": 0.13,
+   "p_pass_mc95": [
+    0.0,
+    0.0064
+   ],
+   "p_block_mc95": [
+    0.8407,
+    0.8946
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), A/A",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": 0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9516666666666667,
+   "coverage_mc95": [
+    0.9314,
+    0.9661
+   ],
+   "p_pass": 0.63,
+   "p_block": 0.0,
+   "p_inconclusive": 0.37,
+   "p_pass_mc95": [
+    0.5907,
+    0.6677
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0064
+   ]
+  },
+  {
+   "scenario": "webshop-like, A/A",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": -0.0,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9616666666666667,
+   "coverage_mc95": [
+    0.9431,
+    0.9743
+   ],
+   "p_pass": 0.8766666666666667,
+   "p_block": 0.0,
+   "p_inconclusive": 0.12333333333333334,
+   "p_pass_mc95": [
+    0.8479,
+    0.9006
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0064
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), boundary -delta",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9333333333333333,
+   "coverage_mc95": [
+    0.9105,
+    0.9507
+   ],
+   "p_pass": 0.03,
+   "p_block": 0.035,
+   "p_inconclusive": 0.935,
+   "p_pass_mc95": [
+    0.0191,
+    0.0469
+   ],
+   "p_block_mc95": [
+    0.023,
+    0.0529
+   ]
+  },
+  {
+   "scenario": "webshop-like, boundary -delta",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": -0.05,
+   "true_effect_sd": 0.0,
+   "coverage": 0.94,
+   "coverage_mc95": [
+    0.9181,
+    0.9563
+   ],
+   "p_pass": 0.028333333333333332,
+   "p_block": 0.03166666666666667,
+   "p_inconclusive": 0.94,
+   "p_pass_mc95": [
+    0.0178,
+    0.0449
+   ],
+   "p_block_mc95": [
+    0.0204,
+    0.0489
+   ]
+  },
+  {
+   "scenario": "binary (mean 0.5), regression -2delta",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.955,
+   "coverage_mc95": [
+    0.9353,
+    0.9689
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.6516666666666666,
+   "p_inconclusive": 0.34833333333333333,
+   "p_pass_mc95": [
+    0.0,
+    0.0064
+   ],
+   "p_block_mc95": [
+    0.6127,
+    0.6887
+   ]
+  },
+  {
+   "scenario": "webshop-like, regression -2delta",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 600,
+   "true_effect_mean": -0.1,
+   "true_effect_sd": 0.0,
+   "coverage": 0.9516666666666667,
+   "coverage_mc95": [
+    0.9314,
+    0.9661
+   ],
+   "p_pass": 0.0,
+   "p_block": 0.8733333333333333,
+   "p_inconclusive": 0.12666666666666668,
+   "p_pass_mc95": [
+    0.0,
+    0.0064
+   ],
+   "p_block_mc95": [
+    0.8443,
+    0.8976
+   ]
+  },
+  {
+   "scenario": "rare-event mixture (round-4 counterexample)",
+   "n": 500,
+   "strata": "single",
+   "replicates": 600,
+   "true_effect_mean": -0.046,
+   "true_effect_sd": 0.0,
+   "coverage": 0.8966666666666666,
+   "coverage_mc95": [
+    0.8697,
+    0.9186
+   ],
+   "p_pass": 0.0033333333333333335,
+   "p_block": 0.0,
+   "p_inconclusive": 0.9966666666666667,
+   "p_pass_mc95": [
+    0.0009,
+    0.0121
+   ],
+   "p_block_mc95": [
+    0.0,
+    0.0064
+   ]
+  }
+ ],
+ "guardrail_rows": [
+  {
+   "scenario": "token guardrail, true change = tolerance (+30%)",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 300,
+   "bootstrap_draws": 20000,
+   "true_relative_change": 0.3,
+   "tolerance": 0.3,
+   "coverage": 0.9566666666666667,
+   "coverage_mc95": [
+    0.9273,
+    0.9745
+   ],
+   "p_guardrail_pass": 0.03666666666666667,
+   "p_guardrail_block": 0.006666666666666667,
+   "p_guardrail_inconclusive": 0.9566666666666667,
+   "p_guardrail_block_mc95": [
+    0.0018,
+    0.024
+   ],
+   "p_guardrail_pass_mc95": [
+    0.0206,
+    0.0645
+   ]
+  },
+  {
+   "scenario": "token guardrail, true change +20%",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 300,
+   "bootstrap_draws": 20000,
+   "true_relative_change": 0.2,
+   "tolerance": 0.3,
+   "coverage": 0.9366666666666666,
+   "coverage_mc95": [
+    0.9032,
+    0.9591
+   ],
+   "p_guardrail_pass": 1.0,
+   "p_guardrail_block": 0.0,
+   "p_guardrail_inconclusive": 0.0,
+   "p_guardrail_block_mc95": [
+    0.0,
+    0.0126
+   ],
+   "p_guardrail_pass_mc95": [
+    0.9874,
+    1.0
+   ]
+  },
+  {
+   "scenario": "token guardrail, no change",
+   "n": 500,
+   "strata": "D-like",
+   "replicates": 300,
+   "bootstrap_draws": 20000,
+   "true_relative_change": 0.0,
+   "tolerance": 0.3,
+   "coverage": 0.9266666666666666,
+   "coverage_mc95": [
+    0.8915,
+    0.9511
+   ],
+   "p_guardrail_pass": 1.0,
+   "p_guardrail_block": 0.0,
+   "p_guardrail_inconclusive": 0.0,
+   "p_guardrail_block_mc95": [
+    0.0,
+    0.0126
+   ],
+   "p_guardrail_pass_mc95": [
+    0.9874,
+    1.0
+   ]
+  }
+ ],
+ "seconds": 509
+}

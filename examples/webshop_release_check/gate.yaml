@@ -1,0 +1,70 @@
+# WebShop release check (pre-registered: engineering/PREREG_gate_ws_2026-11-16.md).
+# Reader Qwen3-8B (snapshot b968826d), page label ON, 15 steps, seeded WebShop 1k server, two execution blocks.
+#   C1  ship the published distilled memory (PUB) on test sessions 0-499
+#   C2  ship the repaired memory (PUB with the six frozen "keep searching" rules replaced) on sessions 520-1019
+# Localization (diagnostic, joint): the repaired memory beats PUB and each of three matched comparator edits.
+name: "WebShop: distilled memory release check (Qwen3-8B)"
+description: "Two release targets and a joint localization claim; 13 arm-runs in two execution blocks."
+base_dir: ../..
+seed: 20261116
+bootstrap_draws: 20000
+
+arms:
+  T_NONE: {logs: ["results/gate_ws_2026_11/GWS_T_NONE_R*_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T_TRUE: {logs: ["results/gate_ws_2026_11/GWS_T_TRUE_R*_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T_NONE_R1: {logs: ["results/gate_ws_2026_11/GWS_T_NONE_R1_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T_NONE_R2: {logs: ["results/gate_ws_2026_11/GWS_T_NONE_R2_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  D_NONE: {logs: ["results/gate_ws_2026_11/GWS_D_NONE_R*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D_TRUE: {logs: ["results/gate_ws_2026_11/GWS_D_TRUE_R*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D_ABL:  {logs: ["results/gate_ws_2026_11/GWS_D_ABL_R*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D_COMP1: {logs: ["results/gate_ws_2026_11/GWS_D_COMP1_H*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D_COMP2: {logs: ["results/gate_ws_2026_11/GWS_D_COMP2_H*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D_COMP3: {logs: ["results/gate_ws_2026_11/GWS_D_COMP3_H*_Q8.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+
+interventions:
+  memory_pub:
+    description: "inject the published 30-rule pool (whole pool, BM25 order)"
+    config_patch: {memory: expel, retriever: bm25, token_budget: 524, demo_pool: data/pools/webshop1010_insights.jsonl}
+    files_sha256: {demo_pool: 89893797d7d171f5bb0b11a7661ee6aae03491d9fbf3f90ac56470f6bc5954b4}
+  memory_abl:
+    description: "inject PUB with the six suspect rules replaced in place by length-matched choral sentences"
+    config_patch: {memory: expel, retriever: bm25, token_budget: 524, demo_pool: data/pools/gate_ws_2026_11/PUB_ABL.jsonl,
+                   rank_reference_pool: data/pools/webshop1010_insights.jsonl}
+    files_sha256: {demo_pool: 0a601d39fabb429263b075e89c8057b0cd32e3bfaf3801b58f0e1817ab79d4ad,
+                   rank_reference_pool: 89893797d7d171f5bb0b11a7661ee6aae03491d9fbf3f90ac56470f6bc5954b4}
+
+targets:
+  C1_ship_pub:
+    description: "Ship the published distilled memory"
+    default: true
+    baseline: T_NONE
+    candidate: T_TRUE
+    interventions: [memory_pub]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+      - {metric: latency_s, statistic: relative_p95, tolerance: 0.30}
+  C2_ship_repaired:
+    description: "Ship the repaired memory"
+    baseline: D_NONE
+    candidate: D_ABL
+    interventions: [memory_abl]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+      - {metric: latency_s, statistic: relative_p95, tolerance: 0.30}
+
+contrasts:
+  R_replication: {description: "PUB lowers the score on panel T (replication of r2 arm P)", candidate: T_TRUE, baseline: T_NONE, role: diagnostic, claim: less, threshold: 0}
+  L1_abl_vs_true: {description: "the repaired memory beats PUB", candidate: D_ABL, baseline: D_TRUE, role: diagnostic, claim: greater, threshold: 0}
+  L2_abl_vs_comp1: {description: "the repaired memory beats comparator edit 1 (same-block pairs)", candidate: D_ABL, baseline: D_COMP1, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+  L2_abl_vs_comp2: {description: "the repaired memory beats comparator edit 2 (same-block pairs)", candidate: D_ABL, baseline: D_COMP2, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+  L2_abl_vs_comp3: {description: "the repaired memory beats comparator edit 3 (same-block pairs)", candidate: D_ABL, baseline: D_COMP3, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+  L2_abl_vs_mean_comp: {description: "the repaired memory vs the mean of the three comparator edits (same-block pairs; reported, not part of the joint claim)", candidate: D_ABL, baseline: [D_COMP1, D_COMP2, D_COMP3], role: diagnostic, pairing: same_block}
+  D_pub_effect: {description: "PUB vs no memory on panel D", candidate: D_TRUE, baseline: D_NONE}
+  AA_none: {description: "A/A: the two repetitions of no memory (diagnostic only)", candidate: T_NONE_R2, baseline: T_NONE_R1}
+
+claims:
+  localization:
+    description: "the six suspect rules explain the loss on these goals, against these three comparator edits"
+    all_of: [L1_abl_vs_true, L2_abl_vs_comp1, L2_abl_vs_comp2, L2_abl_vs_comp3]

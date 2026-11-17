@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gate report: WebShop: page label + distilled memory (historical, descriptive)</title>
+<style>
+:root{--bg:#fbfaf8;--fg:#1d1d1b;--muted:#6b6b66;--line:#e3e1dc;--card:#ffffff;--code:#f3f2ee;
+--pass:#1f7a4d;--pass-bg:#e6f3ec;--block:#b3261e;--block-bg:#fbe9e7;--inc:#8a6100;--inc-bg:#fbf1dc;
+--inv:#5b3f99;--inv-bg:#efe9fa;--desc:#3f5f8a;--desc-bg:#e8eef7;--accent:#2f5d9e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#161615;--fg:#ecebe7;--muted:#a3a29c;
+--line:#33332f;--card:#1f1f1d;--code:#262624;--pass:#6fcf97;--pass-bg:#173326;--block:#f2847c;--block-bg:#3a1d1a;
+--inc:#e5b85c;--inc-bg:#3a2f15;--inv:#b9a3ee;--inv-bg:#2b2340;--desc:#92b4e3;--desc-bg:#1c2738;--accent:#8db3ea}}
+:root[data-theme="dark"]{--bg:#161615;--fg:#ecebe7;--muted:#a3a29c;--line:#33332f;--card:#1f1f1d;--code:#262624;
+--pass:#6fcf97;--pass-bg:#173326;--block:#f2847c;--block-bg:#3a1d1a;--inc:#e5b85c;--inc-bg:#3a2f15;--inv:#b9a3ee;
+--inv-bg:#2b2340;--desc:#92b4e3;--desc-bg:#1c2738;--accent:#8db3ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:34px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{font-size:15px;margin:18px 0 6px}.sub{color:var(--muted);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+.badge{display:inline-block;font-weight:700;font-size:13px;letter-spacing:.04em;padding:3px 10px;border-radius:999px}
+.PASS{color:var(--pass);background:var(--pass-bg)}.BLOCK{color:var(--block);background:var(--block-bg)}
+.INCONCLUSIVE{color:var(--inc);background:var(--inc-bg)}.INVALID{color:var(--inv);background:var(--inv-bg)}
+.DESCRIPTIVE{color:var(--desc);background:var(--desc-bg)}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.head .name{font-weight:700;font-size:16px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 18px;margin:12px 0}
+.kv div span{display:block;color:var(--muted);font-size:12px}.kv div b{font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:600}
+.scroll{overflow-x:auto}ul.reasons{margin:6px 0 0 18px;padding:0;color:var(--muted);font-size:13.5px}
+.flag{color:var(--inc);font-size:13.5px;margin-top:6px}
+svg.iv{width:100%;height:auto;margin-top:8px}svg.iv .lab,svg.iv .reflab{fill:var(--muted);font-size:12px}
+svg.iv .bar{stroke:var(--fg);stroke-width:3;stroke-linecap:round}svg.iv .dot{fill:var(--fg)}
+svg.iv .bar.block{stroke:var(--block)}svg.iv .dot.block{fill:var(--block)}svg.iv .bar.pass{stroke:var(--pass)}
+svg.iv .dot.pass{fill:var(--pass)}svg.iv .bar.inconclusive,svg.iv .bar.descriptive{stroke:var(--inc)}
+svg.iv .dot.inconclusive,svg.iv .dot.descriptive{fill:var(--inc)}svg.iv .bar.muted{stroke:var(--muted)}svg.iv .dot.muted{fill:var(--muted)}
+svg.iv .ref{stroke:var(--line);stroke-width:1.5}svg.iv .ref.margin{stroke:var(--block);stroke-dasharray:4 3}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:8px 0}
+.replay{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:760px){.replay{grid-template-columns:1fr}}
+.traj{font:12.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);border-radius:8px;padding:8px 10px;overflow-x:auto}
+.traj .s{padding:2px 0;border-bottom:1px dashed var(--line);white-space:pre-wrap;word-break:break-word}
+.traj .s.div{background:var(--inc-bg)}.traj .n{color:var(--muted);display:inline-block;width:2.2em}
+details summary{cursor:pointer;color:var(--accent)}code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:12.5px}
+</style>
+</head>
+<body>
+<main>
+<h1>WebShop: page label + distilled memory (historical, descriptive)</h1>
+<p class="sub">Qwen3-8B on 500 WebShop test sessions; four release questions about the same two changes. · skillrc-gate 0.1.0 · 20000 bootstrap draws, seed 20261116, one-sided α = 0.025</p>
+
+<h2>Release targets</h2>
+
+
+<div class="card" id="target-bundle_vs_old">
+  <div class="head"><span class="badge DESCRIPTIVE">DESCRIPTIVE</span><span class="name">bundle_vs_old</span>
+  <span class="sub" style="margin:0">Ship page label + memory together, compared with the old release</span></div>
+  
+  <div class="kv">
+    <div><span>candidate</span><b>L_PUB_TRUE</b></div>
+    <div><span>baseline</span><b>NONE</b></div>
+    <div><span>score: candidate / baseline</span><b>0.458 / 0.325</b></div>
+    <div><span>Δ [95% interval]</span><b>+0.132 [+0.089, +0.174]</b></div>
+    <div><span>margin δ</span><b>0.05</b></div>
+    <div><span>tasks (strata)</span><b>500 (5)</b></div>
+  </div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="219.4" y1="6" x2="219.4" y2="42" class="ref margin"/><text x="219.4" y="56" class="reflab" text-anchor="middle">−δ = -0.05</text><line x1="301.3" y1="6" x2="301.3" y2="42" class="ref zero"/><text x="301.3" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">score (candidate − baseline)</text><line x1="446.7" y1="18" x2="586.6" y2="18" class="bar descriptive"/><circle cx="517.9" cy="18" r="4.5" class="dot descriptive"/></svg>
+  
+  
+  <ul class="reasons"><li>not a release decision: arm L_PUB_TRUE: no repetition ids (legacy log); arm L_PUB_TRUE: no run manifest; arm L_PUB_TRUE: no declared grid; arm NONE: no repetition ids (legacy log); arm NONE: no run manifest; arm NONE: no declared grid</li><li>evidence, primary score: lower bound +0.0888 &gt; -margin -0.0500</li><li>evidence, guardrail prompt_tokens:relative_mean: upper bound +0.1865 &lt; tolerance +0.3000</li></ul>
+  
+  <h3>Guardrails</h3>
+  <div class="scroll"><table><tr><th>guardrail</th><th>estimate</th><th>95% interval</th><th>tolerance</th><th>note</th></tr>
+  <tr><td><code>prompt_tokens:relative_mean</code></td>
+  <td>12.5%</td>
+  <td>[6.4%, 18.6%]</td>
+  <td>30.0%</td><td></td></tr></table></div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="586.6" y1="6" x2="586.6" y2="42" class="ref margin"/><text x="586.6" y="56" class="reflab" text-anchor="middle">τ = +0.30</text><line x1="219.4" y1="6" x2="219.4" y2="42" class="ref zero"/><text x="219.4" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">prompt_tokens:relative_mean</text><line x1="298.0" y1="18" x2="447.7" y2="18" class="bar muted"/><circle cx="371.9" cy="18" r="4.5" class="dot muted"/></svg>
+  
+  
+  <p class="note">Margin sensitivity (primary component): δ = 0.0 → PASS; δ = 0.02 → PASS; δ = 0.05 → PASS</p>
+  
+  
+  <details><summary>Power at this design (normal approximation)</summary>
+  <p class="note">normal approximation for one execution of this design at the observed paired SD; true effect is assumed, sidedness one-sided at alpha for PASS/BLOCK. n = 500, paired SD = 0.488, SE = 0.0218, MDE (80%, two-sided 0.05) = 0.061.</p>
+  <table><tr><th>assumed true Δ</th><th>P(PASS)</th><th>P(BLOCK)</th></tr>
+  <tr><td>+0.025</td><td>93.1%</td><td>0.0%</td></tr><tr><td>+0.000</td><td>63.0%</td><td>0.0%</td></tr><tr><td>-0.025</td><td>20.8%</td><td>0.1%</td></tr><tr><td>-0.050</td><td>2.5%</td><td>2.5%</td></tr><tr><td>-0.100</td><td>0.0%</td><td>63.0%</td></tr></table>
+  </details>
+  
+  
+</div>
+
+
+<div class="card" id="target-label_only">
+  <div class="head"><span class="badge DESCRIPTIVE">DESCRIPTIVE</span><span class="name">label_only</span>
+  <span class="sub" style="margin:0">Ship the page label alone</span></div>
+  
+  <div class="kv">
+    <div><span>candidate</span><b>L_NONE</b></div>
+    <div><span>baseline</span><b>NONE</b></div>
+    <div><span>score: candidate / baseline</span><b>0.577 / 0.325</b></div>
+    <div><span>Δ [95% interval]</span><b>+0.251 [+0.208, +0.295]</b></div>
+    <div><span>margin δ</span><b>0.05</b></div>
+    <div><span>tasks (strata)</span><b>500 (5)</b></div>
+  </div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="219.4" y1="6" x2="219.4" y2="42" class="ref margin"/><text x="219.4" y="56" class="reflab" text-anchor="middle">−δ = -0.05</text><line x1="272.6" y1="6" x2="272.6" y2="42" class="ref zero"/><text x="272.6" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">score (candidate − baseline)</text><line x1="494.2" y1="18" x2="586.6" y2="18" class="bar descriptive"/><circle cx="540.4" cy="18" r="4.5" class="dot descriptive"/></svg>
+  
+  
+  <ul class="reasons"><li>not a release decision: arm L_NONE: no repetition ids (legacy log); arm L_NONE: no run manifest; arm L_NONE: no declared grid; arm NONE: no repetition ids (legacy log); arm NONE: no run manifest; arm NONE: no declared grid</li><li>evidence, primary score: lower bound +0.2081 &gt; -margin -0.0500</li><li>evidence, guardrail prompt_tokens:relative_mean: upper bound -0.2304 &lt; tolerance +0.3000</li></ul>
+  
+  <h3>Guardrails</h3>
+  <div class="scroll"><table><tr><th>guardrail</th><th>estimate</th><th>95% interval</th><th>tolerance</th><th>note</th></tr>
+  <tr><td><code>prompt_tokens:relative_mean</code></td>
+  <td>-27.6%</td>
+  <td>[-32.3%, -23.0%]</td>
+  <td>30.0%</td><td></td></tr></table></div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="586.6" y1="6" x2="586.6" y2="42" class="ref margin"/><text x="586.6" y="56" class="reflab" text-anchor="middle">τ = +0.30</text><line x1="409.7" y1="6" x2="409.7" y2="42" class="ref zero"/><text x="409.7" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">prompt_tokens:relative_mean</text><line x1="219.4" y1="18" x2="273.8" y2="18" class="bar muted"/><circle cx="246.8" cy="18" r="4.5" class="dot muted"/></svg>
+  
+  
+  <p class="note">Margin sensitivity (primary component): δ = 0.0 → PASS; δ = 0.02 → PASS; δ = 0.05 → PASS</p>
+  
+  
+  <details><summary>Power at this design (normal approximation)</summary>
+  <p class="note">normal approximation for one execution of this design at the observed paired SD; true effect is assumed, sidedness one-sided at alpha for PASS/BLOCK. n = 500, paired SD = 0.497, SE = 0.0222, MDE (80%, two-sided 0.05) = 0.062.</p>
+  <table><tr><th>assumed true Δ</th><th>P(PASS)</th><th>P(BLOCK)</th></tr>
+  <tr><td>+0.025</td><td>92.1%</td><td>0.0%</td></tr><tr><td>+0.000</td><td>61.3%</td><td>0.0%</td></tr><tr><td>-0.025</td><td>20.2%</td><td>0.1%</td></tr><tr><td>-0.050</td><td>2.5%</td><td>2.5%</td></tr><tr><td>-0.100</td><td>0.0%</td><td>61.3%</td></tr></table>
+  </details>
+  
+  
+</div>
+
+
+<div class="card" id="target-memory_given_label">
+  <div class="head"><span class="badge DESCRIPTIVE">DESCRIPTIVE</span><span class="name">memory_given_label · selected</span>
+  <span class="sub" style="margin:0">Add the memory on top of the page-label harness</span></div>
+  
+  <div class="kv">
+    <div><span>candidate</span><b>L_PUB_TRUE</b></div>
+    <div><span>baseline</span><b>L_NONE</b></div>
+    <div><span>score: candidate / baseline</span><b>0.458 / 0.577</b></div>
+    <div><span>Δ [95% interval]</span><b>-0.119 [-0.164, -0.075]</b></div>
+    <div><span>margin δ</span><b>0.05</b></div>
+    <div><span>tasks (strata)</span><b>500 (5)</b></div>
+  </div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="474.5" y1="6" x2="474.5" y2="42" class="ref margin"/><text x="474.5" y="56" class="reflab" text-anchor="middle">−δ = -0.05</text><line x1="586.6" y1="6" x2="586.6" y2="42" class="ref zero"/><text x="586.6" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">score (candidate − baseline)</text><line x1="219.4" y1="18" x2="419.3" y2="18" class="bar descriptive"/><circle cx="319.4" cy="18" r="4.5" class="dot descriptive"/></svg>
+  
+  
+  <ul class="reasons"><li>not a release decision: arm L_PUB_TRUE: no repetition ids (legacy log); arm L_PUB_TRUE: no run manifest; arm L_PUB_TRUE: no declared grid; arm L_NONE: no repetition ids (legacy log); arm L_NONE: no run manifest; arm L_NONE: no declared grid</li><li>evidence, primary score: upper bound -0.0746 &lt; -margin -0.0500</li><li>evidence, guardrail prompt_tokens:relative_mean: confirmed violation (Holm): estimate +0.5536, tolerance +0.3000</li></ul>
+  
+  <h3>Guardrails</h3>
+  <div class="scroll"><table><tr><th>guardrail</th><th>estimate</th><th>95% interval</th><th>tolerance</th><th>note</th></tr>
+  <tr><td><code>prompt_tokens:relative_mean</code></td>
+  <td>55.4%</td>
+  <td>[45.4%, 66.3%]</td>
+  <td>30.0%</td><td></td></tr></table></div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="385.5" y1="6" x2="385.5" y2="42" class="ref margin"/><text x="385.5" y="56" class="reflab" text-anchor="middle">τ = +0.30</text><line x1="219.4" y1="6" x2="219.4" y2="42" class="ref zero"/><text x="219.4" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">prompt_tokens:relative_mean</text><line x1="470.8" y1="18" x2="586.6" y2="18" class="bar muted"/><circle cx="525.9" cy="18" r="4.5" class="dot muted"/></svg>
+  
+  
+  <p class="note">Margin sensitivity (primary component): δ = 0.0 → BLOCK; δ = 0.02 → BLOCK; δ = 0.05 → BLOCK</p>
+  
+  
+  <details><summary>Power at this design (normal approximation)</summary>
+  <p class="note">normal approximation for one execution of this design at the observed paired SD; true effect is assumed, sidedness one-sided at alpha for PASS/BLOCK. n = 500, paired SD = 0.509, SE = 0.0228, MDE (80%, two-sided 0.05) = 0.064.</p>
+  <table><tr><th>assumed true Δ</th><th>P(PASS)</th><th>P(BLOCK)</th></tr>
+  <tr><td>+0.025</td><td>90.9%</td><td>0.0%</td></tr><tr><td>+0.000</td><td>59.3%</td><td>0.0%</td></tr><tr><td>-0.025</td><td>19.4%</td><td>0.1%</td></tr><tr><td>-0.050</td><td>2.5%</td><td>2.5%</td></tr><tr><td>-0.100</td><td>0.0%</td><td>59.3%</td></tr></table>
+  </details>
+  
+  
+</div>
+
+
+<div class="card" id="target-memory_old_harness">
+  <div class="head"><span class="badge DESCRIPTIVE">DESCRIPTIVE</span><span class="name">memory_old_harness</span>
+  <span class="sub" style="margin:0">Add the memory to the old harness</span></div>
+  
+  <div class="kv">
+    <div><span>candidate</span><b>PUB_TRUE</b></div>
+    <div><span>baseline</span><b>NONE</b></div>
+    <div><span>score: candidate / baseline</span><b>0.196 / 0.325</b></div>
+    <div><span>Δ [95% interval]</span><b>-0.129 [-0.167, -0.091]</b></div>
+    <div><span>margin δ</span><b>0.05</b></div>
+    <div><span>tasks (strata)</span><b>500 (5)</b></div>
+  </div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="476.5" y1="6" x2="476.5" y2="42" class="ref margin"/><text x="476.5" y="56" class="reflab" text-anchor="middle">−δ = -0.05</text><line x1="586.6" y1="6" x2="586.6" y2="42" class="ref zero"/><text x="586.6" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">score (candidate − baseline)</text><line x1="219.4" y1="18" x2="385.4" y2="18" class="bar descriptive"/><circle cx="302.5" cy="18" r="4.5" class="dot descriptive"/></svg>
+  
+  
+  <ul class="reasons"><li>not a release decision: arm PUB_TRUE: no repetition ids (legacy log); arm PUB_TRUE: no run manifest; arm PUB_TRUE: no declared grid; arm NONE: no repetition ids (legacy log); arm NONE: no run manifest; arm NONE: no declared grid</li><li>evidence, primary score: upper bound -0.0914 &lt; -margin -0.0500</li><li>evidence, guardrail prompt_tokens:relative_mean: confirmed violation (Holm): estimate +0.4239, tolerance +0.3000</li></ul>
+  
+  <h3>Guardrails</h3>
+  <div class="scroll"><table><tr><th>guardrail</th><th>estimate</th><th>95% interval</th><th>tolerance</th><th>note</th></tr>
+  <tr><td><code>prompt_tokens:relative_mean</code></td>
+  <td>42.4%</td>
+  <td>[36.1%, 49.2%]</td>
+  <td>30.0%</td><td></td></tr></table></div>
+  <svg class="iv" viewBox="0 0 640 64" role="img" aria-label="intervals"><line x1="443.4" y1="6" x2="443.4" y2="42" class="ref margin"/><text x="443.4" y="56" class="reflab" text-anchor="middle">τ = +0.30</text><line x1="219.4" y1="6" x2="219.4" y2="42" class="ref zero"/><text x="219.4" y="56" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">prompt_tokens:relative_mean</text><line x1="488.9" y1="18" x2="586.6" y2="18" class="bar muted"/><circle cx="535.9" cy="18" r="4.5" class="dot muted"/></svg>
+  
+  
+  <p class="note">Margin sensitivity (primary component): δ = 0.0 → BLOCK; δ = 0.02 → BLOCK; δ = 0.05 → BLOCK</p>
+  
+  
+  <details><summary>Power at this design (normal approximation)</summary>
+  <p class="note">normal approximation for one execution of this design at the observed paired SD; true effect is assumed, sidedness one-sided at alpha for PASS/BLOCK. n = 500, paired SD = 0.429, SE = 0.0192, MDE (80%, two-sided 0.05) = 0.054.</p>
+  <table><tr><th>assumed true Δ</th><th>P(PASS)</th><th>P(BLOCK)</th></tr>
+  <tr><td>+0.025</td><td>97.5%</td><td>0.0%</td></tr><tr><td>+0.000</td><td>74.2%</td><td>0.0%</td></tr><tr><td>-0.025</td><td>25.6%</td><td>0.1%</td></tr><tr><td>-0.050</td><td>2.5%</td><td>2.5%</td></tr><tr><td>-0.100</td><td>0.0%</td><td>74.2%</td></tr></table>
+  </details>
+  
+  
+</div>
+
+
+
+<h2>Diagnostic and descriptive contrasts</h2>
+<div class="card">
+<div class="scroll"><table><tr><th>contrast</th><th>candidate − baseline</th><th>role</th><th>Δ</th><th>95% interval</th><th>claim</th><th>supported</th><th>evaluable</th></tr>
+<tr><td><b>content_PUB</b><br><span class="sub">memory vs equal-length control text (content value)</span></td><td>L_PUB_TRUE − L_PUB_CHORAL</td><td>descriptive</td>
+<td>-0.140</td><td>[-0.183, -0.096]</td>
+<td>Δ &lt; 0.0</td>
+<td>True</td><td>False<br><span class="sub">descriptive arms: arm L_PUB_TRUE: no repetition ids (legacy log); arm L_PUB_TRUE: no run manifest; arm L_PUB_TRUE: no declared grid; arm L_PUB_CHORAL: no repetition ids (legacy log); arm L_PUB_CHORAL: no run manifest; arm L_PUB_CHORAL: no declared grid</span></td></tr><tr><td><b>reading_PUB</b><br><span class="sub">control text vs no memory (reading cost)</span></td><td>L_PUB_CHORAL − L_NONE</td><td>descriptive</td>
+<td>+0.021</td><td>[-0.020, +0.061]</td>
+<td>–</td>
+<td>–</td><td>False<br><span class="sub">descriptive arms: arm L_PUB_CHORAL: no repetition ids (legacy log); arm L_PUB_CHORAL: no run manifest; arm L_PUB_CHORAL: no declared grid; arm L_NONE: no repetition ids (legacy log); arm L_NONE: no run manifest; arm L_NONE: no declared grid</span></td></tr><tr><td><b>content_R1</b><br><span class="sub">replicate pool R1 vs its control</span></td><td>L_R1_TRUE − L_R1_CHORAL</td><td>descriptive</td>
+<td>-0.284</td><td>[-0.328, -0.239]</td>
+<td>Δ &lt; 0.0</td>
+<td>True</td><td>False<br><span class="sub">descriptive arms: arm L_R1_TRUE: no repetition ids (legacy log); arm L_R1_TRUE: no run manifest; arm L_R1_TRUE: no declared grid; arm L_R1_CHORAL: no repetition ids (legacy log); arm L_R1_CHORAL: no run manifest; arm L_R1_CHORAL: no declared grid</span></td></tr><tr><td><b>content_R2</b><br><span class="sub">replicate pool R2 vs its control</span></td><td>L_R2_TRUE − L_R2_CHORAL</td><td>descriptive</td>
+<td>-0.173</td><td>[-0.216, -0.130]</td>
+<td>Δ &lt; 0.0</td>
+<td>True</td><td>False<br><span class="sub">descriptive arms: arm L_R2_TRUE: no repetition ids (legacy log); arm L_R2_TRUE: no run manifest; arm L_R2_TRUE: no declared grid; arm L_R2_CHORAL: no repetition ids (legacy log); arm L_R2_CHORAL: no run manifest; arm L_R2_CHORAL: no declared grid</span></td></tr><tr><td><b>reading_R1</b><br><span class="sub"></span></td><td>L_R1_CHORAL − L_NONE</td><td>descriptive</td>
+<td>-0.007</td><td>[-0.051, +0.035]</td>
+<td>–</td>
+<td>–</td><td>False<br><span class="sub">descriptive arms: arm L_R1_CHORAL: no repetition ids (legacy log); arm L_R1_CHORAL: no run manifest; arm L_R1_CHORAL: no declared grid; arm L_NONE: no repetition ids (legacy log); arm L_NONE: no run manifest; arm L_NONE: no declared grid</span></td></tr><tr><td><b>reading_R2</b><br><span class="sub"></span></td><td>L_R2_CHORAL − L_NONE</td><td>descriptive</td>
+<td>-0.009</td><td>[-0.050, +0.031]</td>
+<td>–</td>
+<td>–</td><td>False<br><span class="sub">descriptive arms: arm L_R2_CHORAL: no repetition ids (legacy log); arm L_R2_CHORAL: no run manifest; arm L_R2_CHORAL: no declared grid; arm L_NONE: no repetition ids (legacy log); arm L_NONE: no run manifest; arm L_NONE: no declared grid</span></td></tr>
+</table></div>
+<svg class="iv" viewBox="0 0 640 214" role="img" aria-label="intervals"><line x1="528.9" y1="6" x2="528.9" y2="192" class="ref zero"/><text x="528.9" y="206" class="reflab" text-anchor="middle">0</text><text x="180" y="22" class="lab" text-anchor="end">content_PUB</text><line x1="356.0" y1="18" x2="438.2" y2="18" class="bar pass"/><circle cx="397.2" cy="18" r="4.5" class="dot pass"/><text x="180" y="52" class="lab" text-anchor="end">reading_PUB</text><line x1="510.5" y1="48" x2="586.6" y2="48" class="bar muted"/><circle cx="548.3" cy="48" r="4.5" class="dot muted"/><text x="180" y="82" class="lab" text-anchor="end">content_R1</text><line x1="219.4" y1="78" x2="304.1" y2="78" class="bar pass"/><circle cx="260.9" cy="78" r="4.5" class="dot pass"/><text x="180" y="112" class="lab" text-anchor="end">content_R2</text><line x1="325.4" y1="108" x2="406.8" y2="108" class="bar pass"/><circle cx="366.0" cy="108" r="4.5" class="dot pass"/><text x="180" y="142" class="lab" text-anchor="end">reading_R1</text><line x1="480.6" y1="138" x2="561.9" y2="138" class="bar muted"/><circle cx="522.0" cy="138" r="4.5" class="dot muted"/><text x="180" y="172" class="lab" text-anchor="end">reading_R2</text><line x1="482.0" y1="168" x2="558.4" y2="168" class="bar muted"/><circle cx="520.5" cy="168" r="4.5" class="dot muted"/></svg>
+<p><b>Claim memory_content_hurts_all_pools</b>: every distilled pool&#39;s content lowers the score (three independently distilled pools) — evaluable: False, holds: <b>False</b>. <span class="sub">intersection-union: every listed contrast must support its claim; no adjustment</span></p>
+</div>
+
+
+
+
+<h2>Behaviour shift · bundle_vs_old</h2>
+<div class="card"><p class="note">descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict</p>
+<div class="replay"><div><h3>Actions per episode</h3><table><tr><th>action</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>buy</code></td><td>1.66</td><td>2.70</td><td>-1.04 [-1.37, -0.72]</td></tr><tr><td><code>subpage</code></td><td>1.31</td><td>1.74</td><td>-0.44 [-0.62, -0.26]</td></tr><tr><td><code>search</code></td><td>2.12</td><td>1.84</td><td>+0.28 [+0.11, +0.46]</td></tr><tr><td><code>choose_option</code></td><td>1.85</td><td>2.02</td><td>-0.18 [-0.30, -0.05]</td></tr><tr><td><code>open_product</code></td><td>2.07</td><td>1.90</td><td>+0.17 [+0.05, +0.29]</td></tr><tr><td><code>back_to_search</code></td><td>0.78</td><td>0.64</td><td>+0.14 [+0.04, +0.24]</td></tr><tr><td><code>paginate</code></td><td>0.87</td><td>0.89</td><td>-0.02 [-0.19, +0.15]</td></tr><tr><td><code>unparsed</code></td><td>0.00</td><td>0.02</td><td>-0.02 [-0.05, +0.00]</td></tr></table></div>
+<div><h3>Episode outcomes</h3><table><tr><th>outcome</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>loop_3x</code></td><td>18.6%</td><td>33.6%</td><td>-0.150 [-0.196, -0.106]</td></tr><tr><td><code>success</code></td><td>31.8%</td><td>22.4%</td><td>+0.094 [+0.054, +0.134]</td></tr><tr><td><code>no_purchase</code></td><td>31.4%</td><td>31.4%</td><td>+0.000 [-0.042, +0.042]</td></tr><tr><td><code>purchased</code></td><td>68.6%</td><td>68.6%</td><td>+0.000 [-0.042, +0.042]</td></tr></table></div></div>
+</div>
+
+
+<h2>Paired replays · bundle_vs_old</h2>
+<p class="note">Chosen by a fixed rule (first tasks by id where the baseline scored higher, plus random pairs with a fixed seed), not by hand. Highlighted: the first step where the two actions differ.</p>
+
+<div class="card"><div class="head"><span class="name">task 1 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 3</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 5 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[black]</div><div class="s"><span class="n">4</span>click[3x-large]</div><div class="s"><span class="n">5</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.71 · 3 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 3 · electronics</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 3 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core price less than 340]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core under 340]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[buy now]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 19 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 5</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.80 · 8 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[women&#39;s pumps closed toe rubber sole black size 7 under $60]</div><div class="s"><span class="n">2</span>click[b092vdy5mf]</div><div class="s"><span class="n">3</span>click[7]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s div"><span class="n">5</span>click[description]</div><div class="s"><span class="n">6</span>click[reviews]</div><div class="s"><span class="n">7</span>click[&lt; prev]</div><div class="s"><span class="n">8</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[women&#39;s pumps closed toe rubber sole black size 7 under $60]</div><div class="s"><span class="n">2</span>click[b092vdy5mf]</div><div class="s"><span class="n">3</span>click[7]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s div"><span class="n">5</span>click[color]</div><div class="s"><span class="n">6</span>click[back to search]</div><div class="s"><span class="n">7</span>search[women&#39;s pumps closed toe rubber sole black size 7 under $60]</div><div class="s"><span class="n">8</span>click[b09p5v8zsk]</div><div class="s"><span class="n">9</span>click[features]</div><div class="s"><span class="n">10</span>click[back to search]</div><div class="s"><span class="n">11</span>search[women&#39;s pumps closed toe rubber sole black size 7 under $60]</div><div class="s"><span class="n">12</span>click[b09p5v8zsk]</div><div class="s"><span class="n">13</span>click[description]</div><div class="s"><span class="n">14</span>click[back to search]</div><div class="s"><span class="n">15</span>search[women&#39;s pumps closed toe rubber sole black size 7 under $60]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 100 · garden</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 2</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09hxdpkjf]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[description]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 1.00 · 3 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09p8d2q1q]</div><div class="s"><span class="n">3</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 157 · fashion</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[back to search]</div><div class="s"><span class="n">5</span>search[machine wash men&#39;s tuxedo shirt polyester heathers needle sleeve classic fit royal blue 3x-large under 40.00]</div><div class="s"><span class="n">6</span>click[b07jvvdj6l]</div><div class="s"><span class="n">7</span>click[features]</div><div class="s"><span class="n">8</span>click[back to search]</div><div class="s"><span class="n">9</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">10</span>click[b07jvvdj6l]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[back to search]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">15</span>click[features]</div></div></div>
+
+<div><h3>candidate · score 0.90 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heather royal blue 3x-large under $40]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[description]</div><div class="s"><span class="n">4</span>click[&lt; prev]</div><div class="s"><span class="n">5</span>click[&lt; prev]</div><div class="s"><span class="n">6</span>click[b09rvf4jp1]</div><div class="s"><span class="n">7</span>click[&lt; prev]</div><div class="s"><span class="n">8</span>click[b09p39qn2w]</div><div class="s"><span class="n">9</span>click[description]</div><div class="s"><span class="n">10</span>click[&lt; prev]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[&lt; prev]</div><div class="s"><span class="n">13</span>click[royal blue]</div><div class="s"><span class="n">14</span>click[3x-large]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+
+
+
+<h2>Behaviour shift · label_only</h2>
+<div class="card"><p class="note">descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict</p>
+<div class="replay"><div><h3>Actions per episode</h3><table><tr><th>action</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>buy</code></td><td>1.49</td><td>2.70</td><td>-1.21 [-1.53, -0.91]</td></tr><tr><td><code>subpage</code></td><td>1.08</td><td>1.74</td><td>-0.67 [-0.85, -0.49]</td></tr><tr><td><code>search</code></td><td>1.41</td><td>1.84</td><td>-0.43 [-0.55, -0.31]</td></tr><tr><td><code>back_to_search</code></td><td>0.33</td><td>0.64</td><td>-0.32 [-0.40, -0.23]</td></tr><tr><td><code>paginate</code></td><td>1.10</td><td>0.89</td><td>+0.22 [+0.03, +0.40]</td></tr><tr><td><code>open_product</code></td><td>1.76</td><td>1.90</td><td>-0.14 [-0.25, -0.03]</td></tr><tr><td><code>choose_option</code></td><td>2.12</td><td>2.02</td><td>+0.10 [-0.03, +0.24]</td></tr><tr><td><code>unparsed</code></td><td>0.00</td><td>0.02</td><td>-0.02 [-0.05, +0.00]</td></tr></table></div>
+<div><h3>Episode outcomes</h3><table><tr><th>outcome</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>loop_3x</code></td><td>13.8%</td><td>33.6%</td><td>-0.198 [-0.244, -0.152]</td></tr><tr><td><code>success</code></td><td>40.0%</td><td>22.4%</td><td>+0.176 [+0.134, +0.218]</td></tr><tr><td><code>no_purchase</code></td><td>20.0%</td><td>31.4%</td><td>-0.114 [-0.156, -0.072]</td></tr><tr><td><code>purchased</code></td><td>80.0%</td><td>68.6%</td><td>+0.114 [+0.072, +0.156]</td></tr></table></div></div>
+</div>
+
+
+<h2>Paired replays · label_only</h2>
+<p class="note">Chosen by a fixed rule (first tasks by id where the baseline scored higher, plus random pairs with a fixed seed), not by hand. Highlighted: the first step where the two actions differ.</p>
+
+<div class="card"><div class="head"><span class="name">task 3 · electronics</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 3 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core price less than 340]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core price lower than 340.00]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[buy now]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 84 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.83 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:c5-black size:x-large price:lt30.00]</div><div class="s"><span class="n">2</span>click[b09p5crvq6]</div><div class="s"><span class="n">3</span>click[back to search]</div><div class="s"><span class="n">4</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:c5-black size:x-large price:lt30.00]</div><div class="s"><span class="n">5</span>click[b09p5crvq6]</div><div class="s"><span class="n">6</span>click[description]</div><div class="s"><span class="n">7</span>click[back to search]</div><div class="s"><span class="n">8</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:c5-black size:x-large price:lt30.00]</div><div class="s"><span class="n">9</span>click[b09qgk5xhz]</div><div class="s"><span class="n">10</span>click[back to search]</div><div class="s"><span class="n">11</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:c5-black size:x-large price:lt30.00]</div><div class="s"><span class="n">12</span>click[next &gt;]</div><div class="s"><span class="n">13</span>click[b074z315kk]</div><div class="s"><span class="n">14</span>click[black 2]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.50 · 13 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[loose fit women&#39;s tops, tees &amp; blouses short sleeve long sleeve color:c5-black size:x-large price:30.00]</div><div class="s"><span class="n">2</span>click[b09p5crvq6]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[&lt; prev]</div><div class="s"><span class="n">5</span>click[description]</div><div class="s"><span class="n">6</span>click[reviews]</div><div class="s"><span class="n">7</span>click[back to search]</div><div class="s"><span class="n">8</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:c5-black size:x-large price:30.00]</div><div class="s"><span class="n">9</span>click[next &gt;]</div><div class="s"><span class="n">10</span>click[next &gt;]</div><div class="s"><span class="n">11</span>click[b07mgb73nj]</div><div class="s"><span class="n">12</span>click[black]</div><div class="s"><span class="n">13</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 109 · garden</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 5 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[non slip desks for living room spt-026goo3844 15.7x23.6in+15.7x47.2in under $50.00]</div><div class="s"><span class="n">2</span>click[b09cq45zrb]</div><div class="s"><span class="n">3</span>click[spt-026goo3844]</div><div class="s"><span class="n">4</span>click[15.7x23.6in+15.7x47.2in]</div><div class="s"><span class="n">5</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.80 · 4 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[non slip desks for living room color:spt-026goo3844 size:15.7x23.6in+15.7x47.2in price:50.00]</div><div class="s"><span class="n">2</span>click[b09cq45zrb]</div><div class="s"><span class="n">3</span>click[spt-026goo3844]</div><div class="s"><span class="n">4</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 99 · fashion</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 5</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[long lasting moisture wicking loose fit men&#39;s shorts elastic waistband quality materials polyester cotton short sleeve red medium under $30]</div><div class="s"><span class="n">2</span>click[b09q5zhrvm]</div><div class="s"><span class="n">3</span>click[red]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s div"><span class="n">5</span>click[size]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[long lasting moisture wicking loose fit men&#39;s shorts elastic waistband quality materials polyester cotton short sleeve red medium under $30]</div><div class="s"><span class="n">2</span>click[b09q5zhrvm]</div><div class="s"><span class="n">3</span>click[red]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s div"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[size]</div><div class="s"><span class="n">15</span>click[medium]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 157 · fashion</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[back to search]</div><div class="s"><span class="n">5</span>search[machine wash men&#39;s tuxedo shirt polyester heathers needle sleeve classic fit royal blue 3x-large under 40.00]</div><div class="s"><span class="n">6</span>click[b07jvvdj6l]</div><div class="s"><span class="n">7</span>click[features]</div><div class="s"><span class="n">8</span>click[back to search]</div><div class="s"><span class="n">9</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">10</span>click[b07jvvdj6l]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[back to search]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">15</span>click[features]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[description]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s"><span class="n">5</span>click[&lt; prev]</div><div class="s"><span class="n">6</span>click[b07t3vmg dg]</div><div class="s"><span class="n">7</span>click[fit type]</div><div class="s"><span class="n">8</span>click[royal blue]</div><div class="s"><span class="n">9</span>click[3x-large]</div><div class="s"><span class="n">10</span>click[features]</div><div class="s"><span class="n">11</span>click[&lt; prev]</div><div class="s"><span class="n">12</span>click[description]</div><div class="s"><span class="n">13</span>click[b09p7h5yk7]</div><div class="s"><span class="n">14</span>click[&lt; prev]</div><div class="s"><span class="n">15</span>click[reviews]</div></div></div>
+</div></div>
+
+
+
+
+<h2>Behaviour shift · memory_given_label</h2>
+<div class="card"><p class="note">descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict</p>
+<div class="replay"><div><h3>Actions per episode</h3><table><tr><th>action</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>search</code></td><td>2.12</td><td>1.41</td><td>+0.71 [+0.54, +0.89]</td></tr><tr><td><code>back_to_search</code></td><td>0.78</td><td>0.33</td><td>+0.46 [+0.35, +0.56]</td></tr><tr><td><code>open_product</code></td><td>2.07</td><td>1.76</td><td>+0.31 [+0.18, +0.44]</td></tr><tr><td><code>choose_option</code></td><td>1.85</td><td>2.12</td><td>-0.28 [-0.41, -0.15]</td></tr><tr><td><code>paginate</code></td><td>0.87</td><td>1.10</td><td>-0.24 [-0.42, -0.05]</td></tr><tr><td><code>subpage</code></td><td>1.31</td><td>1.08</td><td>+0.23 [+0.08, +0.38]</td></tr><tr><td><code>buy</code></td><td>1.66</td><td>1.49</td><td>+0.17 [-0.07, +0.42]</td></tr></table></div>
+<div><h3>Episode outcomes</h3><table><tr><th>outcome</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>no_purchase</code></td><td>31.4%</td><td>20.0%</td><td>+0.114 [+0.072, +0.156]</td></tr><tr><td><code>purchased</code></td><td>68.6%</td><td>80.0%</td><td>-0.114 [-0.156, -0.072]</td></tr><tr><td><code>success</code></td><td>31.8%</td><td>40.0%</td><td>-0.082 [-0.126, -0.040]</td></tr><tr><td><code>loop_3x</code></td><td>18.6%</td><td>13.8%</td><td>+0.048 [+0.010, +0.088]</td></tr></table></div></div>
+</div>
+
+
+<h2>Paired replays · memory_given_label</h2>
+<p class="note">Chosen by a fixed rule (first tasks by id where the baseline scored higher, plus random pairs with a fixed seed), not by hand. Highlighted: the first step where the two actions differ.</p>
+
+<div class="card"><div class="head"><span class="name">task 1 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 3</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 5 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[black]</div><div class="s"><span class="n">4</span>click[3x-large]</div><div class="s"><span class="n">5</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.71 · 3 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 10 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.80 · 4 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s grey pants 40w x 34l under $80]</div><div class="s"><span class="n">2</span>click[b08lkksl8f]</div><div class="s"><span class="n">3</span>click[40w x 34l]</div><div class="s"><span class="n">4</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s grey pants relaxed fit 40w x 34l under $80]</div><div class="s"><span class="n">2</span>click[b08lkksl8f]</div><div class="s"><span class="n">3</span>click[40w x 34l]</div><div class="s"><span class="n">4</span>click[description]</div><div class="s"><span class="n">5</span>click[back to search]</div><div class="s"><span class="n">6</span>search[machine wash men&#39;s grey pants relaxed fit 40w x 34l under $80]</div><div class="s"><span class="n">7</span>click[b099231v35]</div><div class="s"><span class="n">8</span>click[description]</div><div class="s"><span class="n">9</span>click[color]</div><div class="s"><span class="n">10</span>click[back to search]</div><div class="s"><span class="n">11</span>search[machine wash men&#39;s grey pants relaxed fit 40w x 34l under $80]</div><div class="s"><span class="n">12</span>click[b09nd8p2qr]</div><div class="s"><span class="n">13</span>click[color]</div><div class="s"><span class="n">14</span>click[gray]</div><div class="s"><span class="n">15</span>click[40w x 34l]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 18 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.90 · 8 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s dress shirts polyester heathers heathers cotton cotton heather needle sleeve classic fit color: red fit type: youth size: xx-large price lower than 30.00 dollars]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[youth]</div><div class="s"><span class="n">4</span>click[color]</div><div class="s"><span class="n">5</span>click[red]</div><div class="s"><span class="n">6</span>click[size]</div><div class="s"><span class="n">7</span>click[xx-large]</div><div class="s"><span class="n">8</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.70 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s dress shirts polyester heathers heathers cotton cotton heather needle sleeve classic fit red youth fit xx-large under 30]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[youth]</div><div class="s"><span class="n">4</span>click[color]</div><div class="s"><span class="n">5</span>click[red]</div><div class="s"><span class="n">6</span>click[description]</div><div class="s"><span class="n">7</span>click[features]</div><div class="s"><span class="n">8</span>click[back to search]</div><div class="s"><span class="n">9</span>search[machine wash men&#39;s dress shirts polyester heathers heathers cotton cotton heather needle sleeve classic fit red youth fit xx-large under 30]</div><div class="s"><span class="n">10</span>click[b07jvvdj6l]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[back to search]</div><div class="s"><span class="n">13</span>search[machine wash men&#39;s dress shirts polyester heathers heathers cotton cotton heather needle sleeve classic fit red youth fit xx-large under 30]</div><div class="s"><span class="n">14</span>click[b07jvvdj6l]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 100 · garden</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 2</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.03 · 8 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09hxdpkjf]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[buy now]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[&lt; prev]</div><div class="s"><span class="n">8</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 1.00 · 3 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09p8d2q1q]</div><div class="s"><span class="n">3</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 157 · fashion</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[description]</div><div class="s"><span class="n">4</span>click[features]</div><div class="s"><span class="n">5</span>click[&lt; prev]</div><div class="s"><span class="n">6</span>click[b07t3vmg dg]</div><div class="s"><span class="n">7</span>click[fit type]</div><div class="s"><span class="n">8</span>click[royal blue]</div><div class="s"><span class="n">9</span>click[3x-large]</div><div class="s"><span class="n">10</span>click[features]</div><div class="s"><span class="n">11</span>click[&lt; prev]</div><div class="s"><span class="n">12</span>click[description]</div><div class="s"><span class="n">13</span>click[b09p7h5yk7]</div><div class="s"><span class="n">14</span>click[&lt; prev]</div><div class="s"><span class="n">15</span>click[reviews]</div></div></div>
+
+<div><h3>candidate · score 0.90 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heather royal blue 3x-large under $40]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[description]</div><div class="s"><span class="n">4</span>click[&lt; prev]</div><div class="s"><span class="n">5</span>click[&lt; prev]</div><div class="s"><span class="n">6</span>click[b09rvf4jp1]</div><div class="s"><span class="n">7</span>click[&lt; prev]</div><div class="s"><span class="n">8</span>click[b09p39qn2w]</div><div class="s"><span class="n">9</span>click[description]</div><div class="s"><span class="n">10</span>click[&lt; prev]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[&lt; prev]</div><div class="s"><span class="n">13</span>click[royal blue]</div><div class="s"><span class="n">14</span>click[3x-large]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+
+
+
+<h2>Behaviour shift · memory_old_harness</h2>
+<div class="card"><p class="note">descriptive: paired 95% intervals, no multiplicity adjustment; not part of any verdict</p>
+<div class="replay"><div><h3>Actions per episode</h3><table><tr><th>action</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>search</code></td><td>2.83</td><td>1.84</td><td>+0.99 [+0.80, +1.19]</td></tr><tr><td><code>back_to_search</code></td><td>1.23</td><td>0.64</td><td>+0.59 [+0.48, +0.70]</td></tr><tr><td><code>paginate</code></td><td>0.40</td><td>0.89</td><td>-0.48 [-0.64, -0.33]</td></tr><tr><td><code>open_product</code></td><td>2.16</td><td>1.90</td><td>+0.26 [+0.15, +0.37]</td></tr><tr><td><code>choose_option</code></td><td>1.84</td><td>2.02</td><td>-0.18 [-0.34, -0.01]</td></tr><tr><td><code>buy</code></td><td>2.72</td><td>2.70</td><td>+0.02 [-0.33, +0.39]</td></tr><tr><td><code>unparsed</code></td><td>0.00</td><td>0.02</td><td>-0.02 [-0.05, +0.00]</td></tr><tr><td><code>subpage</code></td><td>1.75</td><td>1.74</td><td>+0.01 [-0.16, +0.17]</td></tr></table></div>
+<div><h3>Episode outcomes</h3><table><tr><th>outcome</th><th>cand.</th><th>base.</th><th>Δ [95%]</th></tr>
+<tr><td><code>no_purchase</code></td><td>43.6%</td><td>31.4%</td><td>+0.122 [+0.080, +0.164]</td></tr><tr><td><code>purchased</code></td><td>56.4%</td><td>68.6%</td><td>-0.122 [-0.164, -0.080]</td></tr><tr><td><code>success</code></td><td>14.0%</td><td>22.4%</td><td>-0.084 [-0.120, -0.048]</td></tr><tr><td><code>loop_3x</code></td><td>39.0%</td><td>33.6%</td><td>+0.054 [+0.002, +0.106]</td></tr></table></div></div>
+</div>
+
+
+<h2>Paired replays · memory_old_harness</h2>
+<p class="note">Chosen by a fixed rule (first tasks by id where the baseline scored higher, plus random pairs with a fixed seed), not by hand. Highlighted: the first step where the two actions differ.</p>
+
+<div class="card"><div class="head"><span class="name">task 1 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 3</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 5 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[black]</div><div class="s"><span class="n">4</span>click[3x-large]</div><div class="s"><span class="n">5</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.71 · 3 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[butt lifting light weight women&#39;s shorts high waist tummy control black 3x-large under $50]</div><div class="s"><span class="n">2</span>click[b09qcp4579]</div><div class="s div"><span class="n">3</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 3 · electronics</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 1.00 · 3 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core price less than 340]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[dual band streaming media player quad core under 340]</div><div class="s"><span class="n">2</span>click[b09lskqf8c]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[buy now]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 7 · fashion</span><span class="sub" style="margin:0">baseline scored higher (first by task id) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.67 · 5 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:b3-wine size:large price:less than 30.00]</div><div class="s"><span class="n">2</span>click[b09npml43m]</div><div class="s"><span class="n">3</span>click[a1-wine red]</div><div class="s"><span class="n">4</span>click[large]</div><div class="s"><span class="n">5</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:b3-wine size:large price:lt30]</div><div class="s"><span class="n">2</span>click[b09npml43m]</div><div class="s"><span class="n">3</span>click[a1-wine red]</div><div class="s"><span class="n">4</span>click[description]</div><div class="s"><span class="n">5</span>click[description]</div><div class="s"><span class="n">6</span>click[size]</div><div class="s"><span class="n">7</span>click[back to search]</div><div class="s"><span class="n">8</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:b3-wine size:large price:lt30]</div><div class="s"><span class="n">9</span>click[b09p5crvq6]</div><div class="s"><span class="n">10</span>click[description]</div><div class="s"><span class="n">11</span>click[back to search]</div><div class="s"><span class="n">12</span>search[loose fit women&#39;s tops tees blouses short sleeve long sleeve color:b3-wine size:large price:lt30]</div><div class="s"><span class="n">13</span>search[loose fit women&#39;s blouses short sleeve long sleeve color:b3-wine size:large price:lt30]</div><div class="s"><span class="n">14</span>click[b07mgb73nj]</div><div class="s"><span class="n">15</span>click[wine]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 100 · garden</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 2</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09hxdpkjf]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[description]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s"><span class="n">1</span>search[home office cabinets with storage space for living room under $210]</div><div class="s div"><span class="n">2</span>click[b09p8d2q1q]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[buy now]</div><div class="s"><span class="n">5</span>click[buy now]</div><div class="s"><span class="n">6</span>click[buy now]</div><div class="s"><span class="n">7</span>click[buy now]</div><div class="s"><span class="n">8</span>click[buy now]</div><div class="s"><span class="n">9</span>click[buy now]</div><div class="s"><span class="n">10</span>click[buy now]</div><div class="s"><span class="n">11</span>click[buy now]</div><div class="s"><span class="n">12</span>click[buy now]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+<div class="card"><div class="head"><span class="name">task 157 · fashion</span><span class="sub" style="margin:0">random pair (fixed seed) · first divergence at step 1</span></div>
+<div class="replay">
+<div><h3>baseline · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[features]</div><div class="s"><span class="n">4</span>click[back to search]</div><div class="s"><span class="n">5</span>search[machine wash men&#39;s tuxedo shirt polyester heathers needle sleeve classic fit royal blue 3x-large under 40.00]</div><div class="s"><span class="n">6</span>click[b07jvvdj6l]</div><div class="s"><span class="n">7</span>click[features]</div><div class="s"><span class="n">8</span>click[back to search]</div><div class="s"><span class="n">9</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">10</span>click[b07jvvdj6l]</div><div class="s"><span class="n">11</span>click[features]</div><div class="s"><span class="n">12</span>click[back to search]</div><div class="s"><span class="n">13</span>click[buy now]</div><div class="s"><span class="n">14</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40.00]</div><div class="s"><span class="n">15</span>click[features]</div></div></div>
+
+<div><h3>candidate · score 0.00 · 15 steps</h3>
+<div class="traj"><div class="s div"><span class="n">1</span>search[machine wash men&#39;s tuxedo shirt polyester heathers heathers cotton cotton heather needle sleeve classic fit royal blue men 3x-large under 40]</div><div class="s"><span class="n">2</span>click[b07jvvdj6l]</div><div class="s"><span class="n">3</span>click[description]</div><div class="s"><span class="n">4</span>click[back to search]</div><div class="s"><span class="n">5</span>search[machine wash men&#39;s tuxedo shirt polyester heather royal blue 3x-large under 40]</div><div class="s"><span class="n">6</span>click[b07jvvdj6l]</div><div class="s"><span class="n">7</span>click[back to search]</div><div class="s"><span class="n">8</span>search[machine wash men&#39;s tuxedo shirt polyester heather royal blue 3x-large under 40]</div><div class="s"><span class="n">9</span>click[b07jvvdj6l]</div><div class="s"><span class="n">10</span>click[back to search]</div><div class="s"><span class="n">11</span>search[machine wash men&#39;s tuxedo shirt polyester heather royal blue 3x-large under 40 classic fit needle sleeve]</div><div class="s"><span class="n">12</span>click[b07jvvdj6l]</div><div class="s"><span class="n">13</span>click[features]</div><div class="s"><span class="n">14</span>click[buy now]</div><div class="s"><span class="n">15</span>click[buy now]</div></div></div>
+</div></div>
+
+
+
+
+<h2>Coverage</h2>
+<div class="card scroll"><table><tr><th>arm</th><th>attempts</th><th>expected cells</th><th>scored</th><th>missing</th><th>infra-failed</th><th>status</th></tr>
+<tr><td><b>NONE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm NONE: no repetition ids (legacy log)</span><br><span class="sub">arm NONE: no run manifest</span><br><span class="sub">arm NONE: no declared grid</span><br></td></tr><tr><td><b>PUB_TRUE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm PUB_TRUE: no repetition ids (legacy log)</span><br><span class="sub">arm PUB_TRUE: no run manifest</span><br><span class="sub">arm PUB_TRUE: no declared grid</span><br></td></tr><tr><td><b>L_NONE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_NONE: no repetition ids (legacy log)</span><br><span class="sub">arm L_NONE: no run manifest</span><br><span class="sub">arm L_NONE: no declared grid</span><br></td></tr><tr><td><b>L_PUB_TRUE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_PUB_TRUE: no repetition ids (legacy log)</span><br><span class="sub">arm L_PUB_TRUE: no run manifest</span><br><span class="sub">arm L_PUB_TRUE: no declared grid</span><br></td></tr><tr><td><b>L_PUB_CHORAL</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_PUB_CHORAL: no repetition ids (legacy log)</span><br><span class="sub">arm L_PUB_CHORAL: no run manifest</span><br><span class="sub">arm L_PUB_CHORAL: no declared grid</span><br></td></tr><tr><td><b>L_R1_TRUE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_R1_TRUE: no repetition ids (legacy log)</span><br><span class="sub">arm L_R1_TRUE: no run manifest</span><br><span class="sub">arm L_R1_TRUE: no declared grid</span><br></td></tr><tr><td><b>L_R1_CHORAL</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_R1_CHORAL: no repetition ids (legacy log)</span><br><span class="sub">arm L_R1_CHORAL: no run manifest</span><br><span class="sub">arm L_R1_CHORAL: no declared grid</span><br></td></tr><tr><td><b>L_R2_TRUE</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_R2_TRUE: no repetition ids (legacy log)</span><br><span class="sub">arm L_R2_TRUE: no run manifest</span><br><span class="sub">arm L_R2_TRUE: no declared grid</span><br></td></tr><tr><td><b>L_R2_CHORAL</b></td><td>500</td><td>not declared</td><td>500</td><td>0</td><td>0</td>
+<td><span class="sub">arm L_R2_CHORAL: no repetition ids (legacy log)</span><br><span class="sub">arm L_R2_CHORAL: no run manifest</span><br><span class="sub">arm L_R2_CHORAL: no declared grid</span><br></td></tr>
+</table></div>
+
+<h2>How to read this</h2>
+<p class="note">Intervals describe task-sampling uncertainty conditional on the observed execution blocks. They do not quantify variability across future execution windows. Two blocks are insufficient to estimate that component reliably.</p><p class="note">Nominal error budget per target: one-sided 0.025 for the primary test and 0.025 for the guardrail family (Holm). This is not a finite-sample guarantee; percentile-bootstrap error rates can exceed nominal levels, notably for rare-event mixtures and small strata.</p>
+<p class="note">Verdicts: PASS = lower bound of Δ above −δ and every guardrail's upper bound below its tolerance; BLOCK = upper bound of Δ below −δ, or a Holm-confirmed guardrail violation; INCONCLUSIVE = neither; INVALID = the evidence fails a validity check; DESCRIPTIVE = logs lack the provenance a release decision needs. A CI job should pass only on PASS.</p>
+</main>
+</body>
+</html>

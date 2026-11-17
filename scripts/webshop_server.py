@@ -10,10 +10,11 @@ wrapper seeds `random` (default --seed 0) before building the environment, so th
 session id gives the same instruction across restarts. Start it with PYTHONHASHSEED=0.
 
 Endpoints:
-  POST /reset {"session": <int>}      -> {obs, actions, category}  (category: goal's product
+  POST /reset {"session": <int>}      -> {obs, actions, category, url}  (category: goal's product
                                          category, for stratified analysis only; never shown
-                                         to the agent)
-  POST /step  {"action": "search[..]"} -> {obs, reward, done, actions}
+                                         to the agent; url: the simulated page, used only by
+                                         the optional page label)
+  POST /step  {"action": "search[..]"} -> {obs, reward, done, actions, url}
   GET  /health                         -> {ok: true}
 """
 import argparse
@@ -38,6 +39,13 @@ def _actions():
         return None
 
 
+def _url():
+    try:
+        return ENV.state["url"]
+    except Exception:
+        return ""
+
+
 @app.route("/health")
 def health():
     return jsonify({"ok": True, **INFO})
@@ -51,7 +59,7 @@ def reset():
         category = ENV.server.user_sessions[ENV.session]["goal"].get("category", "")
     except Exception:
         category = ""
-    return jsonify({"obs": str(_first(obs)), "actions": _actions(), "category": category})
+    return jsonify({"obs": str(_first(obs)), "actions": _actions(), "category": category, "url": _url()})
 
 
 @app.route("/step", methods=["POST"])
@@ -59,7 +67,7 @@ def step():
     action = (request.get_json(silent=True) or {}).get("action", "")
     obs, reward, done, info = ENV.step(action)
     return jsonify({"obs": str(_first(obs)), "reward": float(reward or 0.0),
-                    "done": bool(done), "actions": _actions()})
+                    "done": bool(done), "actions": _actions(), "url": _url()})
 
 
 if __name__ == "__main__":

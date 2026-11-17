@@ -1,0 +1,65 @@
+# Qwen3-32B extension of the WebShop release check (PREREG addendum A in engineering/PREREG_gate_ws_2026-11-16.md).
+# C1_32 asks the release question for the 32B reader. DD asks whether the memory's effect differs between readers:
+# (32B TRUE - 32B NONE) - (8B TRUE - 8B NONE), paired by task on panel T. Different verdicts alone are not a finding.
+# D-phase arms exist only if C1_32's primary component is BLOCK; otherwise those contrasts are not evaluable.
+name: "WebShop: distilled memory release check (Qwen3-32B extension)"
+description: "Release target for the 32B reader and the cross-reader difference of the memory effect."
+base_dir: ../..
+seed: 20261116
+bootstrap_draws: 20000
+
+arms:
+  T32_NONE: {logs: ["results/gate_ws32_2026_11/GWS32_T_NONE_R*_Q32.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T32_TRUE: {logs: ["results/gate_ws32_2026_11/GWS32_T_TRUE_R*_Q32.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T8_NONE: {logs: ["results/gate_ws_2026_11/GWS_T_NONE_R*_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  T8_TRUE: {logs: ["results/gate_ws_2026_11/GWS_T_TRUE_R*_Q8.episodes.jsonl"], grid: {task_range: [0, 500], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_T.jsonl}}
+  D32_NONE: {logs: ["results/gate_ws32_2026_11/GWS32_D_NONE_R*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D32_TRUE: {logs: ["results/gate_ws32_2026_11/GWS32_D_TRUE_R*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D32_ABL: {logs: ["results/gate_ws32_2026_11/GWS32_D_ABL_R*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1, 2], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D32_COMP1: {logs: ["results/gate_ws32_2026_11/GWS32_D_COMP1_H*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D32_COMP2: {logs: ["results/gate_ws32_2026_11/GWS32_D_COMP2_H*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+  D32_COMP3: {logs: ["results/gate_ws32_2026_11/GWS32_D_COMP3_H*_Q32.episodes.jsonl"], grid: {task_range: [520, 1020], repetitions: [1], registry: configs/gate_ws_2026_11/registry_D.jsonl}}
+
+interventions:
+  memory_pub:
+    config_patch: {memory: expel, retriever: bm25, token_budget: 524, demo_pool: data/pools/webshop1010_insights.jsonl}
+    files_sha256: {demo_pool: 89893797d7d171f5bb0b11a7661ee6aae03491d9fbf3f90ac56470f6bc5954b4}
+  memory_abl:
+    config_patch: {memory: expel, retriever: bm25, token_budget: 524, demo_pool: data/pools/gate_ws_2026_11/PUB_ABL.jsonl,
+                   rank_reference_pool: data/pools/webshop1010_insights.jsonl}
+    files_sha256: {demo_pool: 0a601d39fabb429263b075e89c8057b0cd32e3bfaf3801b58f0e1817ab79d4ad,
+                   rank_reference_pool: 89893797d7d171f5bb0b11a7661ee6aae03491d9fbf3f90ac56470f6bc5954b4}
+
+targets:
+  C1_32_ship_pub:
+    description: "Ship the published distilled memory, Qwen3-32B reader"
+    default: true
+    baseline: T32_NONE
+    candidate: T32_TRUE
+    interventions: [memory_pub]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+      - {metric: latency_s, statistic: relative_p95, tolerance: 0.30}
+  C2_32_ship_repaired:
+    description: "Ship the repaired memory, Qwen3-32B reader (only if the D phase ran)"
+    baseline: D32_NONE
+    candidate: D32_ABL
+    interventions: [memory_abl]
+    primary: {metric: score, margin: 0.05}
+    guardrails:
+      - {metric: prompt_tokens, statistic: relative_mean, tolerance: 0.30}
+      - {metric: latency_s, statistic: relative_p95, tolerance: 0.30}
+
+contrasts:
+  R32_replication: {description: "PUB lowers the 32B score on panel T", candidate: T32_TRUE, baseline: T32_NONE, role: diagnostic, claim: less, threshold: 0}
+  DD_reader: {description: "memory effect, 32B minus 8B (difference of paired differences)", candidate: T32_TRUE, baseline: T32_NONE, minus: {candidate: T8_TRUE, baseline: T8_NONE}, role: diagnostic}
+  L1_32: {candidate: D32_ABL, baseline: D32_TRUE, role: diagnostic, claim: greater, threshold: 0}
+  L2_32_1: {candidate: D32_ABL, baseline: D32_COMP1, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+  L2_32_2: {candidate: D32_ABL, baseline: D32_COMP2, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+  L2_32_3: {candidate: D32_ABL, baseline: D32_COMP3, role: diagnostic, claim: greater, threshold: 0, pairing: same_block}
+
+claims:
+  localization_32:
+    description: "the six suspect rules explain the 32B loss on these goals, against these three comparator edits"
+    all_of: [L1_32, L2_32_1, L2_32_2, L2_32_3]

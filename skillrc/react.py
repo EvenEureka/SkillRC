@@ -210,7 +210,9 @@ class ReActAgent:
             memory_tokens=mem_tokens, task_text=obs.text, trajectory=traj)
 
     def run_episode(self, env, task_id, seed: int = 0) -> EpisodeResult:
+        self.last_obs = None
         obs = env.reset(task_id)
+        self.last_obs = obs          # kept so a failed attempt still records its task identity
         if self.style == "react_alfworld":
             return self._run_react_alfworld(env, obs, seed)
         return self._run_generic(env, obs, seed)

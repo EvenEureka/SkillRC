@@ -1,0 +1,4 @@
+configs/gate_ws_2026_11/GWS_D_ABL_R1_Q8.yaml
+configs/gate_ws_2026_11/GWS_T_NONE_R1_Q8.yaml
+configs/gate_ws_2026_11/GWS_D_NONE_R1_Q8.yaml
+configs/gate_ws_2026_11/GWS_D_COMP3_HA_Q8.yaml

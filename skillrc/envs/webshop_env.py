@@ -15,6 +15,22 @@ from typing import Any, List
 from .base import BaseEnv, Observation, StepResult
 
 
+def page_label(url: str) -> str:
+    """Page name for the optional observation label, read from the simulated URL."""
+    parts = (url or "").split("/")
+    if "item_sub_page" in parts:
+        i = parts.index("item_sub_page")
+        sub = parts[i + 5] if len(parts) > i + 5 else ""
+        return f"Product > {sub}" if sub else "Product"
+    if "item_page" in parts:
+        return "Product"
+    if "search_results" in parts:
+        return "Search results"
+    if "done" in parts:
+        return "Purchase complete"
+    return "Search"
+
+
 def _flatten_actions(actions) -> List[str]:
     if not actions:
         return []
@@ -31,8 +47,10 @@ class WebShopEnv(BaseEnv):
     name = "webshop"
 
     def __init__(self, n_tasks: int = 100, mode: str = "http",
-                 base_url: str = "http://127.0.0.1:3000", timeout: float = 120.0, **kw):
+                 base_url: str = "http://127.0.0.1:3000", timeout: float = 120.0,
+                 show_page_label: bool = False, **kw):
         self.n_tasks = n_tasks
+        self.show_page_label = show_page_label
         self.mode = mode
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
@@ -51,6 +69,11 @@ class WebShopEnv(BaseEnv):
         else:
             raise ValueError(f"unknown WebShop mode {mode!r}")
 
+    def _obs(self, r: dict) -> str:
+        if self.show_page_label:
+            return f"[Current page: {page_label(r.get('url', ''))}]\n{r['obs']}"
+        return r["obs"]
+
     def task_ids(self) -> List[Any]:
         return list(range(self.n_tasks))
 
@@ -58,7 +81,7 @@ class WebShopEnv(BaseEnv):
         if self.mode == "http":
             r = self._rq.post(self.base_url + "/reset", json={"session": int(task_id)},
                               timeout=self.timeout).json()
-            return Observation(text=r["obs"], task_id=task_id,
+            return Observation(text=self._obs(r), task_id=task_id,
                                task_type=r.get("category") or "webshop_buy",
                                admissible_actions=_flatten_actions(r.get("actions")))
         obs = self._env.reset(session=task_id)
@@ -71,7 +94,7 @@ class WebShopEnv(BaseEnv):
                               timeout=self.timeout).json()
             reward = float(r.get("reward", 0.0))
             done = bool(r.get("done"))
-            return StepResult(obs_text=r["obs"], reward=reward, done=done,
+            return StepResult(obs_text=self._obs(r), reward=reward, done=done,
                               success=bool(done and reward >= 1.0),
                               info={"admissible_actions": _flatten_actions(r.get("actions"))})
         obs, reward, done, info = self._env.step(action)
