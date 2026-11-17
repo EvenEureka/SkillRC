@@ -1,32 +1,36 @@
 # skillrc-gate
 
-**A release check for agent changes, computed from episode logs.** You changed your agent: added or re-distilled a
-memory, edited the prompt, flipped a harness flag. `skillrc-gate` reads the logs of the old and new versions on the
-same tasks and answers, for each change you declare: ship it (**PASS**), don't (**BLOCK**), not enough evidence
-(**INCONCLUSIVE**), the evidence itself is broken (**INVALID**), or the logs cannot support a decision
-(**DESCRIPTIVE**). Every verdict links to the contrast behind it and to paired trajectories.
+**Should this agent change ship?** Teams that build LLM agents change them constantly: a memory of lessons from past
+runs, a new prompt, a new feature. Before each release someone compares the old and new version on a test set. That
+comparison goes wrong in predictable ways: a small difference is just luck, a good change hides a bad one shipped with
+it, something else changed between the two runs, crashed tasks are quietly dropped, or the score holds while the cost
+explodes.
 
-It does not run agents. It reads logs from the SkillRC runner, from [Inspect AI](https://inspect.aisi.org.uk/), or
-from a plain JSONL format, and writes `result.json`, `summary.md` (for a CI comment) and a self-contained
-`report.html`. The CLI exit code is the verdict, so a CI job can block a release.
+`skillrc-gate` reads the logs of the old and new version on the same tasks and answers, for each declared change:
+**PASS** (ship), **BLOCK** (don't ship), **INCONCLUSIVE** (not enough evidence, not approved) or **INVALID** (the
+experiment is broken). Logs too old to check get **DESCRIPTIVE** (numbers only, no decision). The exit code is the
+answer, so a CI job can stop a release like a failing unit test. Case page with real results:
+<https://eveneureka.github.io/SkillRC/gate/>.
 
-## Why another eval tool
+Before answering it checks four things:
 
-Experiment dashboards (LangSmith, Braintrust) and eval runners (Inspect, promptfoo) compare runs well. What this
-tool adds, and what the SkillRC study needed:
+1. **Same conditions.** The versions may differ only in the declared change; model revision, settings, task list and
+   the hash of every input file must match.
+2. **Nothing dropped.** Every planned task needs a result; crashed tasks are rerun and counted, never removed.
+3. **Real or luck.** A paired bootstrap over tasks gives the range of the true difference; BLOCK needs the whole range
+   below the allowed drop, PASS needs the whole range above it.
+4. **Cost.** Tokens and latency per task must stay within a limit.
 
-- **Bundled changes are split.** A release that adds a page label and a memory looked +0.13 better than the old
-  version; split, the label was +0.25 and the memory −0.12 ([example](#example-a-bundled-release-hides-a-regression)).
-  Each declared intervention gets its own target and verdict, and targets never veto one another.
-- **Only declared differences are allowed.** Each arm's manifest has a fingerprint: config, every file hash, model
-  revision, scorer, and the scientific part of serving and environment. Two arms may differ only in the
-  interventions the spec declares; anything else is INVALID. Missing provenance is DESCRIPTIVE, never PASS.
-- **Uncertainty is honest about what it covers.** Paired, task-clustered, stratified bootstrap; repetitions averaged
-  within task; per-block contrasts shown; the report says the intervals do not cover future execution windows.
-- **Missing data cannot manufacture a PASS.** Infrastructure failures are rerun and logged; no exclusions; missing
-  cells bound the primary metric and make guardrails INCONCLUSIVE.
-- **From verdict to trajectory.** Behaviour shifts (action categories, outcome types) and paired replays chosen by a
-  fixed rule, not by hand.
+It also shows how behaviour changed (e.g. how often the agent searched again) and puts both versions' runs on the same
+task side by side. It does not run agents; it reads logs from the SkillRC runner, from
+[Inspect AI](https://inspect.aisi.org.uk/), or from a plain JSONL format, and writes `result.json`, `summary.md` (for a
+CI comment) and a self-contained `report.html`.
+
+**The real case behind it.** A Qwen3-8B shopping agent on WebShop got a page label and a memory in one release: +0.13,
+looked good. Split, the label was +0.25 and the memory −0.12. Re-tested in a pre-registered experiment, the gate
+blocks the memory (score 0.57 → 0.44, tokens +58%) and refuses a tempting "fix": replacing the six "keep searching"
+lessons stopped the extra searching but won back little of the score, and a random replacement of six other lessons
+did better.
 
 ## Ten-minute path
 

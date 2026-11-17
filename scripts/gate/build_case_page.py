@@ -20,6 +20,31 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+def stacked_svg(rows, width=480, rh=50):
+    """Compact interval chart for phones and desktops: label above each bar, value beside the dot, zero line."""
+    if not rows:
+        return ""
+    lo = min([0.0] + [r["lo"] for r in rows]); hi = max([0.0] + [r["hi"] for r in rows])
+    pad = (hi - lo) * 0.08
+    lo, hi = lo - pad, hi + pad
+    left, right = 10, 70
+    h = rh * len(rows) + 34
+    sx = lambda v: left + (v - lo) / (hi - lo) * (width - left - right)  # noqa: E731
+    z = sx(0.0)
+    out = [f'<svg class="st" viewBox="0 0 {width} {h}" role="img" aria-label="score change by change">',
+           f'<text x="{z:.1f}" y="{h - 8}" class="reflab" text-anchor="middle">┆ 0 = no change</text>']
+    for i, r in enumerate(rows):
+        y = 16 + i * rh
+        out.append(f'<text x="{left}" y="{y}" class="lab">{html.escape(r["label"])}</text>')
+        yb = y + 18
+        out.append(f'<line x1="{z:.1f}" y1="{yb - 11}" x2="{z:.1f}" y2="{yb + 11}" class="zero"/>')
+        out.append(f'<line x1="{sx(r["lo"]):.1f}" y1="{yb}" x2="{sx(r["hi"]):.1f}" y2="{yb}" class="bar {r["tone"]}"/>')
+        out.append(f'<circle cx="{sx(r["est"]):.1f}" cy="{yb}" r="6" class="dot {r["tone"]}"/>')
+        out.append(f'<text x="{sx(r["hi"]) + 8:.1f}" y="{yb + 5}" class="val {r["tone"]}">{f(r["est"])}</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
 def interval_svg(rows, refs, width=820, left=330, right=24, rh=32):
     """Case-page interval chart (own copy, so the frozen report renderer is untouched): full labels on the left,
     reference labels placed beside their lines so they never overlap."""
@@ -178,6 +203,26 @@ def replay(r, target):
             "base": rp["baseline"], "cand": rp["candidate"]}
 
 
+PLAIN = {"PASS": "ship", "BLOCK": "don't ship", "INCONCLUSIVE": "not enough evidence, not approved",
+         "INVALID": "experiment broken", "DESCRIPTIVE": "numbers only, no decision"}
+
+
+def verdict(state):
+    return f'<span class="badge {state}">{state}</span> <span class="plain">{PLAIN.get(state, "")}</span>'
+
+
+def hidden_chart(hist):
+    rows = []
+    for key, label in (("bundle_vs_old", "label + memory, shipped together"),
+                       ("label_only", "page label alone"),
+                       ("memory_given_label", "memory, added on top of the label")):
+        h = hist.get(key)
+        if h:
+            rows.append({"label": label, "est": h["est"], "lo": h["lo"], "hi": h["hi"],
+                         "tone": "pass" if h["est"] > 0 else "block"})
+    return stacked_svg(rows)
+
+
 def main():
     res = {k: load(k) for k in CASES}
     (OUT / "reports").mkdir(parents=True, exist_ok=True)
@@ -204,6 +249,7 @@ def main():
     extras = json.loads(ex_path.read_text()) if ex_path.exists() else None
     from jinja2 import Template
     page = Template(TEMPLATE).render(
+        hidden=hidden_chart(hist), verdict=verdict,
         chart=chart(res), loc_chart=localization_chart(res["release"]), hist=hist, ins=ins_d,
         rel=release_view(res["release"], extras), rel32=release_view(res["release32"], None),
         beh=beh, iv=iv,
@@ -218,7 +264,7 @@ TEMPLATE = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>skillrc-gate | Release checks for agent changes</title>
+<title>skillrc-gate | Should this agent change ship?</title>
 <meta name="description" content="A release check for agent memory, prompt and harness changes, computed from episode logs: paired intervals, cost and latency guardrails, provenance checks, and paired replays.">
 <style>
   :root { color-scheme: light; --bg:#fdfcfc; --surface:#fff; --card:#f4eeef; --rule:#e6dfe1; --text:#1a1718; --text-2:#4f4a4c;
@@ -271,110 +317,135 @@ TEMPLATE = r"""<!doctype html>
   .pending { background: var(--card); border-radius: 8px; padding: 12px 14px; font-family: var(--sans); font-size: 15px; }
   .note { font-size: 16px; color: var(--text-2); }
   footer { margin-top: 44px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--text-3); text-align: center; }
+  svg.st { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; font-family: var(--sans); }
+  svg.st .lab { fill: var(--text); font-size: 14px; } svg.st .reflab { fill: var(--text-3); font-size: 12px; }
+  svg.st .zero { stroke: var(--text-3); stroke-width: 1.2; stroke-dasharray: 3 3; }
+  svg.st .bar { stroke-width: 4; stroke-linecap: round; } svg.st .val { font-size: 14px; font-weight: 700; }
+  svg.st .pass { stroke: var(--pass); fill: var(--pass); } svg.st .block { stroke: var(--block); fill: var(--block); }
+  svg.st text.pass, svg.st text.block { stroke: none; }
+  ul.plainlist { padding-left: 1.2em; } ul.plainlist li { margin: 0 0 6px; }
+  .plain { font-family: var(--sans); font-size: 14px; color: var(--text-2); }
+  table.vt td:first-child { width: 34%; } table.vt td:last-child { white-space: nowrap; }
+  @media (max-width: 680px) { table.vt td:last-child { white-space: normal; } }
+  details { background: var(--card); border-radius: 8px; padding: 10px 14px; margin: 8px 0 0; }
+  details summary { cursor: pointer; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--accent); }
+  details ul { font-size: 16px; color: var(--text-2); padding-left: 1.2em; } details li { margin: 0 0 8px; }
+  h3 { font-size: 20px; margin: 26px 0 8px; }
 </style>
 </head>
 <body>
 <main>
 <header>
   <h1>skillrc-gate</h1>
-  <p class="subtitle">A release check for agent changes, computed from episode logs</p>
+  <p class="subtitle">Should this agent change ship? A release check that answers from the run logs.</p>
   <div class="links">
-    <a class="btn primary" href="{{ repo }}/blob/main/docs/gate/README.md">Docs</a>
-    <a class="btn" href="{{ repo }}/tree/main/skillrc/gate">Code</a>
-    {% if links.release %}<a class="btn" href="{{ links.release }}">Release-check report</a>{% endif %}
-    {% if links.historical %}<a class="btn" href="{{ links.historical }}">Historical report</a>{% endif %}
-    {% if links.inspect %}<a class="btn" href="{{ links.inspect }}">Inspect report</a>{% endif %}
+    <a class="btn primary" href="{{ repo }}/tree/main/skillrc/gate">Code</a>
+    <a class="btn" href="{{ repo }}/blob/main/docs/gate/README.md">Docs</a>
+    {% if links.release %}<a class="btn" href="{{ links.release }}">Full technical report</a>{% endif %}
   </div>
 </header>
 
-<h2>The question</h2>
-<p class="question">An agent team adds a distilled memory, edits a prompt, or turns on a harness feature. Before shipping: is the
-new version better or worse on a fixed task set, by how much, at what cost, and if it is worse, which part of the change
-is responsible? A single before-and-after number cannot answer that, especially when several changes ship together.</p>
-<p>The gate reads the logs of both versions on the same tasks and returns one verdict per declared change:
-{{ badge("PASS") }} {{ badge("BLOCK") }} {{ badge("INCONCLUSIVE") }} {{ badge("INVALID") }} {{ badge("DESCRIPTIVE") }}.
-The exit code is the verdict of the target selected with <code>--target</code> (or the spec's default target), so a CI
-job can stop a release.</p>
+<h2>The problem</h2>
+<p>Teams that build LLM agents change them all the time: they add a memory of lessons from past runs, rewrite the
+prompt, or switch on a new feature. Before each release someone has to decide whether the new version is actually
+better. The usual method is to run both versions on a test set and compare the average score. That method fails in
+predictable ways:</p>
+<ul class="plainlist">
+  <li><strong>Luck.</strong> A small difference can come from which tasks happened to be in the test set.</li>
+  <li><strong>Bundling.</strong> When two changes ship together, a good one can hide a bad one.</li>
+  <li><strong>Unfair comparison.</strong> Something else changed between the two runs: the model version, a setting, the task list.</li>
+  <li><strong>Dropped failures.</strong> Tasks that crashed are quietly left out, which shifts the average.</li>
+  <li><strong>Hidden cost.</strong> The score holds, but every task now uses far more tokens or time.</li>
+</ul>
 
+{% if hist %}
+<h2>A real case: a good release hid a bad change</h2>
+<p>In our SkillRC project, a shopping agent (Qwen3-8B on the WebShop benchmark, 500 tasks) received two changes at
+once: a short label that tells it which page it is on, and a memory of 30 lessons distilled from earlier runs. Together
+they raised the average task score (0 to 1) by {{ f(hist.bundle_vs_old.est) }}, so the release looked good. Tested one at
+a time, the label was worth {{ f(hist.label_only.est) }} and the memory {{ f(hist.memory_given_label.est) }}. The memory
+made the agent worse, and the average hid it.</p>
 <figure>
-  <div class="frame">{{ chart | safe }}</div>
-  <figcaption>Change in mean score (candidate minus baseline) with 95% paired intervals, coloured by verdict. The dashed
-  line is the margin. For the release-eligible, non-degenerate results shown here, the score check passes when the whole
-  interval clears −0.05 and blocks when it lies wholly below −0.05; a target PASS also needs every cost guardrail to pass. The historical rows stay
-  DESCRIPTIVE because their logs lack provenance. Rows are release targets from the cases below.</figcaption>
-</figure>
-
-<h2>What the gate found</h2>
-<ol class="findings">
-  {% if hist %}
-  <li><strong>A bundled release hid a regression.</strong> On 500 WebShop sessions with Qwen3-8B, shipping a page label and a
-  distilled memory together looked like a gain over the old release (Δ {{ f(hist.bundle_vs_old.est) }}
-  [{{ f(hist.bundle_vs_old.lo) }}, {{ f(hist.bundle_vs_old.hi) }}]). Split into declared interventions, the label alone
-  gave {{ f(hist.label_only.est) }} and the memory, given the label, {{ f(hist.memory_given_label.est) }}
-  [{{ f(hist.memory_given_label.lo) }}, {{ f(hist.memory_given_label.hi) }}] while adding {{ pct(hist.memory_given_label.tok) }}
-  prompt tokens per episode. These logs predate the provenance contract, so the gate reports them as
-  {{ badge("DESCRIPTIVE") }}: real statistics, no release decision.</li>
-  {% endif %}
-  {% if rel and rel.c1 %}{% set c1 = rel.c1 %}
-  <li><strong>Re-run under the contract, the memory is blocked.</strong> Fresh runs with full provenance, on the same 500
-  sessions and the same reader. With the published memory the agent scored {{ "%.3f" | format(c1.cand) }}; without it,
-  {{ "%.3f" | format(c1.base) }} (Δ {{ f(c1.est) }} [{{ f(c1.lo) }}, {{ f(c1.hi) }}]). The memory also added
-  {{ pct(c1.tok[0]) }} prompt tokens per episode. The gate returns {{ badge(c1.state) }} on both the score and the cost
-  limit. The logs show what changed: with the memory the agent went back to search
-  {{ "%.2f" | format(beh(c1.beh, "back_to_search", "candidate")) }} times per episode instead of
-  {{ "%.2f" | format(beh(c1.beh, "back_to_search", "baseline")) }}, and ended
-  {{ "%.0f" | format(100 * beh(c1.beh, "no_purchase", "candidate")) }}% of episodes without buying anything instead of
-  {{ "%.0f" | format(100 * beh(c1.beh, "no_purchase", "baseline")) }}%.</li>
-  {% if rel.loc and rel.extras %}{% set x = rel.extras.behaviour %}{% set c2 = rel.c2 %}
-  <li><strong>Fixing the visible symptom did not fix the regression.</strong> Six of the memory's 30 rules tell the agent
-  to keep searching. On 500 held-out sessions, replacing those six with unrelated text of the same length cut the
-  extra searching: returns to search per episode fell from
-  {{ "%.2f" | format(beh(x["D_ABL-D_TRUE"], "back_to_search", "baseline")) }} with the published memory to
-  {{ "%.2f" | format(beh(x["D_ABL-D_TRUE"], "back_to_search", "candidate")) }} (no memory:
-  {{ "%.2f" | format(beh(x["D_TRUE-D_NONE"], "back_to_search", "baseline")) }}). The score gain over the published memory was small and
-  uncertain: {{ iv(rel.con.L1_abl_vs_true.estimate) }}. One of three comparison edits, which replaced six
-  other rules chosen by a fixed random draw, did better than the repair ({{ iv(rel.con.L2_abl_vs_comp1.estimate) }}
-  for repair minus that edit). The localization criterion was set in advance: the repair must beat the published memory and each
-  comparison edit. {% if rel.loc.holds %}It is met.{% else %}It is <strong>not met</strong> (not supported:
-  {{ rel.loc.failed | join("; ") }}), so the logs do not support the explanation that these six rules cause the loss.{% endif %}
-  {% if c2 %}The repaired memory still scores below no memory: Δ {{ f(c2.est) }} [{{ f(c2.lo) }}, {{ f(c2.hi) }}], with
-  {{ pct(c2.tok[0], 1) }} [{{ pct(c2.tok[1], 1) }}, {{ pct(c2.tok[2], 1) }}] prompt tokens. The score interval excludes zero but
-  crosses the −0.05 boundary, and the token interval crosses its +30% limit; both checks are inconclusive, so the gate
-  returns {{ badge(c2.state) }} and the change does not get release approval. With a margin of 0.02 the score check
-  would {{ c2.sens[0.02] }}.{% endif %}</li>
-  {% endif %}
-  {% else %}
-  <li><strong>The pre-registered release check.</strong> <span class="pending">Running now: 13 arm-runs in two execution
-  blocks. This section is generated from the gate's result file when the runs finish.</span></li>
-  {% endif %}
-  {% if ins %}
-  <li><strong>Not enough evidence is also a verdict.</strong> Through Inspect AI on 96 AgentDojo tasks (two epochs per arm),
-  a block of six tips in the system prompt scored {{ "%.3f" | format(ins.cand) }} vs {{ "%.3f" | format(ins.base) }}
-  (Δ {{ f(ins.est) }} [{{ f(ins.lo) }}, {{ f(ins.hi) }}]): the score passes the non-inferiority check, but the token cost
-  ({{ pct(ins.tok[0]) }} [{{ pct(ins.tok[1]) }}, {{ pct(ins.tok[2]) }}]) and p95 latency ({{ pct(ins.lat[0]) }}
-  [{{ pct(ins.lat[1]) }}, {{ pct(ins.lat[2]) }}]) could neither be shown under the +30% tolerance nor shown to exceed it.
-  The gate returns {{ badge(ins.state) }} and says why. With {{ ins.n }} tasks, the score change detectable with 80% power
-  (two-sided α = 0.05, normal approximation from the observed paired variability) is about {{ "%.2f" | format(ins.mde) }}.</li>
-  {% endif %}
-</ol>
-{% if loc_chart %}
-<figure>
-  <div class="frame">{{ loc_chart | safe }}</div>
-  <figcaption>Did the repair beat the alternatives? Score difference, repaired memory minus each alternative, with 95%
-  paired intervals (held-out sessions 520–1019). Green: the repair is better (interval above 0). Red: the alternative is
-  better (interval below 0). Grey: unclear. The localization claim needed the top four rows to be green.</figcaption>
+  <div class="frame">{{ hidden | safe }}</div>
+  <figcaption>Change in average task score versus the version without that change, on the same 500 tasks. Dot and
+  number: the measured change. Bar: the range the true change lies in with 95% confidence.</figcaption>
 </figure>
 {% endif %}
-{% if rel %}<p class="note"><strong>Qwen3-32B extension</strong> (pre-registered addendum):
-{% if rel32 and rel32.c1 %}shipping the memory with the larger reader: {{ badge(rel32.c1.state) }}, Δ {{ f(rel32.c1.est) }}
-[{{ f(rel32.c1.lo) }}, {{ f(rel32.c1.hi) }}].{% else %}results pending. It starts with a 100-session pilot and proceeds to the
-500 sessions of panel T, with both repetitions, only if the pre-registered pilot screen passes. Its verdict and the
-difference between the two readers' memory effects will be added here.{% endif %}</p>{% endif %}
+
+<h2>What skillrc-gate does</h2>
+<p>You give it the logs of the old and the new version on the same tasks, plus a short file that names each change.
+For every change separately, it answers with one of these:</p>
+<div class="scroll"><table>
+<tr><td>{{ verdict("PASS") }}</td><td>{{ verdict("BLOCK") }}</td></tr>
+<tr><td>{{ verdict("INCONCLUSIVE") }}</td><td>{{ verdict("INVALID") }}</td></tr>
+</table></div>
+<p>It is a command-line tool, and its exit code is the answer, so a CI pipeline can stop a release the way a failing
+unit test stops a merge. Before it answers, it checks four things:</p>
+<ol>
+  <li><strong>Same conditions.</strong> The two versions may differ only in the declared change. The model version,
+  settings, task list and a fingerprint (hash) of every input file are compared; any other difference means
+  "experiment broken".</li>
+  <li><strong>Nothing dropped.</strong> Every planned task needs a result. Crashed tasks are rerun and counted, never
+  removed.</li>
+  <li><strong>Real or luck.</strong> It resamples the tasks thousands of times to find the range the true difference
+  lies in. "Don't ship" needs the whole range to be worse than the allowed drop (here 0.05). "Ship" needs the whole range
+  to be better than that. Anything in between is "not enough evidence".</li>
+  <li><strong>Cost.</strong> Tokens and time per task must stay within a limit (here +30%).</li>
+</ol>
+<p>It also reports how the agent's behaviour changed and shows the runs of both versions on the same task side by
+side.</p>
+
+{% if rel and rel.c1 %}{% set c1 = rel.c1 %}{% set c2 = rel.c2 %}
+<h2>Tested on a real release decision</h2>
+<p>We then ran a fresh experiment and let the gate decide. The plan and the decision rules were written down and frozen
+before anything ran.</p>
+<div class="scroll"><table class="vt">
+<tr><th>change</th><th>what happened</th><th>verdict</th></tr>
+<tr><td>Ship the memory</td><td>score {{ "%.2f" | format(c1.base) }} → {{ "%.2f" | format(c1.cand) }};
+  tokens per task {{ pct(c1.tok[0]) }}</td><td>{{ verdict(c1.state) }}</td></tr>
+{% if c2 %}<tr><td>Ship a "fixed" memory (six suspicious lessons replaced)</td><td>score still {{ "%.3f" | format(-c2.est) }} lower than
+  with no memory; tokens per task {{ pct(c2.tok[0]) }}</td><td>{{ verdict(c2.state) }}</td></tr>{% endif %}
+{% if ins %}<tr><td>Add six tips to the prompt (another benchmark, AgentDojo, run through the Inspect AI framework)</td>
+  <td>score {{ f(ins.est) }}, too few tasks to tell</td><td>{{ verdict(ins.state) }}</td></tr>{% endif %}
+</table></div>
+
+<h3>What we learned</h3>
+<ol class="findings">
+  <li><strong>The memory makes the agent keep searching instead of buying.</strong> With the memory, the agent went back
+  to the search page {{ "%.2f" | format(beh(c1.beh, "back_to_search", "candidate")) }} times per task instead of
+  {{ "%.2f" | format(beh(c1.beh, "back_to_search", "baseline")) }}, and ended
+  {{ "%.0f" | format(100 * beh(c1.beh, "no_purchase", "candidate")) }}% of tasks without buying anything instead of
+  {{ "%.0f" | format(100 * beh(c1.beh, "no_purchase", "baseline")) }}%. It also used {{ "%.0f" | format(100 * c1.tok[0]) }}% more tokens.
+  The gate blocks it on both score and cost.</li>
+  {% if rel.extras and rel.loc %}{% set x = rel.extras.behaviour %}
+  <li><strong>Removing the obvious culprit did not fix it.</strong> Six of the 30 lessons tell the agent to keep
+  searching. On 500 new tasks, replacing those six with neutral text of the same length stopped the extra searching
+  ({{ "%.2f" | format(beh(x["D_ABL-D_TRUE"], "back_to_search", "baseline")) }} →
+  {{ "%.2f" | format(beh(x["D_ABL-D_TRUE"], "back_to_search", "candidate")) }} returns to search per task;
+  {{ "%.2f" | format(beh(x["D_TRUE-D_NONE"], "back_to_search", "baseline")) }} without any memory). But it won back
+  only {{ "%.3f" | format(x["D_ABL-D_TRUE"].score_diff) }} of the {{ "%.3f" | format(-x["D_TRUE-D_NONE"].score_diff) }}
+  that the memory had cost, and that gain could be zero (95% range [{{ f(rel.con.L1_abl_vs_true.estimate.lower) }},
+  {{ f(rel.con.L1_abl_vs_true.estimate.upper) }}]). As a
+  control, we also replaced three other, randomly chosen sets of six lessons. One of them won back more than our fix
+  did ({{ "%+.3f" | format(x["D_COMP1-D_TRUE"].score_diff) }}). So the data do not support "these six lessons caused the
+  loss", and the gate does not approve the fixed memory.</li>
+  {% endif %}
+  {% if ins %}
+  <li><strong>When the evidence is thin, it says so.</strong> On {{ ins.n }} AgentDojo tasks, only a score change of
+  about {{ "%.2f" | format(ins.mde) }} can be detected reliably; the tips changed the score by {{ f(ins.est) }}. The
+  gate answers "not enough evidence" instead of guessing.</li>
+  {% endif %}
+</ol>
+<p class="note">Next: the same check with a larger model (Qwen3-32B) is running{% if rel32 and rel32.c1 %}; result:
+{{ verdict(rel32.c1.state) }}, score change {{ f(rel32.c1.est) }}{% else %}, and its result will be added here{% endif %}.</p>
+{% endif %}
 
 {% if rep %}
-<h2>From verdict to trajectory</h2>
-<p class="note">Task {{ rep.task }} ({{ rep.type }}), picked by a rule fixed in advance, not by hand: {{ rep.why }}.
-Highlighted: the first step where the two versions act differently.</p>
+<h2>Same task, two versions</h2>
+<p class="note">Task {{ rep.task }} ({{ rep.type }}), picked by a fixed rule rather than by hand: the first task, by
+id, where the version without the memory scored higher. Highlighted: the first step where the two runs differ.
+{% if rep.task|string == "1" %}Here the version with the memory clicked “buy now” before choosing the colour and size, so it got
+only partial credit.{% endif %}</p>
 <div class="replay">
   {% for side, e in (("without the memory", rep.base), ("with the memory", rep.cand)) %}
   <div><p class="note"><strong>{{ side }}</strong> · score {{ "%.2f" | format(e.score) }} · {{ e.steps }} steps</p>
@@ -383,50 +454,64 @@ Highlighted: the first step where the two versions act differently.</p>
 </div>
 {% endif %}
 
-<h2>How it works</h2>
-<p>The gate does not run agents; it reads their logs (SkillRC runner, Inspect AI, or a plain JSONL schema). Each stage
-passes one thing to the next:</p>
-<div class="scroll"><table>
-<tr><th>stage</th><th>what it does</th><th>passes on</th></tr>
-<tr><td>ingest</td><td>parses each arm's logs into episodes and a run manifest; all runs of an arm must share one fingerprint</td><td>arms (a broken arm fails only its own targets)</td></tr>
-<tr><td>fingerprint check</td><td>the two versions may differ only in the declared interventions and in execution metadata (GPU, host, ports, job and block ids); all other configuration, the model revision, the scorer, the scientific serving and environment settings, and every file hash must match; missing provenance means no release decision</td><td>undeclared differences (any → INVALID)</td></tr>
-<tr><td>pairing</td><td>builds the expected task × repetition grid from a frozen task registry, picks each cell's scored attempt, counts missing and failed cells</td><td>task-aligned table</td></tr>
-<tr><td>statistics</td><td>task-clustered, stratified bootstrap; order-statistic intervals that agree exactly with the p-values; Holm across guardrails; missing cells bound the score</td><td>estimates and intervals</td></tr>
-<tr><td>verdict</td><td>validity and provenance checks come first; a degenerate component is INCONCLUSIVE; otherwise BLOCK needs a score interval wholly below −δ or a Holm-confirmed cost violation, and PASS needs a score interval wholly above −δ, every guardrail passing and no missing cells; everything else is INCONCLUSIVE</td><td>one verdict per change, with reasons</td></tr>
-<tr><td>report</td><td>JSON for machines, Markdown for CI, HTML with behaviour shifts and paired replays</td><td>files and exit code</td></tr>
-</table></div>
+<h2>Try it</h2>
+<p>Runs on a laptop with the real logs from the case above; no GPU or API key needed.</p>
 <pre>pip install -e .
-skillrc-gate report examples/webshop_bundled_release/gate.yaml --out /tmp/gate_demo   # real logs, no GPU
+skillrc-gate report examples/webshop_bundled_release/gate.yaml --out /tmp/gate_demo
 open /tmp/gate_demo/report.html</pre>
 
-<h2>Engineering</h2>
-<p>The producer side is built for unattended GPU runs: every attempt is journaled before it starts; a run resumes only
-under the same fingerprint; interrupted or truncated records are recovered; a run stops itself after repeated
-infrastructure failures so its servers can be restarted; each job in a chain checks that its predecessors succeeded
-(hash-verified markers); state files are published atomically. The contract and its implementation went through eleven
-numbered rounds of review by an independent model reviewer (Codex) before launch (<a href="{{ repo }}/tree/main/engineering">design, pre-registration and review record</a>);
-94 tests and a calibration study (<a href="{{ repo }}/blob/main/docs/gate/calibration.md">calibration.md</a>) back the
-decision rules.</p>
-{% if rel and rel.extras %}{% set t = rel.extras.totals %}{% set rr = rel.extras.reruns %}
-<p>The pre-registered runs: {{ "{:,}".format(t.arm_runs_attempts) }} episodes over 13 arm-runs, with
-{{ t.infra_failed_cells }} infrastructure failures and {{ t.missing_cells }} missing cells. Each repeated arm ran its
-second repetition in a separate execution window hours later. Across these two windows, all
-{{ rr.values() | sum(attribute="same_score_steps_tokens") }} of {{ rr.values() | sum(attribute="tasks") }} arm–task
-pairs ({{ rr | length }} arms) matched on score, step count and prompt-token count (greedy decoding, prefix caching
-off, seeded environment). The score A/A contrast is therefore exactly zero, and the gate reports it as degenerate
-rather than as evidence of stability. This does not establish determinism for latency or for future runs, but here the
-second repetition added no score information; more tasks would have bought more precision.</p>{% endif %}
+<h2>How it is built</h2>
+<ul class="plainlist">
+  <li>Reads logs from the SkillRC agent runner, from the Inspect AI framework, or from a simple JSON-lines format.</li>
+  <li>The runner is built for long unattended GPU jobs: every attempt is logged before it starts, a crashed run resumes
+  where it stopped, and each job checks that the previous one finished correctly before it starts.</li>
+  {% if rel and rel.extras %}{% set t = rel.extras.totals %}{% set rr = rel.extras.reruns %}
+  <li>The release experiment ran {{ "{:,}".format(t.arm_runs_attempts) }} agent episodes with
+  {{ t.infra_failed_cells }} crashes and {{ t.missing_cells }} missing results.</li>
+  <li>Every verdict on this page can be reproduced from the published logs: one script restores the logs, one command
+  recomputes the report.</li>
+  <li>94 automated tests; the decision rule was also checked on simulated data where the true answer is known.</li>
+  <li>One lesson: we ran every setting twice to measure run-to-run noise. Both runs gave identical results on all
+  {{ "{:,}".format(rr.values() | sum(attribute="same_score_steps_tokens")) }} task pairs (greedy decoding, seeded
+  environment). In this setup the second run added nothing; more tasks would have been a better use of the GPUs.</li>
+  {% endif %}
+</ul>
 
-<h2>Limits</h2>
-<p class="note">WebShop here is the 1,000-product version with generated goals, fashion-heavy test panels and a 15-step
-budget; readers are open Qwen3 models. Intervals describe task-sampling uncertainty given the observed execution
-windows, not future windows. The error budget is nominal: in simulation, the chance of a PASS when the true change sits
-exactly at the margin was 0.018–0.041 against a nominal 0.025. The margin (0.05) and the cost tolerances (+30%) are
-illustrative policies fixed before the runs, not recommendations. Which rule caused a loss is tested only through
-declared ablation arms, never inferred automatically. The repair replaces the six rules with unrelated text of the same
-length, so it tests replacement, not deletion; the three comparison edits are the only alternatives the localization
-claim covers. Behaviour shifts (returns to search, episodes without a purchase) are descriptive, with no multiplicity
-adjustment, and are not part of any verdict.</p>
+<h2>Details and limits</h2>
+<details>
+<summary>Statistics, assumptions and review record</summary>
+<ul>
+  <li>Ranges are 95% intervals from a paired bootstrap over tasks (20,000 resamples, stratified by product category,
+  fixed seed). They describe the uncertainty from which tasks were sampled, given the runs we made; they do not cover
+  future runs.</li>
+  <li>Cost checks: "don't ship" only if the limit is confirmed exceeded (Holm correction across the two cost checks);
+  "ship" only if the whole range stays under the limit.{% if rel and rel.c2 %} The fixed memory's token increase was
+  {{ pct(rel.c2.tok[0], 1) }} with range [{{ pct(rel.c2.tok[1], 1) }}, {{ pct(rel.c2.tok[2], 1) }}], straddling the
+  +30% limit, so its cost check was also "not enough evidence". Its score range was
+  [{{ f(rel.c2.lo) }}, {{ f(rel.c2.hi) }}]: below zero, but not wholly below −0.05. With an allowed drop of 0.02 it
+  would have been blocked.{% endif %}</li>
+  <li>The allowed drop (0.05) and the cost limit (+30%) are example policies fixed before the runs, not
+  recommendations. In simulation, the chance of "ship" when the true change sat exactly at the allowed drop was
+  0.018–0.041, against a target of 0.025.</li>
+  <li>The "fix" replaces the six lessons with unrelated text of the same length, so it tests replacement, not
+  deletion. The localization test required the fix to beat the original memory and each of the three random
+  replacements{% if rel and rel.loc %}; it failed for {{ rel.loc.failed | join("; ") }}{% endif %}. It covers those
+  three replacements only.</li>
+  <li>Behaviour numbers (returns to search, tasks without a purchase) and the "won back" amounts for the random
+  replacements are descriptive and not part of any verdict.</li>
+  <li>The two repeat runs matched in score, steps and tokens, not in latency; this does not prove determinism in other
+  setups.</li>
+  <li>WebShop here is the 1,000-product version with generated shopping goals and a 15-step limit; most tasks are
+  fashion items. The AgentDojo check used 96 tasks, two attempts each.</li>
+  <li>The bundled-release case comes from an older run without the provenance records the gate requires, so the gate
+  shows its numbers without a decision ({{ verdict("DESCRIPTIVE") }}).</li>
+  <li>The design and implementation went through eleven rounds of review by an independent model reviewer (Codex)
+  before launch: <a href="{{ repo }}/tree/main/engineering">design, pre-registration and reviews</a>,
+  <a href="{{ repo }}/blob/main/docs/gate/calibration.md">calibration</a>{% if links.historical %},
+  <a href="{{ links.historical }}">historical report</a>{% endif %}{% if links.inspect %},
+  <a href="{{ links.inspect }}">AgentDojo report</a>{% endif %}.</li>
+</ul>
+</details>
 
 <footer>
   <p>skillrc-gate is part of <a href="{{ repo }}">SkillRC</a> · page generated {{ today }} from the gate's result files by
